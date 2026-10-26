@@ -1,0 +1,22 @@
+title: FM-1 Firmware Developers' Wiki
+description: An unofficial, community-written reference for M-VAVE FM-1 and SMK-37 custom-firmware developers.
+remote_theme: just-the-docs/just-the-docs@v0.10.0
+plugins:
+  - jekyll-remote-theme
+  - jekyll-relative-links
+  - jekyll-seo-tag
+relative_links:
+  enabled: true
+  collections: false
+color_scheme: dark
+search_enabled: true
+heading_anchors: true
+aux_links:
+  "Source on GitHub": "https://github.com/sbegueria/fm1-dev-wiki"
+footer_content: "Unofficial. Not affiliated with M-VAVE or JieLi. Text under CC BY-SA 4.0."
+gh_edit_link: true
+gh_edit_link_text: "Edit this page on GitHub"
+gh_edit_repository: "https://github.com/sbegueria/fm1-dev-wiki"
+gh_edit_branch: "master"
+gh_edit_source: docs
+gh_edit_view_mode: "edit"

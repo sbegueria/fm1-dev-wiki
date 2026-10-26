@@ -1,3 +1,9 @@
+---
+title: "Performance"
+parent: Writing firmware
+nav_order: 2
+---
+
 # Performance
 
 The FM-1 has plenty of CPU for one good synth voice set, and not much spare. Most audio dropouts come from a
@@ -119,4 +125,4 @@ Two cores could roughly double the headroom, with caveats: [Second Core](Second-
 
 ---
 
-Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Home](Home.md)

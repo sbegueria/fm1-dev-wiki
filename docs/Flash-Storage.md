@@ -1,3 +1,9 @@
+---
+title: "Flash Storage"
+parent: Boot and install
+nav_order: 4
+---
+
 # Flash Storage
 
 The FM-1 has one 1 MiB SPI NOR flash. It holds the boot area, your code (run in place) and any data you save.
@@ -82,4 +88,4 @@ much the XIP window maps is unknown (felucca-bsp `docs/EXPERIMENTAL.md`). **[?]*
 
 ---
 
-Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Home](Home.md)

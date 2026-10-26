@@ -1,3 +1,9 @@
+---
+title: "Firmware Package Format (.fwsc)"
+parent: Boot and install
+nav_order: 2
+---
+
 # Firmware Package Format (.fwsc)
 
 The `.fwsc` file that M-VAVE's updater and the community installers send. This page describes it as Felucca's
@@ -91,4 +97,4 @@ the stock bootloader back** where the installer writes the head. The Felucca loa
 
 ---
 
-Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Home](Home.md)

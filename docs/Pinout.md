@@ -1,3 +1,9 @@
+---
+title: "Pinout"
+parent: Hardware
+nav_order: 4
+---
+
 # Pinout
 
 What each pin of the AC791N does on the FM-1, from working drivers. "Port" registers are at
@@ -67,4 +73,4 @@ Allow ~10 µs after selecting a column before reading the rows. **[CODE] [HW]**
 
 ---
 
-Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Home](Home.md)

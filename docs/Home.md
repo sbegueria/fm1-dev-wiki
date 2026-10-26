@@ -1,3 +1,9 @@
+---
+title: Home
+nav_order: 1
+permalink: /
+---
+
 # FM-1 Firmware Developers' Wiki
 
 ![A block diagram of the FM-1: the AC791N chip with its flash, USB and MIDI, screen, audio, controls, battery and radio](img/fm1-block-diagram.svg)
@@ -78,4 +84,4 @@ the firmwares listed in [Known Projects](Known-Projects.md).
 
 ---
 
-Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Home](Home.md)

@@ -1,3 +1,9 @@
+---
+title: "Getting Started"
+parent: Start
+nav_order: 1
+---
+
 # Getting Started
 
 From nothing to your own firmware running on an FM-1. This page follows the Felucca-family toolchain, which most
@@ -94,4 +100,4 @@ back first ([Update Protocol and Installers](Update-Protocol-and-Installers.md))
 
 ---
 
-Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Home](Home.md)

@@ -1,3 +1,9 @@
+---
+title: "Recovery"
+parent: Start
+nav_order: 3
+---
+
 # Recovery
 
 What to do when an FM-1 doesn't start, or no installer finds it. **Read this before your first install.**
@@ -81,4 +87,4 @@ Felucca-family `fm1_rescue` accepts only that exact file, by SHA-256
 
 ---
 
-Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Home](Home.md)

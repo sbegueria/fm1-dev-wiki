@@ -1,3 +1,9 @@
+---
+title: "Simulators and Emulators"
+parent: Writing firmware
+nav_order: 5
+---
+
 # Simulators and Emulators
 
 Testing on a computer is faster, safer and repeatable. There are two different kinds of tool, and they answer
@@ -46,4 +52,4 @@ How closely they model timing, the cache and the flash is described in each proj
 
 ---
 
-Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Home](Home.md)

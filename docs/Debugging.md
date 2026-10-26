@@ -1,3 +1,9 @@
+---
+title: "Debugging"
+parent: Writing firmware
+nav_order: 4
+---
+
 # Debugging
 
 The FM-1 has no debug header. Everything has to come out through the screen, USB, or memory that survives a reset.
@@ -76,4 +82,4 @@ Restrict register peeks to known ranges: a read of a gated peripheral block can 
 
 ---
 
-Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Home](Home.md)

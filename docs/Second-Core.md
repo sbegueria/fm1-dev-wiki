@@ -1,3 +1,9 @@
+---
+title: "Second Core"
+parent: Writing firmware
+nav_order: 3
+---
+
 # Second Core
 
 The AC791N has **two cores** (JieLi's SDK: `CPU_CORE_NUM 2`; "dual-core floating-point DSP"). Many open firmwares
@@ -68,4 +74,4 @@ two cores … I went without it. It paid off." Both approaches have shipped.
 
 ---
 
-Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Home](Home.md)

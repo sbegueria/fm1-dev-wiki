@@ -1,3 +1,9 @@
+---
+title: "Update Protocol and Installers"
+parent: Boot and install
+nav_order: 3
+---
+
 # Update Protocol and Installers
 
 How a firmware gets onto an FM-1 over a plain USB cable, without download mode. This is the path every
@@ -80,4 +86,4 @@ automatic reconnect. The cause (a USB drop, the loader's poll falling behind) is
 
 ---
 
-Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Home](Home.md)

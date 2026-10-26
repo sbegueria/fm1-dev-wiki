@@ -1,3 +1,9 @@
+---
+title: "SMK-37"
+parent: Hardware
+nav_order: 9
+---
+
 # SMK-37
 
 The M-VAVE SMK-37 Pro and Elite are 37-key controllers with 16 pads, 8 encoders, 4 faders, pitch and mod wheels,
@@ -54,4 +60,4 @@ so the community doesn't split in two.
 
 ---
 
-Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Home](Home.md)

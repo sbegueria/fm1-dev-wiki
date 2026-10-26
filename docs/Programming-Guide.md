@@ -1,3 +1,9 @@
+---
+title: "Programming Guide"
+parent: Writing firmware
+nav_order: 1
+---
+
 # Programming Guide
 
 How a bare-metal FM-1 firmware is usually put together, and the rules that keep it from crashing or dropping out.
@@ -87,4 +93,4 @@ static void render_block(int32_t *out)              /* called from the ALNK0 han
 
 ---
 
-Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Home](Home.md)
