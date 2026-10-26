@@ -1,5 +1,7 @@
 # FM-1 Firmware Developers' Wiki
 
+![A block diagram of the FM-1: the AC791N chip with its flash, USB and MIDI, screen, audio, controls, battery and radio](img/fm1-block-diagram.svg)
+
 An unofficial, community-written knowledge base for people who write their own firmware for the
 **M-VAVE FM-1** pocket synthesizer, and for its sibling, the **SMK-37 Pro / Elite** keyboard. Both are built
 around a JieLi AC791N (WL82 family) chip.

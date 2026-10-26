@@ -1,5 +1,7 @@
 # FM-1 Firmware Developers' Wiki
 
+![A block diagram of the FM-1: the AC791N chip with its flash, USB and MIDI, screen, audio, controls, battery and radio](docs/img/fm1-block-diagram.svg)
+
 An unofficial, community-written reference for people writing custom firmware for the M-VAVE FM-1 and SMK-37
 (JieLi AC79 chip): the hardware, the boot chain and package format, installing and recovering, and how to write
 firmware that runs well on it. Not affiliated with, endorsed by or supported by M-VAVE or JieLi.

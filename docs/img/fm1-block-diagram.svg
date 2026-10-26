@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 440" width="880" height="440" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+  <title>FM-1 block diagram</title>
+  <desc>The JieLi AC791N chip in the middle, with the flash, USB and MIDI on the left, the screen, audio and controls on the right, and power and radio below.</desc>
+  <style>
+    .bg { fill: #10141a; }
+    .box { fill: #1a212b; stroke: #3a4655; stroke-width: 1.5; }
+    .chip { fill: #142a2a; stroke: #3fd0c0; stroke-width: 2; }
+    .core { fill: #1d3a3a; stroke: #3fd0c0; stroke-width: 1; }
+    .t { fill: #e6ebf0; font-size: 15px; font-weight: 600; }
+    .s { fill: #92a0b0; font-size: 12px; }
+    .c { fill: #3fd0c0; font-size: 12px; font-weight: 600; }
+    .h { fill: #e6ebf0; font-size: 20px; font-weight: 700; }
+    .line { stroke: #5a6878; stroke-width: 1.5; fill: none; marker-end: url(#a); }
+    .two { stroke: #5a6878; stroke-width: 1.5; fill: none; marker-end: url(#a); marker-start: url(#b); }
+    .audio { stroke: #ff7aa8; stroke-width: 2; fill: none; marker-end: url(#p); }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5a6878"/></marker>
+    <marker id="b" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#5a6878"/></marker>
+    <marker id="p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#ff7aa8"/></marker>
+  </defs>
+  <rect class="bg" width="880" height="440" rx="14"/>
+  <text class="h" x="24" y="38">FM-1 at a glance</text>
+  <text class="s" x="24" y="58">What a custom firmware talks to. Details and sources: Hardware Overview, Memory Map, Pinout.</text>
+
+  <!-- the chip -->
+  <rect class="chip" x="300" y="86" width="280" height="250" rx="12"/>
+  <text class="t" x="320" y="112">JieLi AC791N (AC79)</text>
+  <rect class="core" x="320" y="124" width="115" height="56" rx="6"/>
+  <text class="c" x="332" y="146">pi32v2 core 0</text>
+  <text class="s" x="332" y="164">FPU (single)</text>
+  <rect class="core" x="445" y="124" width="115" height="56" rx="6"/>
+  <text class="c" x="457" y="146">pi32v2 core 1</text>
+  <text class="s" x="457" y="164">FPU (single)</text>
+  <rect class="core" x="320" y="190" width="240" height="34" rx="6"/>
+  <text class="s" x="332" y="212">I-cache / D-cache · 360 MHz (stock)</text>
+  <rect class="core" x="320" y="234" width="240" height="34" rx="6"/>
+  <text class="s" x="332" y="256">SRAM: 512 KB window at 0x01C00000</text>
+  <rect class="core" x="320" y="278" width="240" height="44" rx="6"/>
+  <text class="s" x="332" y="296">SFC (XIP) · SPI1 · ALNK0 (I2S)</text>
+  <text class="s" x="332" y="313">UART1 · ADC · USB · timers</text>
+
+  <!-- left -->
+  <rect class="box" x="24" y="96" width="220" height="64" rx="8"/>
+  <text class="t" x="38" y="122">SPI NOR flash, 1 MiB</text>
+  <text class="s" x="38" y="142">code runs in place (XIP), saves</text>
+  <rect class="box" x="24" y="186" width="220" height="64" rx="8"/>
+  <text class="t" x="38" y="212">USB (full speed)</text>
+  <text class="s" x="38" y="232">USB-MIDI · installer · ROM recovery</text>
+  <rect class="box" x="24" y="276" width="220" height="64" rx="8"/>
+  <text class="t" x="38" y="302">TRS MIDI in</text>
+  <text class="s" x="38" y="322">UART1</text>
+  <path class="two" d="M246,128 L298,128"/>
+  <path class="two" d="M246,218 L298,218"/>
+  <path class="line" d="M246,308 L298,308"/>
+
+  <!-- right -->
+  <rect class="box" x="636" y="86" width="220" height="56" rx="8"/>
+  <text class="t" x="650" y="110">Screen 240×240</text>
+  <text class="s" x="650" y="129">ST7789-class, RGB565, SPI1</text>
+  <rect class="box" x="636" y="156" width="220" height="56" rx="8"/>
+  <text class="t" x="650" y="180">Stereo audio out</text>
+  <text class="s" x="650" y="199">I2S, ~44.1 kHz, codec disputed</text>
+  <rect class="box" x="636" y="226" width="220" height="70" rx="8"/>
+  <text class="t" x="650" y="250">Keys, buttons, encoders</text>
+  <text class="s" x="650" y="269">27 keys · 14 buttons · 7 encoders</text>
+  <text class="s" x="650" y="286">one matrix, two 74HC595 · LEDs</text>
+  <rect class="box" x="636" y="310" width="220" height="40" rx="8"/>
+  <text class="t" x="650" y="335">MASTER pot (ADC)</text>
+  <path class="line" d="M582,114 L634,114"/>
+  <path class="audio" d="M582,184 L634,184"/>
+  <path class="two" d="M582,260 L634,260"/>
+  <path class="line" d="M634,330 L582,320"/>
+
+  <!-- bottom -->
+  <rect class="box" x="300" y="364" width="134" height="56" rx="8"/>
+  <text class="t" x="314" y="388">Battery</text>
+  <text class="s" x="314" y="406">charger · SYSVDD</text>
+  <rect class="box" x="446" y="364" width="134" height="56" rx="8"/>
+  <text class="t" x="460" y="388">Radio</text>
+  <text class="s" x="460" y="406">BLE · WiFi (closed)</text>
+  <path class="line" d="M367,362 L367,338"/>
+  <path class="two" d="M513,362 L513,338"/>
+
+  <text class="s" x="636" y="404">Unofficial. Not affiliated</text>
+  <text class="s" x="636" y="420">with M-VAVE or JieLi.</text>
+</svg>
