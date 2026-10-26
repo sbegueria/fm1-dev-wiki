@@ -22,6 +22,8 @@ Each entry: **the question**, what we know, and how to find out.
 3. **The instruction cache.** Size, ways, line size, replacement policy, and whether lines can be locked. DUB-1's
    notes say 32 KB, 8 ways × 4 KB, 32-byte lines; the SDK has `CACHE_LINE_COUNT 32` and `ICACHE_WAY`/`DCACHE_WAY`
    registers. *How:* time a loop over code of growing size from XIP; read the SDK's `cache.h` users.
+   *Known so far:* running DUB-1's 55 KB audio path from SRAM instead of XIP cut its peaks by up to 35% and stopped
+   its dropouts ([Performance](Performance.md)), so misses are costly; the size itself is still unmeasured.
 4. **The D-cache and DMA.** Must DMA buffers be flushed or kept out of the D-cache? Felucca-family firmware keeps DMA
    buffers in plain RAM and has worked, but no one has written down why.
 5. **The cycle counter.** `C0_TL_CKCNT` (`0x01EEE218`) did not move on at least one FM-1 under the stock

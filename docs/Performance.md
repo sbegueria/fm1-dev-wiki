@@ -35,8 +35,30 @@ by default.
   `sram_required` in its build script: **M-VAVE runs its whole DSP from SRAM**.
 - DUB-1 (single core, October 2026): with the engine in flash, which pieces peaked highest on the device did
   not match a computer's profile of the same code at all, a sign of a code-layout (cache) effect. The engine's
-  code had grown to ~93 KB with a ~55 KB hot path. An earlier test with ~62 KB of engine in RAM gave the same
-  average load and **evener peaks**. A larger test was being measured when this page was written.
+  code had grown to ~93 KB with a ~55 KB hot path, and the UI's code runs on the same core between audio blocks.
+  An earlier test with ~62 KB of engine in RAM gave the same average load and evener peaks.
+
+**[HW]** DUB-1's A/B test (2026-10-26, one FM-1 at the stock 360 MHz, M-VAVE's bootloader). Both builds were
+identical except that B runs the engine's hot path (55 KB: the render loop, the voices, the effects, the audio
+interrupt) from a 64 KB SRAM region, the rest of the engine staying in flash. The audio block is 256 frames
+(5.80 ms). Each figure is the heaviest block of a ~2 s window, timed with TIMER4 and read from the device's screen
+after a minute of play:
+
+| Piece | Peak, flash (A) | Peak, SRAM (B) | Mean, A → B | Dropouts, A → B |
+| --- | --- | --- | --- | --- |
+| Haze | 5.1 ms (88%) | 3.7 ms (64%) | 3.3 → 2.8 ms | 2 → 0 |
+| Night Drive | 4.7 ms | 4.4 ms | 2.7 → 2.6 ms | 1 → 0 |
+| Fog | 4.6 ms | 3.0 ms | 3.4 → 2.7 ms | 1 → 0 |
+| Pressure | 4.5 ms | 3.4 ms | 3.0 → 2.5 ms | 1 → 0 |
+| Steppers | 4.6 ms | 3.3 ms | 2.8 → 2.4 ms | 1 → 0 |
+
+- Peaks fell by 6–35%, means by 5–25%, and the dropouts stopped. The arithmetic was the same in both builds, so
+  the difference is time spent fetching code from flash.
+- The stages that gained most were long loops over many small functions: the noise stage halved
+  (0.6 → 0.3 ms) and the final mix (echoes, reverb, master) went from 1.2–1.4 to 1.0–1.1 ms.
+- What B didn't fix are peaks from real work: Night Drive's chord and pings starting in the same block.
+- Conclusion: on a single core with a UI, **put the audio path in SRAM**. It agrees with ZenLegume's dual-core
+  experience and with M-VAVE's own `sram_required` list.
 
 **[?]** The I-cache size and layout. Notes in DUB-1 give 32 KB, 8 ways × 4 KB, 32-byte lines; the SDK defines a
 32-byte line (`CACHE_LINE_COUNT 32`) and has per-way registers (`ICACHE_WAY`, `DCACHE_WAY`); m-bootloader clears
