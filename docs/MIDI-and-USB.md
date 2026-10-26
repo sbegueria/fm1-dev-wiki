@@ -37,7 +37,7 @@ FM-1 or known firmware names, so it never sends SysEx to other gear. Some FM-1s 
 | `F0 00 32 45 00 00 00 40 7F F7` | handshake query used by Felucca's installer | [CODE] |
 | `F0 43 0n …` | Yamaha DX7 voice and bank SysEx (stock firmware) | [RE] |
 
-The update session's framing is on [[Update Protocol and Installers]]. Any firmware that wants to be updatable
+The update session's framing is on [Update Protocol and Installers](Update-Protocol-and-Installers.md). Any firmware that wants to be updatable
 by the community's installers should answer the soft key and the upgrade message.
 
 **On a stock unit with the stock bootloader, the soft key is the only way into download mode without hardware.**
@@ -65,3 +65,7 @@ That's why M-Flasher can back up a stock unit before you change anything.
 - [FM1 Open README](https://github.com/m-vave/fm1_open) (MIDI section).
 - [FM-1-RE architecture](https://github.com/AL-255/FM-1-RE/blob/main/docs/architecture.md) §1, §5.
 - [felucca-bsp docs/EXPERIMENTAL.md](https://github.com/hugelton/felucca-bsp/blob/main/docs/EXPERIMENTAL.md).
+
+---
+
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)

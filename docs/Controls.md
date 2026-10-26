@@ -1,7 +1,7 @@
 # Controls
 
 The FM-1's panel: **27 note keys** (F3 to G5), **14 buttons**, **7 encoders**, the **MASTER** pot, and LEDs under
-keys and buttons. Wiring: [[Pinout]].
+keys and buttons. Wiring: [Pinout](Pinout.md).
 
 ## Scanning
 
@@ -66,3 +66,7 @@ Different bootloaders and firmwares claim different keys at power-on. Avoid clas
 - Felucca's `hal/fm1_input.h` (GPL-3.0-only) and its derivatives' `main_fm1.c`.
 - [m-bootloader SPEC.md](https://github.com/jvitkauskas/m-bootloader/blob/main/docs/SPEC.md) §8.2.
 - [felucca-bsp](https://github.com/hugelton/felucca-bsp), [fm1-base](https://github.com/charlesvestal/fm1-base) READMEs.
+
+---
+
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)

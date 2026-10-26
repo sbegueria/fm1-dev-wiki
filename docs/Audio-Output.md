@@ -28,7 +28,7 @@ void fm1_alnk0_irq(void)
 ```
 
 The last check is a cheap, reliable dropout counter: if the free half has changed by the time you finish, you were
-late. Show it on screen during development ([[Debugging]]).
+late. Show it on screen during development ([Debugging](Debugging.md)).
 
 ### Bring-up
 
@@ -47,7 +47,7 @@ last buffer loops as a buzz. Zero the buffer before flash erases, which run with
 | [FM-1-RE](https://github.com/AL-255/FM-1-RE/blob/main/docs/architecture.md) | "internal audio DAC", the stock firmware running its audio server at **44118 Hz** with 64-sample blocks | [RE] |
 
 Both can be partly true (an I2S link to an on-chip or off-chip converter). The part number, whether there is a
-separate codec, and the true sample rate under each clock setting are in [[Open Questions]]. If you know, please
+separate codec, and the true sample rate under each clock setting are in [Open Questions](Open-Questions.md). If you know, please
 add a photo or a measurement.
 
 ## Sample rate
@@ -67,10 +67,14 @@ Felucca-family firmware it runs nested inside the audio render from the 10 kHz t
 
 Shorter halves give lower latency and less time per block. Longer halves give more slack against an occasional
 heavy block (a note-on, a parameter change), at the cost of latency. Felucca's 256 frames (5.8 ms) is the common
-choice. Whatever you pick, measure the **worst** block, not the average: see [[Performance]].
+choice. Whatever you pick, measure the **worst** block, not the average: see [Performance](Performance.md).
 
 ## Sources
 
 - Felucca's `hal/fm1_audio.h`, `src/usb.c`, and the main loop of its derivatives (`main_fm1.c` in X0X, AMB-1,
   DUB-1); GPL-3.0-only.
 - [FM-1-RE](https://github.com/AL-255/FM-1-RE) `docs/architecture.md` §1, §4.
+
+---
+
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)

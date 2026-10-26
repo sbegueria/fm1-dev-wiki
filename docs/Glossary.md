@@ -9,7 +9,7 @@
 | **Chip key** | A 16-bit key used to encrypt the app area in flash (`0x980F` on known FM-1s). |
 | **Download mode / UBOOT** | The mask ROM's USB mode (`4C4A:8057`, "WL80UBOOT1.00"), for reading and writing flash with no firmware running. |
 | **ENC** | JieLi's simple stream cipher (CRC16-based key schedule). |
-| **`.fwsc`** | The firmware package file. See [[Firmware Package Format]]. |
+| **`.fwsc`** | The firmware package file. See [Firmware Package Format](Firmware-Package-Format.md). |
 | **HSB / LSB** | The high-speed and low-speed bus clocks (180 and 60 MHz at stock). Peripheral dividers are set against LSB. |
 | **isd_config** | A config blob in the boot area that encodes the chip key. |
 | **JLFS** | JieLi's flash directory format (32-byte entries with CRC16). |
@@ -22,7 +22,7 @@
 | **SFC** | The serial flash controller that maps flash into the XIP window and decrypts it. |
 | **Soft key** | SysEx `F0 22 24 35 7D F7`: asks a running firmware to enter download mode. |
 | **SPL / bootloader / `uboot.boot`** | The second stage after the mask ROM. It sets clocks and starts the app or the update loader. |
-| **SYSVDD / VDC14** | The core-and-SRAM supply and the rail it is regulated from. See [[Clocks and Power]]. |
+| **SYSVDD / VDC14** | The core-and-SRAM supply and the rail it is regulated from. See [Clocks and Power](Clocks-and-Power.md). |
 | **UFW** | JieLi's update container inside a `.fwsc`. |
 | **UPDATA_PARM** | The 112-byte update record (RAM `0x01C7FD88` and flash) that makes the bootloader start the staged loader. |
 | **USB_KEY** | A 16-bit signal on USB D+/D− at power-on that forces the mask ROM into download mode. |
@@ -30,3 +30,7 @@
 | **VM** | JieLi's key/value config store region in flash. |
 | **XIP** | Execute in place: running code directly from flash through the cache. |
 | **Xrun / dropout** | A block of audio not ready in time; heard as a click or a gap. |
+
+---
+
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)

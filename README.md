@@ -1,42 +1,58 @@
-# FM-1 Firmware Developers' Wiki (source)
+# FM-1 Firmware Developers' Wiki
 
-The pages of an unofficial community wiki for M-VAVE FM-1 / SMK-37 firmware developers, written as a
-GitHub Wiki: flat `Page-Name.md` files, `Home.md`, `_Sidebar.md`, `_Footer.md`, links as `[[Page Name]]`.
+An unofficial, community-written reference for people writing custom firmware for the M-VAVE FM-1 and SMK-37
+(JieLi AC79 chip): the hardware, the boot chain and package format, installing and recovering, and how to write
+firmware that runs well on it. Not affiliated with, endorsed by or supported by M-VAVE or JieLi.
 
-This README and `REPORT.txt` are not wiki pages: don't copy them into the wiki.
+Every technical fact is tagged with where it comes from: **[HW]** measured on a unit, **[SDK]** JieLi's SDK,
+**[RE]** reverse engineering, **[CODE]** used by working firmware, **[?]** unverified. Start at
+[Home](docs/Home.md).
 
-## Publishing it as a GitHub Wiki
+## Contents
 
-1. Create (or pick) a repository on GitHub, e.g. `fm1-dev-wiki`. In its Settings, make sure **Wikis** is enabled.
-2. Create the wiki's first page in the browser (any text). GitHub only creates the wiki's git repository then.
-3. Clone the wiki repository, copy the pages in, and push:
+**Start**
+- [Getting Started](docs/Getting-Started.md)
+- [Choosing a Base](docs/Choosing-a-Base.md)
+- [Recovery](docs/Recovery.md)
 
-   ```sh
-   git clone https://github.com/<owner>/<repo>.wiki.git
-   cd <repo>.wiki
-   rsync -av --exclude README.md --exclude REPORT.txt --exclude .git /path/to/fm1-wiki/ ./
-   git add -A
-   git commit -m "Initial pages"
-   git push
-   ```
+**Hardware**
+- [Hardware Overview](docs/Hardware-Overview.md)
+- [Memory Map](docs/Memory-Map.md)
+- [Clocks and Power](docs/Clocks-and-Power.md)
+- [Pinout](docs/Pinout.md)
+- [Audio Output](docs/Audio-Output.md)
+- [Display](docs/Display.md)
+- [Controls](docs/Controls.md)
+- [MIDI and USB](docs/MIDI-and-USB.md)
+- [SMK-37](docs/SMK-37.md)
 
-4. Check Home, the sidebar and a few `[[links]]` in the browser.
+**Boot and install**
+- [Boot Chain and Bootloaders](docs/Boot-Chain-and-Bootloaders.md)
+- [Firmware Package Format](docs/Firmware-Package-Format.md)
+- [Update Protocol and Installers](docs/Update-Protocol-and-Installers.md)
+- [Flash Storage](docs/Flash-Storage.md)
 
-GitHub turns `[[Page Name]]` into a link to `Page-Name`. File names use hyphens for spaces.
+**Writing firmware**
+- [Programming Guide](docs/Programming-Guide.md)
+- [Performance](docs/Performance.md)
+- [Second Core](docs/Second-Core.md)
+- [Debugging](docs/Debugging.md)
+- [Simulators and Emulators](docs/Simulators-and-Emulators.md)
 
-## Alternative: pages in a normal repository
+**Community**
+- [Known Projects](docs/Known-Projects.md)
+- [Tools](docs/Tools.md)
+- [Open Questions](docs/Open-Questions.md)
+- [Glossary](docs/Glossary.md)
+- [Contributing](docs/Contributing.md)
+- [License](docs/License.md)
 
-If you'd rather take pull requests with review (wikis can't), keep these files in a normal repository's `docs/`
-folder and convert `[[Page Name]]` to `[Page Name](Page-Name.md)` links:
+## Contributing
 
-```sh
-python3 -c 'import re,glob
-for f in glob.glob("*.md"):
-    s=open(f).read()
-    s=re.sub(r"\[\[([^\]|]+)\]\]", lambda m: "[%s](%s.md)" % (m[1], m[1].replace(" ", "-")), s)
-    open(f,"w").write(s)'
-```
+Corrections and new findings are welcome as pull requests. Please read [Contributing](docs/Contributing.md)
+first: a wrong fact, once written down, gets copied, so each one needs its source and its tag.
 
 ## Licence
 
-Text: CC BY-SA 4.0. Code excerpts keep their own licences. See `License.md`.
+Text: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). New code sketches: CC0. Excerpts from other
+projects keep their own licences. See [License](docs/License.md).

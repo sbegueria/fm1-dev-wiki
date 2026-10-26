@@ -2,9 +2,9 @@
 
 From nothing to your own firmware running on an FM-1. This page follows the Felucca-family toolchain, which most
 open firmwares use. M-VAVE's own open kit ([FM1 Open](https://github.com/m-vave/fm1_open)) uses a different,
-Windows-only build; see [[Choosing a Base]].
+Windows-only build; see [Choosing a Base](Choosing-a-Base.md).
 
-> Before your first install, read [[Recovery]] and make a full flash backup with
+> Before your first install, read [Recovery](Recovery.md) and make a full flash backup with
 > [M-Flasher](https://github.com/jvitkauskas/m-flasher). It takes a minute and it is your way back.
 
 ## 1. What you need
@@ -43,7 +43,7 @@ October 2026). Watch that project if you need a toolchain you can audit.
 ## 2. Pick a starting point
 
 Don't start from an empty file. The hard parts (start-up, the audio interrupt, USB-MIDI, the update path, a crash
-screen) are done and tested in several bases. [[Choosing a Base]] compares them.
+screen) are done and tested in several bases. [Choosing a Base](Choosing-a-Base.md) compares them.
 
 The smallest documented starting points:
 - [Dinghy](https://github.com/zvenson/dinghy) (GPL-3.0): "the plumbing done and documented", with a four-voice sine.
@@ -54,11 +54,11 @@ The smallest documented starting points:
 
 Each base has its own build command; read its BUILDING or README. What a good build does, whichever base:
 
-- compiles with the FPU on: `-mcpu=r3 -mfprev1` (see [[Performance]]);
+- compiles with the FPU on: `-mcpu=r3 -mfprev1` (see [Performance](Performance.md));
 - links at the address the boot chain jumps to, `0x02000120` **[CODE]**;
 - checks the image: its size against the app slot, that no `double` crept in (the FPU is single precision),
   that code which runs with the flash off calls nothing in flash;
-- wraps the app and an update loader into a `.fwsc` package ([[Firmware Package Format]]).
+- wraps the app and an update loader into a `.fwsc` package ([Firmware Package Format](Firmware-Package-Format.md)).
 
 If your build prints a check as failed, **do not install the package it leaves behind.** Some scripts leave the
 previous package in place when a check fails. Compare the package's hash or a build stamp before installing.
@@ -66,23 +66,23 @@ previous package in place when a check fails. Compare the package's hash or a bu
 ## 4. First install
 
 Most open firmwares install over USB-MIDI with the same protocol M-VAVE's updater uses
-([[Update Protocol and Installers]]):
+([Update Protocol and Installers](Update-Protocol-and-Installers.md)):
 
 - from a browser (Chrome or Edge, Web MIDI with SysEx), on the project's install page; or
 - from the command line, e.g. `python3 tools/fm1_install.py build/app.fwsc` in Felucca-family trees.
 
 **If the unit runs M-VAVE's FM1 Open firmware**, many installers refuse or fail: put M-VAVE's stock firmware (V15)
-back first ([[Update Protocol and Installers]]).
+back first ([Update Protocol and Installers](Update-Protocol-and-Installers.md)).
 
 ## 5. When something goes wrong
 
-- The unit shows a crash screen: read the PC address on it, then [[Debugging]].
-- The unit doesn't start: [[Recovery]].
-- The sound clicks or drops out: [[Performance]].
+- The unit shows a crash screen: read the PC address on it, then [Debugging](Debugging.md).
+- The unit doesn't start: [Recovery](Recovery.md).
+- The sound clicks or drops out: [Performance](Performance.md).
 
 ## Next
 
-[[Hardware Overview]] · [[Programming Guide]] · [[Simulators and Emulators]]
+[Hardware Overview](Hardware-Overview.md) · [Programming Guide](Programming-Guide.md) · [Simulators and Emulators](Simulators-and-Emulators.md)
 
 ## Sources
 
@@ -91,3 +91,7 @@ back first ([[Update Protocol and Installers]]).
 - [m-bootloader](https://github.com/jvitkauskas/m-bootloader) (toolchain pin), [pi32v2-isa](https://github.com/jvitkauskas/pi32v2-isa).
 - [JieLi AC79 SDK](https://gitee.com/Jieli-Tech/fw-AC79_AIoT_SDK) and its
   [documentation](https://doc.zh-jieli.com/AC79/zh-cn/master/index.html) (Chinese).
+
+---
+
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)

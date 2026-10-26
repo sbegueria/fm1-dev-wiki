@@ -21,7 +21,7 @@ as of October 2026; check them again, these projects move fast.
 ([felucca-bsp README](https://github.com/hugelton/felucca-bsp)). MPL-2.0 files (felucca-bsp, fm1-base) can be part
 of a GPL work and stay MPL file by file. To link JieLi's closed Bluetooth or WiFi libraries, fm1-base's notes say
 the firmware has to have no GPL file in it at all ([fm1-base DESIGN.md](https://github.com/charlesvestal/fm1-base/blob/main/DESIGN.md)).
-FM1 Open's app links a binary engine under a linking exception. Read [[License]] and each project's LICENSE
+FM1 Open's app links a binary engine under a linking exception. Read [License](License.md) and each project's LICENSE
 before you mix code.
 
 **Shared fixes.** A private copy of Felucca's platform stops getting fixes the day you copy it. Since early
@@ -31,7 +31,7 @@ compare it with felucca-bsp now and then. fm1-base ships a Claude skill, `felucc
 Felucca-based firmware onto it and keeps the firmware's GPL.
 
 **Simulator.** fm1-base, Felucca-family trees and others build the same app for the computer, so you can test
-without flashing. This matters more than it seems: see [[Simulators and Emulators]].
+without flashing. This matters more than it seems: see [Simulators and Emulators](Simulators-and-Emulators.md).
 
 **RTOS or bare metal.** Felucca-family firmwares are bare metal: the audio renders in an interrupt and the UI runs
 in a main loop. fm1-nes and FM1 Open run on JieLi's SDK (a FreeRTOS-derived kernel, per
@@ -43,9 +43,13 @@ Both have shipped firmware.
 Felucca family's `build.py` is shared lineage, not something to reinvent. If you start fresh, pick what you and
 your contributors can maintain.
 
-**The SMK-37.** If you want your firmware on the SMK-37 too, see [[SMK-37]] before you design your UI.
+**The SMK-37.** If you want your firmware on the SMK-37 too, see [SMK-37](SMK-37.md) before you design your UI.
 
 ## Sources
 
 READMEs of each project linked above (October 2026);
 [the r/MVaveFM1 thread](https://www.reddit.com/r/MVaveFM1/comments/1xe8c9x/all_right_stop_collaborate_and_listen/).
+
+---
+
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)

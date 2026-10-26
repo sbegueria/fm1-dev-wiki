@@ -67,7 +67,7 @@ Felucca-family `fm1_rescue` accepts only that exact file, by SHA-256
 
 - Don't write the boot area (`[0, 0x4000)`) unless you are installing a bootloader with a tool made for it.
 - Don't copy another unit's flash wholesale: the areas above `0x93000` can hold unit data (on the SMK-37,
-  factory calibration). See [[Flash Storage]].
+  factory calibration). See [Flash Storage](Flash-Storage.md).
 - Don't connect VBUS from a dongle to the FM-1.
 
 ## Sources
@@ -78,3 +78,7 @@ Felucca-family `fm1_rescue` accepts only that exact file, by SHA-256
   [MvaveFM1Unbricker](https://github.com/Quixotic7/MvaveFM1Unbricker).
 - Felucca-family `tools/fm1_rescue.py`, `tools/fm1_rescue.sh` (GPL-3.0-only).
 - [awesome-fm-1](https://github.com/cicloid/awesome-fm-1), "Firmware update and recovery".
+
+---
+
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)

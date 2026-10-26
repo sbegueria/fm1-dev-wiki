@@ -51,7 +51,7 @@ the erase must:
 - touch only registers, the stack and RAM buffers: **no constants in flash, no library calls, no helper functions
   in flash**;
 - run with **interrupts off** (an interrupt handler in flash would fetch from the flash);
-- be called through a far pointer ([[Memory Map]]).
+- be called through a far pointer ([Memory Map](Memory-Map.md)).
 
 Felucca's build checks that `.ram_text` contains no `call`. Its sequence follows the SDK's flash driver
 (`enter_spi_code`, `norflash_erase`, `norflash_wait_ok`, `exit_spi_code`).
@@ -79,3 +79,7 @@ much the XIP window maps is unknown (felucca-bsp `docs/EXPERIMENTAL.md`). **[?]*
 - [FM-1-RE architecture](https://github.com/AL-255/FM-1-RE/blob/main/docs/architecture.md) §2.
 - Felucca's `src/storage.c`, `hal/fm1_flash.h`, `hal/fm1_xip.h` (GPL-3.0-only).
 - [fm1-base README](https://github.com/charlesvestal/fm1-base); [felucca-bsp EXPERIMENTAL.md](https://github.com/hugelton/felucca-bsp/blob/main/docs/EXPERIMENTAL.md).
+
+---
+
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)

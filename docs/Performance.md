@@ -7,12 +7,12 @@ few heavy blocks, not from a high average. This page collects what is known abou
 
 - **Time each block** with TIMER4 (24 MHz crystal, independent of the CPU clock): load = block time / block period.
 - **Keep the peak** of a window (e.g. the heaviest block of each ~2 s), not only a running mean.
-- **Count dropouts:** after rendering, check whether the DMA's free half changed ([[Audio Output]]).
+- **Count dropouts:** after rendering, check whether the DMA's free half changed ([Audio Output](Audio-Output.md)).
 - **Time stages inside the render** (voices, effects, mix) the same way, and show the heaviest block's breakdown.
   Show it on the device: a computer's profile does not predict the device's (below).
 - **Show the build stamp** on the same screen, so you know which build you measured.
 
-The core's own cycle counter may not run (see [[Clocks and Power]]); TIMER4 always does.
+The core's own cycle counter may not run (see [Clocks and Power](Clocks-and-Power.md)); TIMER4 always does.
 
 ## Flash, XIP and the instruction cache
 
@@ -34,7 +34,7 @@ by default.
 
 **[?]** The I-cache size and layout. Notes in DUB-1 give 32 KB, 8 ways × 4 KB, 32-byte lines; the SDK defines a
 32-byte line (`CACHE_LINE_COUNT 32`) and has per-way registers (`ICACHE_WAY`, `DCACHE_WAY`); m-bootloader clears
-cache arrays at `0x01F00000`… when it invalidates. Nobody has published a measurement. See [[Open Questions]].
+cache arrays at `0x01F00000`… when it invalidates. Nobody has published a measurement. See [Open Questions](Open-Questions.md).
 
 ### Putting hot code in RAM
 
@@ -45,8 +45,8 @@ cache arrays at `0x01F00000`… when it invalidates. Nobody has published a meas
 2. Mark hot functions with `__attribute__((section(".fast_text")))`, or put whole object files' `.text` there in
    the linker script and mark the cold ones to stay in flash.
 3. Copy the section at start-up, with `.data`, before anything calls it.
-4. Open the PC-limit guard over the region, or the guard faults on the first fetch ([[Debugging]]).
-5. Calls between flash and RAM need far calls ([[Memory Map]]). Calls inside the region are short.
+4. Open the PC-limit guard over the region, or the guard faults on the first fetch ([Debugging](Debugging.md)).
+5. Calls between flash and RAM need far calls ([Memory Map](Memory-Map.md)). Calls inside the region are short.
 6. Jump tables and constant tables stay in flash unless you move them too (`-fno-jump-tables`; tables `const` in
    a RAM data section).
 7. Make the build check the region's size and the pool's headroom.
@@ -106,7 +106,7 @@ shorter tail, while the load is high. Users hear a thinner sound rather than a c
 
 ## The second core
 
-Two cores could roughly double the headroom, with caveats: [[Second Core]].
+Two cores could roughly double the headroom, with caveats: [Second Core](Second-Core.md).
 
 ## Sources
 
@@ -116,3 +116,7 @@ Two cores could roughly double the headroom, with caveats: [[Second Core]].
 - JieLi AC79 SDK `include_lib/driver/cpu/wl82/asm/cache.h`, `csfr.h`.
 - DUB-1's CPU notes (October 2026) and Felucca's `tools/build.py` checks (GPL-3.0-only).
 - [fm1-base](https://github.com/charlesvestal/fm1-base) commit history.
+
+---
+
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)

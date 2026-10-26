@@ -46,4 +46,8 @@ Many firmwares document hardware lessons in their own docs. Some that have shape
 - [DUB-1](https://github.com/sbegueria/fm1-dub): CPU-load notes on XIP and the cache, clock registers on a
   settings page.
 
-Add yours: see [[Contributing]].
+Add yours: see [Contributing](Contributing.md).
+
+---
+
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)

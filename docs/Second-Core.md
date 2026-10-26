@@ -22,12 +22,12 @@ From felucca-bsp's [EXPERIMENTAL.md](https://github.com/hugelton/felucca-bsp/blo
   without a crash.
 - **[HW]** The core supply matters: "at the boot loader's [voltages], under load (both cores, or WiFi …), some
   units read flash and SRAM wrong" (felucca-bsp `chip/fm1_sys.h`). Raise VDC14 and SYSVDD to M-VAVE's levels
-  before starting core 1 ([[Clocks and Power]]).
+  before starting core 1 ([Clocks and Power](Clocks-and-Power.md)).
 - felucca-bsp's own copy of this code is **beta**: "this version not yet on a device". fm1-base turns it on with
   `cpu2 = true`.
 
 Other firmwares that describe themselves as dual-core include SLOOP (both cores, per pi32v2-isa's table) and
-GammaWave. See [[Known Projects]].
+GammaWave. See [Known Projects](Known-Projects.md).
 
 ## Design advice
 
@@ -42,7 +42,7 @@ GammaWave. See [[Known Projects]].
 - **A UI on core 1** is another option: less DSP freed, but the audio core's cache no longer has the UI's code
   pushed through it between blocks.
 - **Flash contention:** both cores fetching from XIP share the flash. Code that core 0 needs at a deadline should
-  be in SRAM ([[Performance]]).
+  be in SRAM ([Performance](Performance.md)).
 
 ## How to test stability
 
@@ -65,3 +65,7 @@ two cores … I went without it. It paid off." Both approaches have shipped.
 - [r/MVaveFM1 thread](https://www.reddit.com/r/MVaveFM1/comments/1xe8c9x/all_right_stop_collaborate_and_listen/).
 - JieLi AC79 SDK `README.md`, `include_lib/driver/cpu/wl82/asm/cpu.h`.
 - [fm1-base DESIGN.md](https://github.com/charlesvestal/fm1-base/blob/main/DESIGN.md) (which firmwares use `plat_cpu2_*`).
+
+---
+
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)

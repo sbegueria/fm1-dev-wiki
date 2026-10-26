@@ -15,7 +15,7 @@ least significant bit first. The checksum is the complement of the byte sum over
 **The device pulls the package; the host only answers.** **[RE] [CODE]**
 
 1. **Handshake.** The host asks for the identity (cmd `0x11`); the device answers with a string like `FM-1_900`
-   (model, underscore, version). The installer checks the model against the package's ([[Firmware Package Format]]).
+   (model, underscore, version). The installer checks the model against the package's ([Firmware Package Format](Firmware-Package-Format.md)).
 2. **Upgrade.** The host sends `F0 22 24 35 7F F7`.
 3. **Step 1, the running firmware.** It asks for parts of the package with read requests (cmd `0x30`: an address
    in the logical image and a length, up to 512 bytes), checks them, and **stages the package's update loader**
@@ -37,7 +37,7 @@ To be installable by the community's installers, a firmware should:
 - answer the identity handshake and the upgrade message;
 - run step 1 itself, or hand over to a loader that does (Felucca's `ota.c` takes hooks from the app: send a
   SysEx, get the next SysEx, time, idle, flash erase/program/read, show progress, commit);
-- answer the soft key `F0 22 24 35 7D F7` with download mode ([[MIDI and USB]]);
+- answer the soft key `F0 22 24 35 7D F7` with download mode ([MIDI and USB](MIDI-and-USB.md));
 - offer an update mode from the keys, in case its UI is broken (Felucca: OCT− + OCT+ for 5 s; fm1-base: REC at
   power-on).
 
@@ -51,7 +51,7 @@ To be installable by the community's installers, a firmware should:
 | [fm1-linux-update](https://github.com/fuleo/fm1-linux-update) | Linux | stock V14 → V15 |
 | [FM1Kit](https://github.com/ocean/FM1Kit) | iOS, macOS (Swift) | not widely tested (its README) |
 | [Slipway](https://github.com/Discodave-Glitch/slipway) | Windows | lists firmwares, keeps stock V15 as the way back |
-| [M-Flasher](https://github.com/jvitkauskas/m-flasher) | Windows, macOS, Linux | not this protocol: writes through download mode ([[Recovery]]) |
+| [M-Flasher](https://github.com/jvitkauskas/m-flasher) | Windows, macOS, Linux | not this protocol: writes through download mode ([Recovery](Recovery.md)) |
 
 ## Known problems
 
@@ -77,3 +77,7 @@ automatic reconnect. The cause (a USB drop, the loader's poll falling behind) is
 - [m-bootloader](https://github.com/jvitkauskas/m-bootloader) README (M-UPGRADE behaviour).
 - [fm1-base](https://github.com/charlesvestal/fm1-base) (`tools/fm1_install.py`, `web/installer.html`),
   [felucca-bsp](https://github.com/hugelton/felucca-bsp) commit history.
+
+---
+
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)

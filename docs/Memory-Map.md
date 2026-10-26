@@ -1,6 +1,6 @@
 # Memory Map
 
-Addresses as the CPU sees them. See [[Flash Storage]] for the flash's own layout.
+Addresses as the CPU sees them. See [Flash Storage](Flash-Storage.md) for the flash's own layout.
 
 ## CPU address space
 
@@ -22,7 +22,7 @@ Addresses as the CPU sees them. See [[Flash Storage]] for the flash's own layout
 **A disagreement on the XIP offset.** Felucca-family code maps flash offset `0x4120` (where `app.bin` starts) to
 `0x02000120`. FM-1-RE's architecture notes write the mapping as `flash_offset − 0x4120 + 0x02000000` and put the
 stock app's vectors at `0x020000A0`. Working firmware proves the first for open firmwares. Whether the stock
-image is linked differently, or the note is off by the 0x120-byte header, is in [[Open Questions]]. **[?]**
+image is linked differently, or the note is off by the 0x120-byte header, is in [Open Questions](Open-Questions.md). **[?]**
 | `0x04000000` | External RAM window. **Absent on the FM-1.** | [SDK] [RE] |
 
 ## One firmware's RAM layout (example)
@@ -44,9 +44,9 @@ MEMORY
 Points to know:
 - **The app slot is `0x8DFBC` bytes** (581,564). The package builder refuses a bigger image. **[CODE]**
 - **Any SRAM can hold code.** The "(rw)" on the pool is only a linker label. M-VAVE's own open firmware marks its
-  render functions to run from SRAM. See [[Performance]]. **[CODE] [HW]**
+  render functions to run from SRAM. See [Performance](Performance.md). **[CODE] [HW]**
 - **Stacks** sit high in RAM with guard bands under them; Felucca's hardware guards fault on a write into a band.
-  See [[Debugging]]. **[CODE]**
+  See [Debugging](Debugging.md). **[CODE]**
 - **Leave `0x01C7FD50` and up alone** until your vectors are set up. The bootloader passes boot info there, and
   the update path writes its record at `0x01C7FD88` (112 bytes). Writing `usb_update_mode\0` at `0x01C7FD80`
   and resetting enters the mask ROM's download mode. **[CODE] [HW]**
@@ -74,3 +74,7 @@ section contains no `call` instruction.
 - [FM-1-RE architecture](https://github.com/AL-255/FM-1-RE/blob/main/docs/architecture.md) §2.
 - Felucca's `firmware/app.ld`, `hal/fm1_xip.h`, `hal/fm1_flash.h`, `hal/fm1_sys.h` (GPL-3.0-only).
 - [fm1-base README](https://github.com/charlesvestal/fm1-base), "What each costs".
+
+---
+
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)

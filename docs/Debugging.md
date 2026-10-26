@@ -25,7 +25,7 @@ which ELF a report belongs to.
 | Bus-invalid | fetch, read or write of unmapped space (the NULL page, writes into XIP) |
 | PC limit | instruction fetch outside the code's range (two windows: flash, and RAM code) |
 
-If you add code in RAM, widen the PC-limit window, or the guard faults on the first fetch ([[Performance]]).
+If you add code in RAM, widen the PC-limit window, or the guard faults on the first fetch ([Performance](Performance.md)).
 
 ## Survive a crash loop
 
@@ -39,11 +39,11 @@ whether it was the watchdog.
 ## On-screen meters
 
 Show, on a debug or settings page:
-- the audio load: now and the peak of the last ~2 s ([[Performance]]);
+- the audio load: now and the peak of the last ~2 s ([Performance](Performance.md));
 - the dropout count;
-- the clock (from its registers, [[Clocks and Power]]) and the build stamp;
+- the clock (from its registers, [Clocks and Power](Clocks-and-Power.md)) and the build stamp;
 - per-stage timing of the heaviest block, if you have it;
-- second-core job errors, if you use it ([[Second Core]]).
+- second-core job errors, if you use it ([Second Core](Second-Core.md)).
 
 Put a dark, semi-transparent panel behind debug text if it sits over an animation: you want to keep the
 animation running (it is part of the load you are measuring) and still read the numbers.
@@ -73,3 +73,7 @@ Restrict register peeks to known ranges: a read of a gated peripheral block can 
 - Felucca's `hal/fm1_irq.h`, `fm1_guard.h`, `fm1_sys.h`, `fm1_debug.h`, `src/usb.c`, and its derivatives' main loops (GPL-3.0-only).
 - [fm1-base README](https://github.com/charlesvestal/fm1-base) ("Development over USB").
 - [FM-1 Transporter](https://github.com/kurogedelic/FM-1-transporter).
+
+---
+
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)

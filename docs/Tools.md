@@ -15,7 +15,7 @@ current state.
 
 | Tool | Notes |
 | --- | --- |
-| `fm1pkg.py` / `fm1pkg_make.py` (felucca-bsp, Felucca) | builds a `.fwsc` from an app and a loader ([[Firmware Package Format]]) |
+| `fm1pkg.py` / `fm1pkg_make.py` (felucca-bsp, Felucca) | builds a `.fwsc` from an app and a loader ([Firmware Package Format](Firmware-Package-Format.md)) |
 | `fm1_install.py` (felucca-bsp, Felucca, fm1-base) | USB-MIDI installer; `--info` reads the identity |
 | Web installers (Felucca family, fm1-base) | Chrome/Edge, Web MIDI with SysEx |
 | M-UPGRADE (M-VAVE) | official updater, Windows/macOS |
@@ -44,4 +44,8 @@ current state.
 | `fm1_remote.py` (fm1-base) | drive the panel and read the screen over USB |
 | [jl-misctools](https://github.com/kagaimiq/jl-misctools) | JieLi containers and key files |
 | Ghidra + [ghidra-jieli](https://github.com/kagaimiq/ghidra-jieli) | disassemble stock firmware |
-| Emulators | see [[Simulators and Emulators]] |
+| Emulators | see [Simulators and Emulators](Simulators-and-Emulators.md) |
+
+---
+
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)

@@ -4,7 +4,7 @@
 | --- | --- | --- |
 | Panel | 240×240, ST7789-class controller, RGB565, high byte first, origin (0,0), no row offset | [HW] |
 | Bus | SPI1 (registers at `0x11D00`), write only; CLK PC9, MOSI PC10, CS PC7 (active low), D/C PC8 | [HW] |
-| Backlight | PA2, active low. PA2 also enables the key matrix ([[Pinout]]). | [HW] |
+| Backlight | PA2, active low. PA2 also enables the key matrix ([Pinout](Pinout.md)). | [HW] |
 | Tearing line (TE) | **None** on the FM-1 | [CODE] |
 
 ## Commands
@@ -24,7 +24,7 @@ on (m-bootloader SPEC §8.4). **[HW]**
 | 0 | 60 MHz nominal (~44 MHz effective, measured) | Used by several firmwares. ST7789 parts are rated to about 62 MHz. |
 
 Under m-bootloader's 320 MHz clock the LSB drops to 53 MHz, so every SPI speed drops by 11% unless you reset the
-clock ([[Clocks and Power]]).
+clock ([Clocks and Power](Clocks-and-Power.md)).
 
 ## Drawing without tearing (as far as anyone got)
 
@@ -40,9 +40,13 @@ With no TE line, you can't sync to the panel's refresh in hardware. Notes from F
 
 On a single-core firmware, drawing runs between audio interrupts. Big clears, fonts read from flash and
 full-screen redraws can push the audio code out of the instruction cache, so a heavy screen can cause audio
-peaks. Measure the audio load with your busiest screen showing. See [[Performance]].
+peaks. Measure the audio load with your busiest screen showing. See [Performance](Performance.md).
 
 ## Sources
 
 - [m-bootloader SPEC.md](https://github.com/jvitkauskas/m-bootloader/blob/main/docs/SPEC.md) §2.2, §8.4.
 - Felucca's `hal/fm1_lcd_hw.h` and `src/lcd.c` (GPL-3.0-only), with the SPI speed notes from DUB-1's copy.
+
+---
+
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)

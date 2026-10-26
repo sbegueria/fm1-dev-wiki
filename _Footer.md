@@ -1,1 +1,0 @@
-Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([[License]]). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [[Home]]. Found an error? See [[Contributing]].

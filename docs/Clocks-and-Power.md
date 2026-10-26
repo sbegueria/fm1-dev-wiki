@@ -38,7 +38,7 @@ independently on another unit by DUB-1's Setup page in October 2026):
   Timing a fixed loop against TIMER4 (24 MHz, from the crystal) gives the clock without trusting any register.
 - **[HW] [?]** The core's cycle counter (`C0_TL_CKCNT`, `0x01EEE218`) did **not** move on at least one FM-1 under
   the stock bootloader (DUB-1, October 2026), so a measurement based on it returned nothing. fm1-base offers
-  cycle-counter calls for profiling. Whether the counter needs enabling first is in [[Open Questions]].
+  cycle-counter calls for profiling. Whether the counter needs enabling first is in [Open Questions](Open-Questions.md).
 
 ### Going faster
 
@@ -52,7 +52,7 @@ settings (360 MHz, its voltages) and assume they're fine until you have a reason
 | --- | --- | --- |
 | TIMER4 (`0x10800`) | Free-running from the 24 MHz crystal, period `0xFFFFFFFF`: the time base. Wraps every 178.9 s; use unsigned differences. Not used by the ROM or the first-stage loader. | [CODE] |
 | TIMER5 (`0x10900`) | 10 kHz system tick: key-matrix scan, USB poll (2 kHz), ms counter. IRQ 63. | [CODE] |
-| ALNK0 (I2S) | The audio interrupt: one per half buffer. See [[Audio Output]]. | [CODE] |
+| ALNK0 (I2S) | The audio interrupt: one per half buffer. See [Audio Output](Audio-Output.md). | [CODE] |
 
 TIMER4 runs from the crystal, so it keeps true time whatever the CPU clock is. That makes it the right reference
 for a CPU-load meter.
@@ -95,3 +95,7 @@ chip (Felucca's `hal/fm1_adc.h`, from `isd_config`). **[CODE]** fm1-base has `pl
 - JieLi AC79 SDK `README.md`.
 - Felucca's `hal/fm1_time.h`, `fm1_timer.h`, `fm1_adc.h` (GPL-3.0-only).
 - [fm1-x0x#21](https://github.com/charlesvestal/fm1-x0x/issues/21) (voltages, cited by felucca-bsp).
+
+---
+
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)

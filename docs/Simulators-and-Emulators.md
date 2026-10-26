@@ -19,7 +19,7 @@ library on both, and `-ffp-contract=off` on both (no fused multiply-add).
 
 **It does not tell you the device's timing.** A host profile does not predict which blocks are heavy on the FM-1:
 code layout, the cache and flash fetches decide that. One firmware's heaviest piece on the device was among the
-lightest on the host (DUB-1, October 2026). Measure on the device ([[Performance]]).
+lightest on the host (DUB-1, October 2026). Measure on the device ([Performance](Performance.md)).
 
 ## Browser emulators of the app
 
@@ -43,3 +43,7 @@ How closely they model timing, the cache and the flash is described in each proj
 
 - Each project's README (October 2026); [awesome-fm-1](https://github.com/cicloid/awesome-fm-1).
 - Felucca-family `host/` simulators and `web/emu/`; [fm1-base DESIGN.md](https://github.com/charlesvestal/fm1-base/blob/main/DESIGN.md).
+
+---
+
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)

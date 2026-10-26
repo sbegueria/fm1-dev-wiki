@@ -4,7 +4,7 @@ What each pin of the AC791N does on the FM-1, from working drivers. "Port" regis
 `0x50000 + 0x40 × port` (A=0, B=1, C=2, H=7) with `OUT +0`, `IN +4`, `DIR +8` (1 = input), `DIE +0xC` (digital
 input enable), `PU +0x10`, `PD +0x14`, `HD0 +0x18`, `HD +0x1C`. **[SDK] [CODE]**
 
-SMK-37 wiring differs: see [[SMK-37]].
+SMK-37 wiring differs: see [SMK-37](SMK-37.md).
 
 | Pin | Function | Notes | Tag |
 | --- | --- | --- | --- |
@@ -25,7 +25,7 @@ SMK-37 wiring differs: see [[SMK-37]].
 | PC10 | LCD SPI data out | | [CODE] [HW] |
 | PH6, PH9 | LED lines | | [CODE] [HW] |
 | PH8 | TRS MIDI in → UART1 RX | 31250 baud, through input channel 1 | [CODE] |
-| USB D+/D− | USB0 full-speed device | also the USB_KEY recovery signal ([[Recovery]]) | [HW] |
+| USB D+/D− | USB0 full-speed device | also the USB_KEY recovery signal ([Recovery](Recovery.md)) | [HW] |
 
 ## The key matrix and PA2
 
@@ -64,3 +64,7 @@ Allow ~10 µs after selecting a column before reading the rows. **[CODE] [HW]**
   GPL-3.0-only, © Leo Kuroshita), as in DUB-1.
 - [m-bootloader SPEC.md](https://github.com/jvitkauskas/m-bootloader/blob/main/docs/SPEC.md) §2.2, §8.2, §8.4.
 - [felucca-bsp](https://github.com/hugelton/felucca-bsp) `boards/fm1/`.
+
+---
+
+Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Contents](../README.md)
