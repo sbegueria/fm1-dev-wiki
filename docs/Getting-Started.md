@@ -42,6 +42,40 @@ git clone --depth 1 --branch AC79NN_SDK_V1.2.1_2023-12-13 \
 
 Some build scripts check these three files by SHA-256, so a package made from another SDK version is noticed.
 
+**[CODE]** The hashes pinned by mvave-fm1's build container (`docker/vendor/README.md`, which says they are the
+Optimist project's); Dinghy's `tools/build.py` checks the same three SDK hashes:
+
+| File | SHA-256 |
+| --- | --- |
+| `jieli-linux-toolchains-20250324.1.tar.xz` | `f686586bcfb45e0f0bb27fd2b39c7a7f313cb4f0e88a66a14da621ffa8225958` |
+| `uboot.boot` | `4e3b4c220dc96641cb5a723f41e68ce41d5261ae9434bb33fbd7f2c59976ded4` |
+| `cfg_tool.bin` | `276579954f076886a6a7694f65dc71c034a63a2c204b76749065c0ac7b010d1b` |
+| `cfg/eq_cfg_hw.bin` | `41167491bffed4651750719c973d2758adeb9021a5670d02d6a53c85ed80ea7d` |
+
+The same toolchain archive is also served from `https://jl-update.oss-cn-shenzhen.aliyuncs.com/jieli-linux-toolchains-20250324.1.tar.xz`.
+**JieLi's hosts geo-block some regions:** from one developer's network `pkgman.jieliapp.com` answered "Connection
+denied by Geolocation" and Gitee and Aliyun failed (mvave-fm1, 2026-10-22). Download the files on another
+machine, check the hashes, and copy them over. Don't turn off certificate checks to get round it.
+
+### Building in a container
+
+If you don't want JieLi's toolchain on your computer, or you are on macOS or Windows,
+[mvave-fm1](https://github.com/maxfridbe/mvave-fm1) (MIT) has a podman image (Debian bookworm, the toolchain, the
+three SDK files, Python with Pillow) and a script, `mvave-build.sh`, that builds Felucca-family firmwares unchanged:
+
+```sh
+./mvave-build.sh fetch-vendor        # toolchain + SDK files into docker/vendor/, hash-checked
+./mvave-build.sh image
+./mvave-build.sh clone dinghy
+./mvave-build.sh run dinghy tests/run_host.sh    # host run: WAV + PNG screens
+./mvave-build.sh build dinghy                    # -> out/dinghy/dinghy.fwsc
+```
+
+**[CODE]** Its CI built Dinghy, Felucca and ORBIT this way (2026-10-22); no container-built package had been
+flashed then. Install from the host, never from inside the container. Its notes say JieLi's licence does not
+allow passing the toolchain on, so keep the image local (don't push it to a registry) **[?]**. Felucca's font
+generation needs Pillow with Raqm (`libraqm0`, `libfribidi0`, `libharfbuzz0b` on Debian).
+
 **An open toolchain is coming.** [pi32v2-isa](https://github.com/jvitkauskas/pi32v2-isa) and its LLVM fork build
 m-bootloader, fm1-base, Felucca and SLOOP with nothing of JieLi's, and the results run on hardware (its README,
 October 2026). Watch that project if you need a toolchain you can audit.
@@ -95,6 +129,8 @@ back first ([Update Protocol and Installers](Update-Protocol-and-Installers.md))
 - Felucca-family build: [Felucca BUILDING.md](https://github.com/hugelton/Felucca/blob/main/BUILDING.md); DUB-1's
   `BUILDING.md`, `tools/get_toolchain.sh`, `tools/build.py` (GPL-3.0).
 - [m-bootloader](https://github.com/jvitkauskas/m-bootloader) (toolchain pin), [pi32v2-isa](https://github.com/jvitkauskas/pi32v2-isa).
+- [mvave-fm1](https://github.com/maxfridbe/mvave-fm1) `docker/vendor/README.md`, `readme/build-container.md`
+  (MIT; hashes from [Optimist](https://github.com/w0ts/optimist)); see [AI Skills](AI-Skills.md).
 - [JieLi AC79 SDK](https://gitee.com/Jieli-Tech/fw-AC79_AIoT_SDK) and its
   [documentation](https://doc.zh-jieli.com/AC79/zh-cn/master/index.html) (Chinese).
 

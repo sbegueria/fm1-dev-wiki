@@ -40,6 +40,25 @@ Felucca's family, as in X0X, AMB-1 and DUB-1 **[CODE]**:
 | `0xDC000` | panel calibration (Felucca's user-preset area) |
 | `0xE0000`… | **the update loader's staging area: never store data here** |
 
+Other Felucca-family firmwares use more of the flash. Dinghy's and Felucca's layout as summarised in mvave-fm1's
+development skill (§3), and TransitFM1's notes **[CODE]**:
+
+| Where | What |
+| --- | --- |
+| `0x97000…0xDFFFF` | songs and sounds (Felucca family), inside the stock VM range |
+| `0xE0000…0xE4FFF` | update-loader staging; the update record's flash copy at `0xE4F00` (TransitFM1, ChoralRoot) |
+| `0xE5000…0xE6FFF` | Felucca's autosave, A/B |
+| `0xE6000` | where **M-VAVE's V15** stages its update loader ([Update Protocol and Installers](Update-Protocol-and-Installers.md)) |
+| `0xE7000` | Felucca's FM6 voice bank |
+| `0xFC000…0xFEFFF` | settings and globals (`SETTINGS_AT = 0xFC000` in Dinghy) |
+
+Note the overlaps (`0xE6000` in two rows): each firmware's map is its own, and a firmware that follows V15 may find
+V15's loader where it keeps data. Never assume a sector is free because your own map says so. **[?]**
+
+**Three address spaces.** A physical flash offset, an offset into the decoded `app.bin` (byte 0 = flash `0x4120`
+in the stock layout) and a CPU address in the XIP window (`0x02000120`) are different numbers for the same byte.
+Never copy an address from another firmware or revision into a write (mvave-fm1 development skill §3).
+
 ## Writing safely: A/B sectors, header last
 
 **[CODE]** Felucca-family storage (`src/storage.c`, GPL-3.0-only) gives every object two 4 KiB sectors. A save
@@ -85,6 +104,8 @@ much the XIP window maps is unknown (felucca-bsp `docs/EXPERIMENTAL.md`). **[?]*
 - [FM-1-RE architecture](https://github.com/AL-255/FM-1-RE/blob/main/docs/architecture.md) §2.
 - Felucca's `src/storage.c`, `hal/fm1_flash.h`, `hal/fm1_xip.h` (GPL-3.0-only).
 - [fm1-base README](https://github.com/charlesvestal/fm1-base); [felucca-bsp EXPERIMENTAL.md](https://github.com/hugelton/felucca-bsp/blob/main/docs/EXPERIMENTAL.md).
+- [mvave-fm1](https://github.com/maxfridbe/mvave-fm1) development skill §3 (MIT); [Dinghy](https://github.com/zvenson/dinghy) (GPL-3.0).
+- [TransitFM1 docs/SAFETY.md](https://github.com/Quixotic7/TransitFM1/blob/main/docs/SAFETY.md) (record at `0xE4F00`; V15's loader at `0xE6000`).
 
 ---
 

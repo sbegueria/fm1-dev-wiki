@@ -33,6 +33,24 @@ SMK-37 wiring differs: see [SMK-37](SMK-37.md).
 | PH8 | TRS MIDI in → UART1 RX | 31250 baud, through input channel 1 | [CODE] |
 | USB D+/D− | USB0 full-speed device | also the USB_KEY recovery signal ([Recovery](Recovery.md)) | [HW] |
 
+## The package pins, from the resource hub
+
+The [FM-1 resource hub](https://github.com/aroum/fm1-custom-fw/blob/main/REVERSE_ENGINEERING.md) (§1.2) maps
+every pin of the 48-pin package, from Felucca-family drivers, board photos, JieLi's AC7911B datasheet and
+reference schematics. Where it goes beyond the drivers, it is **[?]** here until someone checks it on a board:
+
+| Pin(s) | The hub says | Tag |
+| --- | --- | --- |
+| PC0, PC1, PC2, PC6 | I2S MCLK, BCLK, LRCK, and the codec's power/reset line (active high), to an external codec | [?] |
+| DACL (pin 13) | the chip's own DAC, left channel, as an auxiliary line next to the codec | [?] |
+| PD0, PD1, PD4, PD5, PD6 | the internal flash: CS, DI, CLK, DO, and a flash power gate | [?] |
+| PH8 / PH7 | share one package pin; PH7 is UART1 TX on the die, but the TRS jack's input circuit only passes MIDI in | [?] |
+| 74HC595 outputs | 16 outputs, 11 used as columns: **5 spare** outputs on the second register | [CODE] [?] |
+| All 48 pins | in use: no free GPIO pad to solder to | [?] |
+
+The hub also suggests ways to get a MIDI *out* (routing UART1 TX to the USB D+ pin when no computer is attached,
+or to a freed pin through the output crossbar). Nobody has published one working. **[?]**
+
 ## The key matrix and PA2
 
 **[HW]** "PA2 MUST be driven low while the FM-1 matrix is scanned." On the FM-1, PA2 (the backlight enable) also
@@ -70,6 +88,8 @@ Allow ~10 µs after selecting a column before reading the rows. **[CODE] [HW]**
   GPL-3.0-only, © Leo Kuroshita), as in DUB-1.
 - [m-bootloader SPEC.md](https://github.com/jvitkauskas/m-bootloader/blob/main/docs/SPEC.md) §2.2, §8.2, §8.4.
 - [felucca-bsp](https://github.com/hugelton/felucca-bsp) `boards/fm1/`.
+- [FM-1 resource hub REVERSE_ENGINEERING.md](https://github.com/aroum/fm1-custom-fw/blob/main/REVERSE_ENGINEERING.md)
+  §1.2 (commit `d269391`, 2026-10-28; no licence declared, summarised only).
 
 ---
 

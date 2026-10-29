@@ -24,12 +24,13 @@ Addresses as the CPU sees them. See [Flash Storage](Flash-Storage.md) for the fl
 | `0x01F00000`… | Cache internal arrays (the bootloader clears some ranges here to invalidate) | [RE] |
 | `0x02000000`… | Flash XIP window, decrypted and cached. Flash offset `off` (≥ `0x4000`) reads at `0x02000000 + off − 0x4000`. | [CODE] |
 | `0x02000120` | Entry point of every known application image | [CODE] [RE] |
+| `0x04000000` | External RAM window. **Absent on the FM-1** (but see the SDRAM question in [Open Questions](Open-Questions.md)). | [SDK] [RE] |
+| `0xFFC00000`–`0xFFCFFFFF` | The chip's ROM. Dinghy's build refuses any call to, or constant loaded from, this range: a constant that happens to fall in it (`-32767 << 7` = `0xFFC00080`) trips the check too. | [CODE] |
 
 **A disagreement on the XIP offset.** Felucca-family code maps flash offset `0x4120` (where `app.bin` starts) to
 `0x02000120`. FM-1-RE's architecture notes write the mapping as `flash_offset − 0x4120 + 0x02000000` and put the
 stock app's vectors at `0x020000A0`. Working firmware proves the first for open firmwares. Whether the stock
 image is linked differently, or the note is off by the 0x120-byte header, is in [Open Questions](Open-Questions.md). **[?]**
-| `0x04000000` | External RAM window. **Absent on the FM-1.** | [SDK] [RE] |
 
 ## One firmware's RAM layout (example)
 
@@ -56,6 +57,10 @@ Points to know:
 - **Leave `0x01C7FD50` and up alone** until your vectors are set up. The bootloader passes boot info there, and
   the update path writes its record at `0x01C7FD88` (112 bytes). Writing `usb_update_mode\0` at `0x01C7FD80`
   and resetting enters the mask ROM's download mode. **[CODE] [HW]**
+- Dinghy's layout differs again: a 360 KB pool from `0x01C1A000`, stacks in `0x01C74000`–`0x01C7C000` with
+  256-byte guard bands (mvave-fm1 development skill §3). **[CODE]**
+- `NOINIT` survives a reset **and** an entry into download mode: MvaveFM1Unbricker reads 512 bytes at
+  `0x01C7C000` through the ROM's loader to recover Melodee's crash record. **[CODE]**
 - fm1-base's figures for its template: 96 KB of RAM for `.data`/`.bss` and a 336 KB pool (128 KB and 304 KB in a
   WiFi build). **[CODE]**
 
@@ -80,6 +85,8 @@ section contains no `call` instruction.
 - [FM-1-RE architecture](https://github.com/AL-255/FM-1-RE/blob/main/docs/architecture.md) §2.
 - Felucca's `firmware/app.ld`, `hal/fm1_xip.h`, `hal/fm1_flash.h`, `hal/fm1_sys.h` (GPL-3.0-only).
 - [fm1-base README](https://github.com/charlesvestal/fm1-base), "What each costs".
+- [Dinghy](https://github.com/zvenson/dinghy) `docs/RULES.md`, `tools/build.py` (GPL-3.0); [mvave-fm1](https://github.com/maxfridbe/mvave-fm1) development skill §3.
+- [MvaveFM1Unbricker README](https://github.com/Quixotic7/MvaveFM1Unbricker) (`retained-ram.bin`).
 
 ---
 

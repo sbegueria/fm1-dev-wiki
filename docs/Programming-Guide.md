@@ -34,6 +34,10 @@ start-up ── clock, voltages, guards, vectors, storage, screen, inputs, audio
    counter, are worth more than any optimisation ([Debugging](Debugging.md), [Performance](Performance.md)).
 2. **No floating-point doubles.** The FPU is single precision. Write `1.0f`, use `sinf`, not `sin`. Check the
    link map for soft-double routines (`__adddf3`, `__muldf3`, …); Felucca's build fails if it finds one.
+   *Two traditions:* Felucca, DUB-1 and FM1 Open compile with the FPU on (`-mfprev1`) and use `float`. The SLOOP /
+   Dinghy line builds **integers only** (Q15 levels, Q12 gains, 32-bit phase accumulators, no 64-bit division
+   since `__udivdi3` is not linked), and its docs say the chip has "no FPU". Whose statement holds for the chip is
+   in [Open Questions](Open-Questions.md); for your build, what matters is which flags and libraries it links.
 3. **No flash access from the audio path while the flash may be busy.** Saves erase the flash with interrupts off;
    the audio code must not run then, and the DMA buffer should be zeroed ([Flash Storage](Flash-Storage.md)).
 4. **Spread bursts of work.** Changing a whole preset, regrowing patterns or loading a sample in one block makes
@@ -62,6 +66,9 @@ start-up ── clock, voltages, guards, vectors, storage, screen, inputs, audio
   with the PC, a watchdog ([Debugging](Debugging.md)).
 - **Start the clock and voltages as M-VAVE's firmware has them** ([Clocks and Power](Clocks-and-Power.md)).
 - **Be installable**: answer the update protocol and the soft key ([Update Protocol and Installers](Update-Protocol-and-Installers.md)).
+  A firmware without an update path locks the unit to it until someone uses download mode. Keep a key-held
+  rescue at power-on as well (OCT− in SLOOP, ORBIT and Dinghy).
+- **Check divisors**: in the Felucca family a division by zero gives a wrong value, not a crash ([Debugging](Debugging.md)).
 - **Don't trust the flash's contents** ([Flash Storage](Flash-Storage.md)).
 
 ## A minimal render callback (sketch)
@@ -89,6 +96,7 @@ static void render_block(int32_t *out)              /* called from the ALNK0 han
 ## Sources
 
 - The main loops and HALs of Felucca-family firmwares (GPL-3.0-only); [fm1-base DESIGN.md](https://github.com/charlesvestal/fm1-base/blob/main/DESIGN.md).
+- [Dinghy docs/RULES.md](https://github.com/zvenson/dinghy/blob/main/docs/RULES.md) (integer-only rules); [mvave-fm1](https://github.com/maxfridbe/mvave-fm1) development skill §5, §7.
 - The tips of the [r/MVaveFM1 thread](https://www.reddit.com/r/MVaveFM1/comments/1xe8c9x/all_right_stop_collaborate_and_listen/) by u/ZenLegume and its comments.
 
 ---

@@ -51,6 +51,7 @@ last buffer loops as a buzz. Zero the buffer before flash erases, which run with
 | --- | --- | --- |
 | Felucca's `hal/fm1_audio.h` | "ALNK0 I2S → external codec" | [CODE] |
 | [FM-1-RE](https://github.com/AL-255/FM-1-RE/blob/main/docs/architecture.md) | "internal audio DAC", the stock firmware running its audio server at **44118 Hz** with 64-sample blocks | [RE] |
+| [FM-1 resource hub](https://github.com/aroum/fm1-custom-fw/blob/main/REVERSE_ENGINEERING.md) §1.2 | an **external codec** on I2S: PC0 MCLK, PC1 BCLK, PC2 LRCK, PC6 the codec's power/reset; the chip's own DAC (DACL pin) as an auxiliary line. From board photos and JieLi's reference schematics; no codec part number given. | [?] |
 
 Both can be partly true (an I2S link to an on-chip or off-chip converter). The part number, whether there is a
 separate codec, and the true sample rate under each clock setting are in [Open Questions](Open-Questions.md). If you know, please
@@ -80,6 +81,7 @@ choice. Whatever you pick, measure the **worst** block, not the average: see [Pe
 - Felucca's `hal/fm1_audio.h`, `src/usb.c`, and the main loop of its derivatives (`main_fm1.c` in X0X, AMB-1,
   DUB-1); GPL-3.0-only.
 - [FM-1-RE](https://github.com/AL-255/FM-1-RE) `docs/architecture.md` §1, §4.
+- [FM-1 resource hub REVERSE_ENGINEERING.md](https://github.com/aroum/fm1-custom-fw/blob/main/REVERSE_ENGINEERING.md) §1.2, item 3.
 
 ---
 

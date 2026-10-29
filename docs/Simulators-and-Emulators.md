@@ -32,6 +32,16 @@ lightest on the host (DUB-1, October 2026). Measure on the device ([Performance]
 **[CODE]** The same host build compiled to WebAssembly (Emscripten), with a picture of the panel. fm1-base, Felucca
 and many forks publish one. Good for showing a firmware before anyone installs it.
 
+## The FM-1 as a panel for a computer
+
+**[CODE]** [RemoteFM1](https://github.com/Quixotic7/RemoteFM1) (GPL-3.0) is a firmware that sends every key,
+button, encoder and the MASTER pot to the computer as plain MIDI (keys as notes on channel 16, buttons on channel
+15, encoders as relative CCs 16–22, MASTER as 14-bit CC 7/39), and shows on its screen and LEDs what the computer
+sends back (16×16 tiles, only the changed ones; over USB-MIDI SysEx, a vendor bulk interface at about 830 KB/s, or
+Bluetooth MIDI). A firmware built for the emulator then runs on the computer with the real panel: no reflash per
+change. ChoralRoot, Felucca and Melodee run this way through [FM1VST](https://github.com/Quixotic7/FM1VST). It
+does not model the device's CPU time. Version 0.2.3, tested on an FM-1 on 2026-10-28 (its README).
+
 ## Full-system emulators: the chip itself
 
 These emulate the AC791N and run real firmware images unchanged:
@@ -48,6 +58,7 @@ How closely they model timing, the cache and the flash is described in each proj
 ## Sources
 
 - Each project's README (October 2026); [awesome-fm-1](https://github.com/cicloid/awesome-fm-1).
+- [RemoteFM1 README](https://github.com/Quixotic7/RemoteFM1) and `docs/PROTOCOL.md`.
 - Felucca-family `host/` simulators and `web/emu/`; [fm1-base DESIGN.md](https://github.com/charlesvestal/fm1-base/blob/main/DESIGN.md).
 
 ---

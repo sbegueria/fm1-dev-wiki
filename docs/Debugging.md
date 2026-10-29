@@ -42,6 +42,20 @@ install something else. Clear the count once the firmware has run long enough.
 Arm the **watchdog** early in start-up and feed it from the main loop. The reset reason (P33) tells you next time
 whether it was the watchdog.
 
+**[CODE]** The watchdog is in P33 (`P3_WDT_CON`, P33 register `0x80`). Dinghy's `hal/fm1_sys.h` arms it in reset
+mode with a timeout code from `0xA` (1 s) to `0xF` (32 s), and its platform uses `0x0D`; mvave-fm1's skill calls
+that 8 s, which fits a doubling per step. Feed it from the main loop at least that often.
+
+## Divide by zero: the trap is off in the Felucca family
+
+**[CODE]** The CPU can trap a division by zero (Dinghy clears bit 2 of `EMU_CON` to turn the trap off). SLOOP 2.4
+and Felucca 1.0.3.1 turned it **off**, and Dinghy follows: JieLi's clang treats a divide as harmless and may hoist
+a loop-invariant division *ahead of* the test that guards it, so a guarded divide could trap. With the trap off,
+such a hoisted divide gives a value nobody uses; the price is that a real divide by zero gives a **wrong value**
+instead of a crash report. Test divisors yourself, and build the host simulator with
+`-fsanitize=integer-divide-by-zero` to catch real ones (Dinghy `hal/fm1_irq.h`, whose comment cites
+"#61, after PR #111 by spinkham"; `docs/RULES.md`).
+
 ## On-screen meters
 
 Show, on a debug or settings page:
@@ -62,6 +76,7 @@ animation running (it is part of the load you are measuring) and still read the 
 | `fm1_debug.py` (X0X debug builds) | peek and poke registers and RAM in a few allowed ranges, time a loop against TIMER4 | [CODE] |
 | `tools/fm1_remote.py` (fm1-base) | press buttons and keys, turn encoders, read back what the screen says, the last crash and the radio's log | [CODE] |
 | "Report a problem" (fm1-base's installer page) | reads the crash record and log in the browser, ready to copy | [CODE] |
+| MvaveFM1Unbricker in download mode | saves 512 bytes of `NOINIT` (`0x01C7C000`) as `retained-ram.bin` before its backup: a crash record survives a trip into download mode | [CODE] |
 | `fm1t memr` (FM-1 Transporter) | read memory, e.g. a debug struct in `NOINIT` (named in a Felucca-family code comment; how it reaches RAM not checked here) | [?] |
 
 Restrict register peeks to known ranges: a read of a gated peripheral block can fault.
@@ -79,6 +94,8 @@ Restrict register peeks to known ranges: a read of a gated peripheral block can 
 - Felucca's `hal/fm1_irq.h`, `fm1_guard.h`, `fm1_sys.h`, `fm1_debug.h`, `src/usb.c`, and its derivatives' main loops (GPL-3.0-only).
 - [fm1-base README](https://github.com/charlesvestal/fm1-base) ("Development over USB").
 - [FM-1 Transporter](https://github.com/kurogedelic/FM-1-transporter).
+- [Dinghy](https://github.com/zvenson/dinghy) `firmware/hal/fm1_sys.h`, `fm1_irq.h`, `firmware/src/platform.c`, `docs/RULES.md` (GPL-3.0).
+- [mvave-fm1](https://github.com/maxfridbe/mvave-fm1) development skill §3, §7; [MvaveFM1Unbricker README](https://github.com/Quixotic7/MvaveFM1Unbricker).
 
 ---
 

@@ -31,6 +31,7 @@ project's README (October 2026).
 | Project | Licence | What |
 | --- | --- | --- |
 | [m-bootloader](https://github.com/jvitkauskas/m-bootloader) and its [SPEC.md](https://github.com/jvitkauskas/m-bootloader/blob/main/docs/SPEC.md) | MIT | Clean-room bootloader; the spec is the most complete public description of boot, flash formats, keys and panel |
+| [FM-1 resource hub](https://github.com/aroum/fm1-custom-fw) `REVERSE_ENGINEERING.md` | none declared | Pin-by-pin package map from board photos and JieLi's datasheet, the stock updater's internals, protocol notes, case opening; **mixes FM-1 facts with generic AC79 material** (e.g. 4–8 MB flash), so check each point |
 | [FM-1-RE](https://github.com/AL-255/FM-1-RE) | WTFPL | Analysis of the stock firmware: architecture, memory map, OTA protocol, Ghidra scripts |
 | [pi32v2-isa](https://github.com/jvitkauskas/pi32v2-isa) | MIT-0 | The instruction set as a table, an open assembler/linker, and an LLVM fork that builds FM-1 firmware |
 | [fm1-bootloader](https://github.com/jvitkauskas/fm1-bootloader) | Apache-2.0 | The stock bootloader, readable C |
@@ -49,6 +50,12 @@ Many firmwares document hardware lessons in their own docs. Some that have shape
 - [Jangada](https://github.com/zednaked/jangada): core supply raising; measured the core-1 misreads.
 - [fm1-radio](https://github.com/charlesvestal/fm1-radio): WiFi, HE-AAC; found the 64-bit multiply erratum.
 - [Lunar Modulator](https://github.com/ip2k/lunar-modulator): a USB_KEY dongle write-up.
+- [Dinghy](https://github.com/zvenson/dinghy): `docs/RULES.md`, the integer-only rules and the build checks (64-bit
+  division, ROM addresses, registers outside `hal/`); the div-by-zero trap left off.
+- [TransitFM1](https://github.com/Quixotic7/TransitFM1): `docs/SAFETY.md`, power-cut tests of every flash
+  operation of an install; where V15 stages its loader.
+- [ORBIT](https://github.com/dspaudio/orbit) (SLOOP lineage): explicit "tested on hardware or not" release notes.
+- [mvave-fm1](https://github.com/maxfridbe/mvave-fm1): AI skills and a build container ([AI Skills](AI-Skills.md)).
 - [DUB-1](https://github.com/sbegueria/fm1-dub): CPU-load notes on XIP and the cache, clock registers on a
   settings page.
 

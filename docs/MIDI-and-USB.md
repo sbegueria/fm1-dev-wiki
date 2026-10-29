@@ -12,7 +12,7 @@ nav_order: 8
 | --- | --- | --- | --- |
 | USB-MIDI | in and out | USB0 full-speed device, class compliant | [HW] |
 | TRS MIDI | **in** | UART1 RX on PH8, 31250 baud, RX by DMA into a ring | [CODE] |
-| TRS MIDI out | ? | M-VAVE's FM1 Open lists only USB and BLE as outputs. No known open firmware sends on the TRS jack. | [?] |
+| TRS MIDI out | ? | M-VAVE's FM1 Open lists only USB and BLE as outputs. No known open firmware sends on the TRS jack. The resource hub says the jack's circuit only passes MIDI **in** (an input buffer), so there is no TRS out without a hardware change. | [?] |
 | BLE MIDI | in and out | JieLi's closed Bluetooth stack; in fm1-base (`ble = true`) | [HW] |
 
 Felucca's UART header says its MIDI-in driver was "untested on hardware" when written; fm1-base lists MIDI "over
@@ -22,7 +22,8 @@ USB and TRS" in its platform. If you have tested TRS input on a given firmware, 
 
 | VID:PID | Name | Who | Tag |
 | --- | --- | --- | --- |
-| (M-VAVE's) | "FM-1 MIDI 1" (and an "FM-1 Audio" UAC1 function) | stock firmware | [RE] [HW] |
+| `4C4A:C755` | "FM-1 MIDI 1" (and an "FM-1 Audio" UAC1 function) | stock firmware (ID seen by mvave-fm1 on a V15 unit, 2026-10-22) | [RE] [HW] |
+| `4D4A:4155` | `ota-FM-1` | the update loader during an M-UPGRADE update (resource hub; which loader is not stated) | [RE] [?] |
 | `1209:0001` | the firmware's name | Felucca and forks (pid.codes **test** ID) | [CODE] |
 | `1209:0002` | "Felucca Update" | Felucca's update loader | [CODE] |
 | `4C4A:8057` | `WL80UBOOT1.00` / `UBOOT1.00`, mass storage | the chip's mask-ROM download mode | [HW] |
@@ -40,7 +41,7 @@ FM-1 or known firmware names, so it never sends SysEx to other gear. Some FM-1s 
 | --- | --- | --- |
 | `F0 22 24 35 7D F7` | **Soft key**: the running firmware enters the ROM's download mode (writes `usb_update_mode` at `0x01C7FD80` and resets). Stock firmware (FM-1 015; SMK-37 016) and Felucca answer it. M-Flasher's DOWNLOAD MODE button sends it. | [HW] |
 | `F0 22 24 35 7F F7` | **Upgrade**: start an M-UPGRADE update session | [RE] [CODE] |
-| `F0 00 32 45 00 00 00 40 7F F7` | handshake query used by Felucca's installer | [CODE] |
+| `F0 00 32 45 00 00 00 40 7F F7` | handshake query used by Felucca's installer. The answer unpacks to a 34-byte identity block starting `00 59 11`. Stock firmware answers **only** parameter ID `0x40`: a scan of all other IDs got no reply (resource hub). | [CODE] [RE] |
 | `F0 43 0n …` | Yamaha DX7 voice and bank SysEx (stock firmware) | [RE] |
 
 The update session's framing is on [Update Protocol and Installers](Update-Protocol-and-Installers.md). Any firmware that wants to be updatable
@@ -71,6 +72,8 @@ That's why M-Flasher can back up a stock unit before you change anything.
 - [FM1 Open README](https://github.com/m-vave/fm1_open) (MIDI section).
 - [FM-1-RE architecture](https://github.com/AL-255/FM-1-RE/blob/main/docs/architecture.md) §1, §5.
 - [felucca-bsp docs/EXPERIMENTAL.md](https://github.com/hugelton/felucca-bsp/blob/main/docs/EXPERIMENTAL.md).
+- [FM-1 resource hub REVERSE_ENGINEERING.md](https://github.com/aroum/fm1-custom-fw/blob/main/REVERSE_ENGINEERING.md) §1.2, §4.1, §4.2.
+- [mvave-fm1](https://github.com/maxfridbe/mvave-fm1) firmware skill §2, §10.
 
 ---
 
