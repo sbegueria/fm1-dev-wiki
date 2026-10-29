@@ -94,7 +94,10 @@ Felucca-family `fm1_rescue` accepts only that exact file, by SHA-256
 is kept in M-VAVE's FM1 Open repository (`sdk/firmware/FM-1_015.fwsc` at commit `b178ac4`, linked from
 awesome-fm-1) and in the Internet Archive (linked from czietz's
 [fm1-firmware-patcher](https://github.com/czietz/fm1-firmware-patcher)). A V15-only tool given today's download
-will refuse it. **[CODE]**
+will refuse it. **[CODE]** Checked for this wiki on 2026-10-29: the FM1 Open copy has the V15 hash above; the
+download address gave a 718,196-byte file with SHA-256
+`d017fb65e70aca97ee29d944470c3515a74581df5c0576bf70de917c7b2b61d5` (the resource hub lists another hash for V16,
+starting `a21368e0`, so M-VAVE may have replaced the file again; check before you rely on either).
 
 **Back on stock, presets look garbled** after Felucca-family firmwares, which keep their data inside the stock
 settings range: use stock **System > Reset Patches** (TransitFM1 README; mvave-fm1). **Felucca 0.9-beta to 1.0.x**

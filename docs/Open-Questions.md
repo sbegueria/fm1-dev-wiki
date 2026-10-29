@@ -92,6 +92,8 @@ Each entry: **the question**, what we know, and how to find out.
     does it answer the soft key `F0 22 24 35 7D F7`, and does it accept the community's packages the way V15 does?
     Where does V16 stage its update loader (V15: `0xE6000`)? *How:* `fm1_install.py --info` and M-Flasher's
     DOWNLOAD MODE on a V16 unit; a flash dump after a V16 install.
+    Also: the file at the download address hashed `d017fb65…` on 2026-10-29, while the hub lists `a21368e0…` for
+    V16 (2026-10-21). Has V16 been re-issued?
 26. **The V15 region hash on real units.** One unit reporting `FM-1_015` had a firmware-region hash
     (`0x4000…0x92FFF`) of `8c1d13a5…`, not the official file's `6edf3c37…` (mvave-fm1, 2026-10-22). Was it an
     earlier V15 build, or does stock V15 write inside its own app area? *How:* compare dumps from several V15
