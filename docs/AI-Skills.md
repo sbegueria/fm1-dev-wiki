@@ -15,12 +15,13 @@ that uses it. This page lists the FM-1 skills we know of, what they teach, and w
 > at one date. Where it states a fact, look for the fact's tag on this wiki. Where the two disagree, the point is
 > in [Open Questions](Open-Questions.md). See also "Using AI assistants" in [Contributing](Contributing.md).
 
-## mvave-fm1 (maxfridbe)
+## mvave-fm1
 
-[mvave-fm1](https://github.com/maxfridbe/mvave-fm1) (GitHub user maxfridbe, MIT, first published 2026-10-22) is
-two Claude Code skills and a podman build container. The r/MVaveFM1 thread
-["Claude skill"](https://www.reddit.com/r/MVaveFM1/comments/1xh6o7m/claude_skill/) is, as far as we could tell,
-about this repository (see Sources).
+The thread ["Claude skill"](https://www.reddit.com/r/MVaveFM1/comments/1xh6o7m/claude_skill/), posted on
+r/MVaveFM1 by u/LordApophis99 (October 2026): "Did my best to make you guys a claude skill for
+interacting/building firmwares". It links the repo
+[github.com/maxfridbe/mvave-fm1](https://github.com/maxfridbe/mvave-fm1) (MIT, first published 2026-10-22): two
+Claude Code skills and a podman build container.
 
 | Part | What it covers |
 | --- | --- |
@@ -64,6 +65,21 @@ As of 2026-10-29. Each is in [Open Questions](Open-Questions.md).
 
 None of these is a reason to avoid the skill. They are the reason to keep the tags.
 
+### Suggestions from the thread
+
+- **Add fm1-base.** A commenter suggested adding [fm1-base](https://github.com/charlesvestal/fm1-base) to the
+  development skill, as a base with "BLE, WIFI, Velocity, USB Audio, Dual Core, USB Midi, Aftertouch", "much
+  better than using Felucca as base", but not GPL, so GPL engines from other firmwares can't easily be brought in.
+  As of commit `5607a60` the skill's five paths don't include it. What fm1-base offers and what its licence
+  allows in each direction: [fm1-base as a Base](FM1-Base.md).
+- **Make the firmware skill generic.** The same commenter noted that `mvave-fm1-firmware` is written around ORBIT
+  (its install example, rescue keys, identities and file formats). Most of it holds for any Felucca-family
+  firmware (the update protocol, MvaveFM1Unbricker, the safety rules), but the identity `FM-1_900`, the loader name
+  `ota-FM-1_9XX`, OCT− rescue and ORP7/OPB2 files are ORBIT's. If you use it for another firmware, swap those for
+  your firmware's ([Update Protocol and Installers](Update-Protocol-and-Installers.md), "Package identities").
+- u/kmplngj replied that he would check what he could use, and pointed to the skills and tooling in his Felucca
+  fork (below).
+
 ## Other skills and agent kits
 
 | Project | Licence | What |
@@ -72,9 +88,37 @@ None of these is a reason to avoid the skill. They are the reason to keep the ta
 | [fm1-to-smk37](https://github.com/genkigenki/fm1-to-smk37) | per its README | A prompt and kit for porting an FM-1 firmware to the SMK-37 with a coding agent ([SMK-37](SMK-37.md)). |
 | [Felucca Editor](https://github.com/hunterxiong2026/fm1-felucca-editor-2026) | MIT | Edits Felucca 1.5 sounds, tracks and songs over SysEx; also packaged as a Claude skill. Chinese README. |
 | [SLOOP Editor Skill](https://github.com/hunterxiong2026/fm1-sloop-editor-2026) | MIT | Drives SLOOP 2.4.1 over SysEx (a DeepSeek harness skill). Chinese README. |
+| [kmplngj/Felucca](https://github.com/kmplngj/Felucca) `.agents/skills/` | GPL-3.0-only | A Felucca fork run largely by agents (below). |
 | Dinghy's [docs/RULES.md](https://github.com/zvenson/dinghy/blob/main/docs/RULES.md) | GPL-3.0 | Not a skill, but written to be read by agents and people; the source of most of mvave-fm1's "chip rules". |
 
 (Descriptions from each README and [awesome-fm-1](https://github.com/cicloid/awesome-fm-1), October 2026.)
+
+## kmplngj's Felucca fork: skills and tooling
+
+[kmplngj/Felucca](https://github.com/kmplngj/Felucca) (Jan Kampling, GPL-3.0-only) is a personal fork of
+Felucca that collects features from upstream and other forks and works on CPU, RAM and size. Its agent set-up is
+the most complete public one for FM-1 work we know of (commit `c543e24`, 2026-10-29) **[CODE]**:
+
+- **One set of instructions for every agent.** `AGENTS.md` holds the commands, the architecture, the invariants
+  ("three builds": firmware, host tests and browser emulator compile the same sources; every resource budget;
+  older saved data still loads) and a table "before you … read …". `CLAUDE.md` only imports it, so Claude Code and
+  Codex read the same file. Skills live in `.agents/skills/`.
+- **Six skills:** `issue-delivery` (an issue or PR through validation, review and hand-off, or an explicitly
+  requested backlog), `full-stop` and `full-send` (the same, ending at a verified PR, or merging once every gate
+  passes), `pr-testing` (writing FM-1 hardware test steps and expected results for the user), `firmware-watch`
+  (reviewing other firmwares' commits for ideas worth adopting, with a JSON/JSONL ledger of what was assessed) and
+  `sol-loop` (a bounded code review by another model). `docs/ai-workflows.md` explains them for other projects.
+- **No merge without hardware.** Tagged releases need an FM-1 test report and the maintainer's approval; agents
+  write the test steps, the owner runs them.
+- **Measurement tools** (in `tools/` and `tests/`): a read-only device diagnostics collector over the USB serial
+  console (`tools/fm1_diagnostics.py`; boot clock registers, crash context, render-stage timing as opt-in build
+  flags), an offline boot-area identifier for dumps and packages (`tools/fm1_bootarea.py`: M-VAVE V15/V16 or
+  m-bootloader, CRCs, chip key, the clock declared in `isd_config.ini`), a static scan of the disassembly for the
+  64-bit-multiply erratum pattern (`tests/mul64_hload_check.py`), golden-hash and CPU-baseline regression tests,
+  a per-function target budget check on the disassembly (`tests/target_budget.py`), and screenshots over USB.
+- **Dated investigation notes** in `docs/` (audio deadline misses on note attacks, the second core's idle polling,
+  display power), each with the exact images tested. The hardware findings are on [Second Core](Second-Core.md),
+  [Display](Display.md) and [Clocks and Power](Clocks-and-Power.md).
 
 ## Writing a skill for the FM-1
 
@@ -93,9 +137,11 @@ What the good ones do:
 - [awesome-fm-1](https://github.com/cicloid/awesome-fm-1) (CC0), "Tools" and "Editors" entries.
 - [RemoteFM1 README](https://github.com/Quixotic7/RemoteFM1) (0.2.3, 2026-10-28).
 - [Dinghy docs/RULES.md](https://github.com/zvenson/dinghy/blob/main/docs/RULES.md).
-- The r/MVaveFM1 thread ["Claude skill"](https://www.reddit.com/r/MVaveFM1/comments/1xh6o7m/claude_skill/): its
-  text could not be fetched when this page was written; the repository above is the project the thread is about
-  as far as we could tell. If the thread adds facts, add them here with the posters' usernames.
+- The r/MVaveFM1 thread ["Claude skill"](https://www.reddit.com/r/MVaveFM1/comments/1xh6o7m/claude_skill/),
+  posted by u/LordApophis99; a commenter's reply (name not recorded here); u/kmplngj's reply.
+- [kmplngj/Felucca](https://github.com/kmplngj/Felucca) `AGENTS.md`, `CLAUDE.md`, `.agents/skills/*/SKILL.md`,
+  `docs/ai-workflows.md`, `docs/diagnostics.md`, `docs/boot-area-survey.md`, `docs/mul64-hload-audit.md`
+  (GPL-3.0-only; commit `c543e24`, 2026-10-29).
 
 ---
 

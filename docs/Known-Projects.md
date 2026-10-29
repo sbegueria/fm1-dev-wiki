@@ -18,7 +18,7 @@ project's README (October 2026).
 | --- | --- | --- |
 | [Felucca](https://github.com/hugelton/Felucca) (Leo Kuroshita, Hügelton Instruments) | GPL-3.0 | The first big open firmware; the origin of most community platform code |
 | [felucca-bsp](https://github.com/hugelton/felucca-bsp) | MPL-2.0 | The chip and board layer split out of Felucca, beta |
-| [fm1-base](https://github.com/charlesvestal/fm1-base) (Charles Vestal) | MPL-2.0 | A platform and template on felucca-bsp, with host simulator, browser emulator, BLE MIDI, WiFi, USB audio; beta |
+| [fm1-base](https://github.com/charlesvestal/fm1-base) (Charles Vestal) | MPL-2.0 | A platform and template on felucca-bsp, with host simulator, browser emulator, BLE MIDI, WiFi, USB audio, velocity and pressure, second core; beta. See [fm1-base as a Base](FM1-Base.md) |
 | [Dinghy](https://github.com/zvenson/dinghy) | GPL-3.0 | The smallest documented firmware to build on |
 | [foma](https://github.com/konsumer/foma) | GPL-3.0 | One C file, Docker, a WebAssembly preview and installer on one page |
 | [fm1-nes](https://github.com/Keitark/fm1-nes) | Apache-2.0 | Source-only integration with JieLi's SDK; app-only updates |
@@ -55,6 +55,7 @@ Many firmwares document hardware lessons in their own docs. Some that have shape
 - [TransitFM1](https://github.com/Quixotic7/TransitFM1): `docs/SAFETY.md`, power-cut tests of every flash
   operation of an install; where V15 stages its loader.
 - [ORBIT](https://github.com/dspaudio/orbit) (SLOOP lineage): explicit "tested on hardware or not" release notes.
+- [kmplngj/Felucca](https://github.com/kmplngj/Felucca): dated investigation notes with exact images (deadline misses, the second core's idle polling, display power), diagnostics and agent workflows ([AI Skills](AI-Skills.md)).
 - [mvave-fm1](https://github.com/maxfridbe/mvave-fm1): AI skills and a build container ([AI Skills](AI-Skills.md)).
 - [DUB-1](https://github.com/sbegueria/fm1-dub): CPU-load notes on XIP and the cache, clock registers on a
   settings page.

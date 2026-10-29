@@ -53,7 +53,8 @@ When two sources disagree, both are shown and the point goes to [Open Questions]
 2. [Choosing a Base](Choosing-a-Base.md): which existing code to start from.
 3. [Recovery](Recovery.md): how to get a unit back when an install goes wrong. **Read it before your first install.**
 4. [Hardware Overview](Hardware-Overview.md): what is in the box.
-5. [Programming Guide](Programming-Guide.md): the audio deadline, interrupts, the screen, and the traps.
+5. [fm1-base as a Base](FM1-Base.md): what a newer, MPL-licensed base offers, and the licence in both directions.
+6. [Programming Guide](Programming-Guide.md): the audio deadline, interrupts, the screen, and the traps.
 
 ## All pages
 

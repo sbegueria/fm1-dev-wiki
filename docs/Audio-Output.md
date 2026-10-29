@@ -70,6 +70,9 @@ clock) would settle it. **[?]**
 the other direction (the computer plays through the FM-1). The USB packet service must run every 1 ms frame, so in
 Felucca-family firmware it runs nested inside the audio render from the 10 kHz timer interrupt.
 
+kmplngj's Felucca fork offers the USB audio input at **44.1 or 48 kHz** (`FELUCCA_UAC_48K`, on by default; 44.1 kHz
+only up to 1.0.5.2), per its `BUILDING.md`. **[CODE]**
+
 ## Choosing a block size
 
 Shorter halves give lower latency and less time per block. Longer halves give more slack against an occasional
@@ -81,6 +84,7 @@ choice. Whatever you pick, measure the **worst** block, not the average: see [Pe
 - Felucca's `hal/fm1_audio.h`, `src/usb.c`, and the main loop of its derivatives (`main_fm1.c` in X0X, AMB-1,
   DUB-1); GPL-3.0-only.
 - [FM-1-RE](https://github.com/AL-255/FM-1-RE) `docs/architecture.md` §1, §4.
+- [kmplngj/Felucca BUILDING.md](https://github.com/kmplngj/Felucca/blob/main/BUILDING.md) (build options).
 - [FM-1 resource hub REVERSE_ENGINEERING.md](https://github.com/aroum/fm1-custom-fw/blob/main/REVERSE_ENGINEERING.md) §1.2, item 3.
 
 ---

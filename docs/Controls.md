@@ -52,6 +52,11 @@ dims by lighting it in fewer frames.
 velocity and aftertouch "from the M-VAVE FM-1's keys, no hardware mods", and felucca-bsp and fm1-base include
 it (off by default). How it works is documented in those repositories.
 
+**[CODE]** In fm1-base (`lib/touch.h`, `#define APP_TOUCH`): the **20 keys on the analog rows (F3 to C5)** are read
+through the scan's ADC readings, giving a velocity per press and a **pressure** (0–127) while held, which works as
+per-key aftertouch. The **7 top-row keys (C#5 to G5)** have no converter: a velocity from a probe through the LED
+line, and no pressure. Curve and sensitivity are adjustable (−5..+5). See [fm1-base as a Base](FM1-Base.md).
+
 ## Hold-at-power-on keys
 
 Different bootloaders and firmwares claim different keys at power-on. Avoid clashing with them:
@@ -71,7 +76,7 @@ Different bootloaders and firmwares claim different keys at power-on. Avoid clas
 
 - Felucca's `hal/fm1_input.h` (GPL-3.0-only) and its derivatives' `main_fm1.c`.
 - [m-bootloader SPEC.md](https://github.com/jvitkauskas/m-bootloader/blob/main/docs/SPEC.md) §8.2.
-- [felucca-bsp](https://github.com/hugelton/felucca-bsp), [fm1-base](https://github.com/charlesvestal/fm1-base) READMEs.
+- [felucca-bsp](https://github.com/hugelton/felucca-bsp), [fm1-base](https://github.com/charlesvestal/fm1-base) READMEs; fm1-base `lib/touch.h` (MPL-2.0).
 
 ---
 

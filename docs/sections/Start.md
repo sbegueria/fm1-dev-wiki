@@ -10,3 +10,4 @@ permalink: /sections/start/
 - [Getting Started](../Getting-Started.md)
 - [Choosing a Base](../Choosing-a-Base.md)
 - [Recovery](../Recovery.md)
+- [fm1-base as a Base](../FM1-Base.md)

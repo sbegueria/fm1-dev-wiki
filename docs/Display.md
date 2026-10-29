@@ -42,6 +42,16 @@ With no TE line, you can't sync to the panel's refresh in hardware. Notes from F
   the tearing on hardware (a comment in Felucca-derived `lcd.c`). **[CODE]**
 - Never start a DMA with a count of zero: it never completes. **[HW] [CODE]**
 
+## Turning the backlight off
+
+**[HW] [?]** PA2 is both the backlight and the key matrix's enable, so switching PA2 off to darken the screen also
+stops the keys. kmplngj's Felucca fork reviewed the known firmwares and found none that turns the backlight off
+physically while keeping the keys working (2026-10-22). An experiment sending the ST7789 brightness commands
+`0x51`/`0x53` was reported with **wrong colours and unreadable text** right after install, and was rolled back;
+M-VAVE's own source sets `0x51 = 255` with PA2 on, which is a lead, not proof that `0x51 = 0` darkens this
+panel's backlight (`docs/display-power-research-2026-10-22.md`, `docs/lcd-backlight-probe.md`). That fork's
+"all dark" mode blanks the image and the LEDs; the backlight stays powered.
+
 ## The screen and the audio share the CPU
 
 On a single-core firmware, drawing runs between audio interrupts. Big clears, fonts read from flash and
@@ -52,6 +62,7 @@ peaks. Measure the audio load with your busiest screen showing. See [Performance
 
 - [m-bootloader SPEC.md](https://github.com/jvitkauskas/m-bootloader/blob/main/docs/SPEC.md) §2.2, §8.4.
 - Felucca's `hal/fm1_lcd_hw.h` and `src/lcd.c` (GPL-3.0-only), with the SPI speed notes from DUB-1's copy.
+- [kmplngj/Felucca](https://github.com/kmplngj/Felucca) `docs/display-power-research-2026-10-22.md`, `docs/lcd-backlight-probe.md`, `docs/lcd-colour-ab-2026-10-22.md` (GPL-3.0-only).
 
 ---
 

@@ -25,6 +25,15 @@ Under m-bootloader 1.2, "every firmware was 11 % slower", and every divider set 
 360 MHz if it differs. felucca-bsp's `chip/fm1_clock.h` (MPL-2.0) does this with m-bootloader's own sequence,
 from RAM, with interrupts off. fm1-base calls it at every start ("whichever bootloader started us").
 
+### V16's boot area declares 320 MHz [?]
+
+kmplngj's boot-area tool (`tools/fm1_bootarea.py`) recognises the official V15 and V16 boot areas by their SPL,
+and its notes say the V15 and V16 references **declare 360 and 320 MHz** in `isd_config.ini`. The tool reads
+the stored fields only, not a clock register; live evidence is that fork's open issue #618
+(`docs/boot-area-survey.md`, 2026-10). If a V16 install puts a 320 MHz boot area on the unit, every firmware
+started from it would run about 11% slower, as under m-bootloader 1.2, unless it resets the clock. Not measured
+here: see [Open Questions](Open-Questions.md).
+
 ### The registers
 
 **[HW]** Read off FM-1s under M-VAVE's bootloader (felucca-bsp `chip/fm1_clock.h`; the same three words were read
@@ -101,6 +110,7 @@ chip (Felucca's `hal/fm1_adc.h`, from `isd_config`). **[CODE]** fm1-base has `pl
 - JieLi AC79 SDK `README.md`.
 - Felucca's `hal/fm1_time.h`, `fm1_timer.h`, `fm1_adc.h` (GPL-3.0-only).
 - [fm1-x0x#21](https://github.com/charlesvestal/fm1-x0x/issues/21) (voltages, cited by felucca-bsp).
+- [kmplngj/Felucca `docs/boot-area-survey.md`](https://github.com/kmplngj/Felucca/blob/main/docs/boot-area-survey.md) (GPL-3.0-only).
 
 ---
 

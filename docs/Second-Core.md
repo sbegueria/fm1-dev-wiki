@@ -35,6 +35,20 @@ From felucca-bsp's [EXPERIMENTAL.md](https://github.com/hugelton/felucca-bsp/blo
 Other firmwares that describe themselves as dual-core include SLOOP (both cores, per pi32v2-isa's table) and
 GammaWave. See [Known Projects](Known-Projects.md).
 
+## The worker's idle loop: one unit's finding
+
+**[HW]** In kmplngj's Felucca fork, a unit repeatedly reported invalid second-core jobs (bad sequence, function
+or checksum), even with an **empty** worker job and all real DSP on core 0, and with different RAM layouts. Making
+the worker's idle branch execute **32 NOPs in RAM before polling the mailbox again** stopped it (41,419 dispatched
+sub-blocks with no bad job, against failures after 432 to 14,064 without the pacing). One unit, an empirical fix:
+the mechanism (silicon, cache, bus, compiler) is not known (kmplngj/Felucca `docs/cpu2-idle-polling.md`, issue
+#554, 2026-10-22). It may be the same misread the check word catches above
+([Open Questions](Open-Questions.md)). That fork's worker times a job out after 4 ms; fm1-base's after 8 ms.
+
+**[CODE]** fm1-base wraps the worker as `plat_cpu2_*` (`cpu2 = true`): by default a failure **restarts** the FM-1
+with the reason recorded and two failed starts give safe mode; with `cpu2_fallback = true` the core is given up
+and the render runs on one core until power-off ([fm1-base as a Base](FM1-Base.md)).
+
 ## Design advice
 
 - **Your firmware must sound right on one core.** Some units can't use the second one reliably, and the fallback
@@ -68,6 +82,8 @@ two cores … I went without it. It paid off." Both approaches have shipped.
 ## Sources
 
 - [felucca-bsp](https://github.com/hugelton/felucca-bsp) `docs/EXPERIMENTAL.md`, `chip/fm1_sys.h`.
+- [kmplngj/Felucca `docs/cpu2-idle-polling.md`](https://github.com/kmplngj/Felucca/blob/main/docs/cpu2-idle-polling.md) (GPL-3.0-only).
+- [fm1-base](https://github.com/charlesvestal/fm1-base) `include/plat.h` (the `plat_cpu2_*` group).
 - [r/MVaveFM1 thread](https://www.reddit.com/r/MVaveFM1/comments/1xe8c9x/all_right_stop_collaborate_and_listen/).
 - JieLi AC79 SDK `README.md`, `include_lib/driver/cpu/wl82/asm/cpu.h`.
 - [fm1-base DESIGN.md](https://github.com/charlesvestal/fm1-base/blob/main/DESIGN.md) (which firmwares use `plat_cpu2_*`).

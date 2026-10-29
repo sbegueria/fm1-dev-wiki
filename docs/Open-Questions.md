@@ -69,47 +69,68 @@ Each entry: **the question**, what we know, and how to find out.
 18. **Flag gains.** What do FM1 Open's flags (`-flto`, `-pi32v2-enable-simd=true`, `-pi32v2-large-program=true`,
     IPRA, `rep-memop`) gain on real DSP code, and do they change float results?
 
+19. **The second core's idle polling.** On one unit, pacing the worker's idle loop (32 NOPs in RAM between
+    mailbox polls) stopped invalid jobs that appeared even with an empty job (kmplngj/Felucca, 2026-10-22). Is
+    this the same fault as the misreads above? Does it hold on other units, and why does polling rate matter?
+    *How:* the same paired test on units known to misread.
+
 ## Memory map
 
-19. **The XIP offset in the stock image.** Felucca maps flash `0x4120` to `0x02000120`; FM-1-RE writes
+20. **The XIP offset in the stock image.** Felucca maps flash `0x4120` to `0x02000120`; FM-1-RE writes
     `flash_offset − 0x4120 + 0x02000000` and puts stock vectors at `0x020000A0`. Is the stock app linked
     differently, or is one note off by the 0x120 header?
-20. **The stock clock in the app.** FM-1-RE reads a `pll_clock_init` → 240 MHz in V13's start-up; measurements under
+21. **The stock clock in the app.** FM-1-RE reads a `pll_clock_init` → 240 MHz in V13's start-up; measurements under
     M-VAVE's bootloader, with an open firmware running, give 360 MHz. What does V15's own start-up set, and when?
 
 ## Installing
 
-21. **Installs that stall half-way** ("the loader stopped answering" after ~half the requests). A USB drop, or the
+22. **Installs that stall half-way** ("the loader stopped answering" after ~half the requests). A USB drop, or the
     loader's poll falling behind? *How:* log the last request and its timing in the installer; a USB capture.
-22. **m-bootloader and full packages.** Which installers keep m-bootloader and which put the stock one back?
+23. **m-bootloader and full packages.** Which installers keep m-bootloader and which put the stock one back?
     (SLOOP's kept it; M-VAVE's and Baud Girl's restore stock.)
-23. **The loader's watchdog.** How long can the update loader go without a request before it gives up, per base?
+24. **The loader's watchdog.** How long can the update loader go without a request before it gives up, per base?
 
-24. **USB IDs of the update loaders.** The hub reports `4D4A:4155` "ota-FM-1" during an update; mvave-fm1's skill
+25. **USB IDs of the update loaders.** The hub reports `4D4A:4155` "ota-FM-1" during an update; mvave-fm1's skill
     puts ORBIT's loader there too. ORBIT's and Felucca's loader sources say `1209:0002` "Felucca Update". Is
     `4D4A:4155` M-VAVE's own loader? *How:* `lsusb` during an M-UPGRADE update and during an ORBIT update.
-25. **V16.** Since 2026-10-21 M-VAVE's download address serves V16. What identity does V16 answer (`FM-1_016`?),
+26. **V16.** Since 2026-10-21 M-VAVE's download address serves V16. What identity does V16 answer (`FM-1_016`?),
     does it answer the soft key `F0 22 24 35 7D F7`, and does it accept the community's packages the way V15 does?
     Where does V16 stage its update loader (V15: `0xE6000`)? *How:* `fm1_install.py --info` and M-Flasher's
     DOWNLOAD MODE on a V16 unit; a flash dump after a V16 install.
     Also: the file at the download address hashed `d017fb65…` on 2026-10-29, while the hub lists `a21368e0…` for
     V16 (2026-10-21). Has V16 been re-issued?
-26. **The V15 region hash on real units.** One unit reporting `FM-1_015` had a firmware-region hash
+27. **The V15 region hash on real units.** One unit reporting `FM-1_015` had a firmware-region hash
     (`0x4000…0x92FFF`) of `8c1d13a5…`, not the official file's `6edf3c37…` (mvave-fm1, 2026-10-22). Was it an
     earlier V15 build, or does stock V15 write inside its own app area? *How:* compare dumps from several V15
     units sector by sector.
-27. **Download-mode sessions that end.** On one Linux run, the chip reset back to normal after one tool run in
+28. **Download-mode sessions that end.** On one Linux run, the chip reset back to normal after one tool run in
     download mode (`info`, then `backup`, failed). A timeout in the ROM, or the host re-probing the disk?
     *How:* time how long the ROM stays in download mode idle, on Linux and Windows.
-28. **The watchdog's timeout codes.** Dinghy documents `0xA` = 1 s to `0xF` = 32 s for `P3_WDT_CON`; 8 s for
+29. **The watchdog's timeout codes.** Dinghy documents `0xA` = 1 s to `0xF` = 32 s for `P3_WDT_CON`; 8 s for
     `0x0D` assumes a doubling per step. *How:* time a reset with no feed.
-29. **Can anything run stock firmware off the device?** RemoteFM1's README says no emulator exists for the FM-1's
+30. **Can anything run stock firmware off the device?** RemoteFM1's README says no emulator exists for the FM-1's
     CPU, so stock firmware can't run on a computer; fm1-emu and fm1-emulator run community firmware images
     unchanged ([Simulators and Emulators](Simulators-and-Emulators.md)). Do they run stock V15?
 
+31. **The clock after a V16 install.** kmplngj's boot-area notes say V16's boot area declares 320 MHz in
+    `isd_config.ini` (V15: 360). Does M-UPGRADE's V16 update replace the boot area, and does a unit started by it
+    then run at 320 MHz? (The wiki also says the update loader never writes the head, while m-bootloader's README
+    says an official update puts the stock bootloader back.) *How:* read the clock registers
+    ([Clocks and Power](Clocks-and-Power.md)) on a unit before and after a V16 install; compare boot-area dumps.
+32. **A GPL firmware with Bluetooth MIDI.** fm1-base's own BLE stack links nothing of JieLi's and its parts are
+    MPL-2.0, Apache-2.0 and BSD-2-Clause. Can a GPL-3.0 firmware ship it, as this wiki reads the licences?
+    fm1-base states the JieLi-library case, not this one ([fm1-base as a Base](FM1-Base.md)). *How:* ask the
+    fm1-base maintainers to state it.
+
 ## The SMK-37
 
-30. Elite hardware behaviour is inferred from the Pro's (m-bootloader SPEC §13). Who has an Elite to test?
+33. Elite hardware behaviour is inferred from the Pro's (m-bootloader SPEC §13). Who has an Elite to test?
+
+## Display
+
+34. **The backlight off without losing the keys.** PA2 drives both. Can the ST7789's own brightness command
+    (`0x51`) darken this panel, given that one experiment with `0x51`/`0x53` gave wrong colours? *How:* a minimal
+    test sending only `0x51` after the normal start-up, colours checked.
 
 ## Resolved
 

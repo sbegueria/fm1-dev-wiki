@@ -57,6 +57,10 @@ current state.
 | [jl-misctools](https://github.com/kagaimiq/jl-misctools) | JieLi containers and key files |
 | Ghidra + [ghidra-jieli](https://github.com/kagaimiq/ghidra-jieli) | disassemble stock firmware |
 | Emulators | see [Simulators and Emulators](Simulators-and-Emulators.md) |
+| `tools/fm1_bootarea.py` ([kmplngj/Felucca](https://github.com/kmplngj/Felucca)) | offline, read-only: names a dump's or package's boot area (V15, V16, m-bootloader), checks CRCs, reads the chip key and the declared clock |
+| `tests/mul64_hload_check.py` (kmplngj/Felucca) | scans a build's disassembly for 64-bit multiplies next to 16-bit loads, the erratum's pattern ([Performance](Performance.md)) |
+| `tools/fm1_diagnostics.py` (kmplngj/Felucca) | read-only collector of a device's health, input, crash and boot-clock data over the USB serial console |
+| `tools/provenance.py` ([fm1-base](https://github.com/charlesvestal/fm1-base)) | finds lines copied from Felucca in a project, for relicensing ([fm1-base as a Base](FM1-Base.md)) |
 | AI assistant skills | see [AI Skills](AI-Skills.md) |
 
 ---

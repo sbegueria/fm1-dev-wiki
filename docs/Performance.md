@@ -111,7 +111,9 @@ __attribute__((noinline)) int32_t mul_q31(int32_t a, int32_t b) { return (int32_
 
 It cost that decoder ~50% of its speed. Floating-point code (no 64-bit multiplies) never showed it. Not known:
 the exact instruction pairs, whether 320 MHz avoids it. To find exposed code, look in the disassembly for
-`rN_rM = rA * rB` beside `h[...]` loads.
+`rN_rM = rA * rB` beside `h[...]` loads. kmplngj's Felucca fork automates that search over a build's disassembly
+(`tests/mul64_hload_check.py`, `docs/mul64-hload-audit.md`); it lists places to look, and no fault has been
+reproduced on that firmware.
 
 ## Integer maths
 
@@ -144,6 +146,7 @@ Two cores could roughly double the headroom, with caveats: [Second Core](Second-
 - JieLi AC79 SDK `include_lib/driver/cpu/wl82/asm/cache.h`, `csfr.h`.
 - DUB-1's CPU notes (October 2026) and Felucca's `tools/build.py` checks (GPL-3.0-only).
 - [fm1-base](https://github.com/charlesvestal/fm1-base) commit history.
+- [kmplngj/Felucca `docs/mul64-hload-audit.md`](https://github.com/kmplngj/Felucca/blob/main/docs/mul64-hload-audit.md) (GPL-3.0-only).
 
 ---
 

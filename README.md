@@ -16,6 +16,7 @@ Every technical fact is tagged with where it comes from: **[HW]** measured on a 
 - [Getting Started](docs/Getting-Started.md)
 - [Choosing a Base](docs/Choosing-a-Base.md)
 - [Recovery](docs/Recovery.md)
+- [fm1-base as a Base](docs/FM1-Base.md)
 
 **Hardware**
 - [Hardware Overview](docs/Hardware-Overview.md)
