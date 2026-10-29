@@ -66,7 +66,7 @@ When two sources disagree, both are shown and the point goes to [Open Questions]
 **Writing firmware:** [Programming Guide](Programming-Guide.md) · [Performance](Performance.md) · [Second Core](Second-Core.md) · [Debugging](Debugging.md) ·
 [Simulators and Emulators](Simulators-and-Emulators.md)
 
-**Community:** [Known Projects](Known-Projects.md) · [Tools](Tools.md) · [Open Questions](Open-Questions.md) · [Glossary](Glossary.md) · [Contributing](Contributing.md) · [License](License.md)
+**Community:** [Known Projects](Known-Projects.md) · [Tools](Tools.md) · [AI Skills](AI-Skills.md) · [Open Questions](Open-Questions.md) · [Glossary](Glossary.md) · [Contributing](Contributing.md) · [License](License.md)
 
 ## Related lists
 

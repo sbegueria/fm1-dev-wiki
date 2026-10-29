@@ -44,6 +44,7 @@ Every technical fact is tagged with where it comes from: **[HW]** measured on a 
 **Community**
 - [Known Projects](docs/Known-Projects.md)
 - [Tools](docs/Tools.md)
+- [AI Skills](docs/AI-Skills.md)
 - [Open Questions](docs/Open-Questions.md)
 - [Glossary](docs/Glossary.md)
 - [Contributing](docs/Contributing.md)

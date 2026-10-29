@@ -9,6 +9,7 @@ permalink: /sections/community/
 
 - [Known Projects](../Known-Projects.md)
 - [Tools](../Tools.md)
+- [AI Skills](../AI-Skills.md)
 - [Open Questions](../Open-Questions.md)
 - [Glossary](../Glossary.md)
 - [Contributing](../Contributing.md)
