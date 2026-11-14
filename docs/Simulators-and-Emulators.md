@@ -49,6 +49,7 @@ These emulate the AC791N and run real firmware images unchanged:
 | Project | Licence | Notes |
 | --- | --- | --- |
 | [fm1-emu](https://github.com/joakimeriksson/fm1-emu) | MIT | runs community firmwares unchanged in the browser, natively or as an AU/VST3 plugin; an SMK-37 emulator too |
+| [FM-1 Emulator (atst.tools)](https://fm1-emulator.atst.tools/) | — | Hosted build of fm1-emu with stock V15 plus 10 community firmwares, a synth basics course, per-firmware first-track recipes and WAV export. Free, no install. |
 | [fm1-emulator](https://github.com/simonjohansson/fm1-emulator) | GPL-3.0 | Rust; runs `.fwsc`, `.elf`, `.bin` with the screen, buttons and USB serial |
 | [m-wave-fm1-browser-emulator](https://github.com/shcherbakov7/m-wave-fm1-browser-emulator) | GPL-3.0 | Rust/WebAssembly, both cores; Russian README |
 
