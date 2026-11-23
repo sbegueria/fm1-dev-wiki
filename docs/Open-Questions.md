@@ -123,8 +123,12 @@ Each entry: **the question**, what we know, and how to find out.
     fm1-base maintainers to state it.
 33. **m-bootloader on the UC25HQ80.** M-Flasher warns against installing m-bootloader on the newer flash
     (`B36014`; jvitkauskas/m-flasher#13), yet one UC25HQ80 unit reports m-bootloader `2.3-6bc8f45` installed and
-    working (fm1-dub#14, 2026-11-22). Is the warning still needed, and for which versions? *How:* the owner's
-    account of the install; M-Flasher's issue.
+    working (fm1-dub#14, 2026-11-22): installed with M-Flasher 0.12.1 (macOS), the unit rebooted normally, Device
+    info "Firmware check: OK", and since then SHRUB v1.29, DUB-1 and stock V15 installed on it without trouble
+    (M-Flasher and DUB-1's web installer). The owner calls it one unit, not proof: the failure in m-flasher#13
+    (a UC25HQ80 that didn't boot after the same kind of install) used M-Flasher 0.7.0. Is the warning still needed
+    with 0.12.1, and did something change between the versions? *How:* more UC25HQ80 installs with 0.12.1;
+    M-Flasher's changelog between 0.7.0 and 0.12.1.
 
 ## The SMK-37
 
