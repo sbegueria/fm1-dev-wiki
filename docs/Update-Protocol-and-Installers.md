@@ -62,6 +62,16 @@ carries the same stub, byte for byte, and measured on the host (power cut after 
 page, the real stub code judging the flash) that only the final sector, about 0.1 s, stays unprotected when
 leaving for a stub-less firmware such as V15, and none between stub-carrying firmwares (its README, 0.1.3). **[CODE]**
 
+**[HW]** Without a boot stub, the stock bootloader alone does the same when the first sector is blank. A cut
+install that had already rewritten `0x4000` left a half-old, half-new app that the bootloader **started** (the
+mixed app crashed; 2026-10-31, DUB-1 1.5.0 beta 1). DUB-1's update loader since 1.5.0 erases `0x4000` first (as
+soon as any sector differs) and writes it last: a deliberate cut at about 35% (cable out and power off together,
+2026-11-23) left `0x4000` erased; at power-on the bootloader ran the staged loader from the update record in
+flash, which was back on USB as "Felucca Update" about 7 s later, and the installer resumed and finished. One
+power cut, one unit (a Puya flash): the bootloader's rule (a blank app start: the flash update record) seen once.
+DUB-1's loader also keeps the RAM update record armed while it writes, with a start counter (3 tries), so a reset
+of the loader itself comes straight back (host-tested only).
+
 A unit that comes back in update mode shows three short flashes of the key lights and a black screen, and
 enumerates as `ota-FM-1` ("Felucca Update"). **Don't power-cycle it twice in a row in update mode**: a second
 arrival with no normal boot in between drops into the ROM's USB boot (TransitFM1 README). **[CODE]**
@@ -145,6 +155,7 @@ community's installers and the soft key work with V16 is in [Open Questions](Ope
 ## Sources
 
 - Felucca's `src/ota.c`, `loader/loader.c`, `tools/fm1_install.py` (GPL-3.0-only).
+- [DUB-1](https://github.com/sbegueria/fm1-dub) `firmware/loader/ldr_core.c` (from 1.5.0), `tests/ldr_test.c`; the cut-install test, 2026-11-23.
 - [FM-1-RE](https://github.com/AL-255/FM-1-RE) OTA protocol and host-updater analysis.
 - [m-bootloader](https://github.com/jvitkauskas/m-bootloader) README (M-UPGRADE behaviour).
 - [FM-1 resource hub REVERSE_ENGINEERING.md](https://github.com/aroum/fm1-custom-fw/blob/main/REVERSE_ENGINEERING.md) §4.
