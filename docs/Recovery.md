@@ -62,7 +62,9 @@ M-Flasher follow the same safety rules, which were checked on hardware:
 
 1. A flash loader runs in RAM (JieLi's `wl82loader.bin` from [jl-uboot-tool](https://github.com/kagaimiq/jl-uboot-tool),
    checked against its hash; or m-bootloader's own MIT flash loader in M-Flasher).
-2. The chip key must be `0x980F` and the flash `856014` (1 MiB), or nothing is done.
+2. The chip key must be `0x980F` and the flash a known 1 MiB part, or nothing is done. Older tools know only
+   `856014` (Puya); units since about autumn 2026 carry `B36014` (UC25HQ80): `fm1_rescue` accepts it from DUB-1
+   1.4.4 ([Hardware Overview](Hardware-Overview.md)).
 3. The whole flash is read and saved first.
 4. Only `[0x4000, 0x93000)` is written, and only the 4 KiB sectors that differ; each is erased, written and read
    back. The boot area below `0x4000` and the device data above `0x93000` are not touched.
@@ -118,6 +120,7 @@ could soft-brick on its old preset layout; the fix reported is erasing `0x97000`
 - [FM-1 Transporter](https://github.com/kurogedelic/FM-1-transporter) README;
   [MvaveFM1Unbricker](https://github.com/Quixotic7/MvaveFM1Unbricker).
 - Felucca-family `tools/fm1_rescue.py`, `tools/fm1_rescue.sh` (GPL-3.0-only).
+- [fm1-dub#14](https://github.com/sbegueria/fm1-dub/issues/14): M-Flasher installing a community `.fwsc` on a UC25HQ80 (2026-11-22).
 - [MvaveFM1Unbricker README](https://github.com/Quixotic7/MvaveFM1Unbricker) (MIT), "does not show up as WL82
   UBOOT1.00" and `restore` sections.
 - [mvave-fm1](https://github.com/maxfridbe/mvave-fm1) firmware skill §5, §10 (MIT).

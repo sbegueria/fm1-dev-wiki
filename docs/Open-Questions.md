@@ -121,14 +121,18 @@ Each entry: **the question**, what we know, and how to find out.
     MPL-2.0, Apache-2.0 and BSD-2-Clause. Can a GPL-3.0 firmware ship it, as this wiki reads the licences?
     fm1-base states the JieLi-library case, not this one ([fm1-base as a Base](FM1-Base.md)). *How:* ask the
     fm1-base maintainers to state it.
+33. **m-bootloader on the UC25HQ80.** M-Flasher warns against installing m-bootloader on the newer flash
+    (`B36014`; jvitkauskas/m-flasher#13), yet one UC25HQ80 unit reports m-bootloader `2.3-6bc8f45` installed and
+    working (fm1-dub#14, 2026-11-22). Is the warning still needed, and for which versions? *How:* the owner's
+    account of the install; M-Flasher's issue.
 
 ## The SMK-37
 
-33. Elite hardware behaviour is inferred from the Pro's (m-bootloader SPEC §13). Who has an Elite to test?
+34. Elite hardware behaviour is inferred from the Pro's (m-bootloader SPEC §13). Who has an Elite to test?
 
 ## Display
 
-34. **The backlight off without losing the keys.** PA2 drives both. Can the ST7789's own brightness command
+35. **The backlight off without losing the keys.** PA2 drives both. Can the ST7789's own brightness command
     (`0x51`) darken this panel, given that one experiment with `0x51`/`0x53` gave wrong colours? *How:* a minimal
     test sending only `0x51` after the normal start-up, colours checked.
 

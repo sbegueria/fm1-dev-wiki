@@ -87,13 +87,17 @@ the stock bootloader back** where the installer writes the head. The Felucca loa
 - [jl-misctools](https://github.com/kagaimiq/jl-misctools): JieLi container utilities.
 - [FM-1-RE](https://github.com/AL-255/FM-1-RE): unpacked stock packages and their metadata.
 - [M-Flasher](https://github.com/jvitkauskas/m-flasher): installs M-VAVE's `.fwsc` through download mode and
-  shows a flash map of what will change.
+  shows a flash map of what will change. **[HW]** It installs community packages too: DUB-1's `.fwsc` went on
+  at the first try over SHRUB v1.29 on a UC25HQ80 unit (`download-mode`, then FLASH FIRMWARE), and back to
+  stock V15 the same way (fm1-dub#14). M-UPGRADE (3.11.1211, macOS) refuses a community package: "Invalid OTA
+  firmware: missing or incomplete model, version, or metadata".
 
 ## Sources
 
 - Felucca's `tools/fm1pkg_make.py`, `tools/fm1_install.py` (GPL-3.0-only, © Leo Kuroshita).
 - [m-bootloader SPEC.md](https://github.com/jvitkauskas/m-bootloader/blob/main/docs/SPEC.md) §5.
 - [FM-1-RE architecture](https://github.com/AL-255/FM-1-RE/blob/main/docs/architecture.md) §2.
+- [fm1-dub#14](https://github.com/sbegueria/fm1-dub/issues/14): M-Flasher and M-UPGRADE with DUB-1's package (2026-11-22).
 
 ---
 

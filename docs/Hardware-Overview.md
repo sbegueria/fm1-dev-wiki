@@ -26,7 +26,7 @@ What is inside an FM-1, as far as the community knows. Each line has its tag (se
 
 | | | Tag |
 | --- | --- | --- |
-| Flash | 1 MiB SPI NOR, executed in place (XIP) through the SFC. JEDEC ID `856014`: the only ID `fm1_rescue` accepts, so at least the units it was tested on have it. Chip key `0x980F` on known units. | [HW] |
+| Flash | 1 MiB SPI NOR, executed in place (XIP) through the SFC. Two JEDEC IDs seen: `856014` (Puya, the earlier units) and `B36014` (**UC25HQ80**, on units sold since about autumn 2026; same size, same chip key). Chip key `0x980F` on known units. A firmware that checks the ID must accept both: DUB-1 1.4.3 accepted only `856014`, so on a UC25HQ80 nothing saved ("NOT SAVED · FLASH ERROR") and it refused installs over itself; fixed in 1.4.4 (fm1-dub#14, PR #15), `fm1_rescue` too. M-Flasher's device info shows the ID. | [HW] |
 | Flash part | JEDEC manufacturer `0x85` is Puya; the hub names the **Puya P25Q80H** (8 Mbit) and says the die is **inside the SoC's package** (SiP), wired to the SFC on PD0, PD1, PD4, PD5, PD6. Other notes speak of a SOIC-8 part on the board ([Flash Storage](Flash-Storage.md)). | [?] |
 | Screen | 240×240 colour TFT, ST7789-class, RGB565, on SPI1. Backlight on PA2 (active low). See [Display](Display.md). | [HW] |
 | Keys | 27 note keys (F3 to G5) and 14 buttons in one diode matrix behind two 74HC595 shift registers. | [HW] |
@@ -65,6 +65,7 @@ None of that is needed by a custom firmware: the open firmwares replace the whol
 - Felucca-derived HAL headers (`hal/fm1_input.h`, `fm1_lcd_hw.h`, `fm1_adc.h`, `fm1_audio.h`, `fm1_uart.h`;
   GPL-3.0-only, © Leo Kuroshita), as in DUB-1 and other Felucca forks.
 - `fm1_rescue.py` in Felucca-family trees (flash ID and chip key checks).
+- [fm1-dub#14](https://github.com/sbegueria/fm1-dub/issues/14), [#15](https://github.com/sbegueria/fm1-dub/pull/15): the UC25HQ80 (`B36014`) on new units, M-Flasher's device info from two owners (2026-11).
 - [FM-1 resource hub REVERSE_ENGINEERING.md](https://github.com/aroum/fm1-custom-fw/blob/main/REVERSE_ENGINEERING.md) §1.1, §1.2
   (part marking, package, flash part, from board photos and JieLi's AC7911B datasheet; no licence declared, so
   summarised here, not copied).
