@@ -78,7 +78,7 @@
   <text class="s" x="314" y="406">charger · SYSVDD</text>
   <rect class="box" x="446" y="364" width="134" height="56" rx="8"/>
   <text class="t" x="460" y="388">Radio</text>
-  <text class="s" x="460" y="406">BLE · WiFi (closed)</text>
+  <text class="s" x="460" y="406">BLE · WiFi · 2.4 GHz</text>
   <path class="line" d="M367,362 L367,338"/>
   <path class="two" d="M513,362 L513,338"/>
 
