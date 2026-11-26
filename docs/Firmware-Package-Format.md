@@ -12,6 +12,14 @@ MPL-2.0). M-VAVE's own packages have the same structure (FM-1-RE).
 
 **All integrity checks in the format are CRC16 (polynomial 0x1021, initial value 0).** **[CODE]**
 
+**A name to ignore.** FM-1-RE calls this CRC `jl_crc16` and names it "CRC-16/CCITT-FALSE", whose initial value is
+`0xFFFF` ([`io/11-ota-protocol.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/io/11-ota-protocol.md), "Known open
+items"). M-VAVE's own files say initial value 0, which is CRC-16/XMODEM: in the stock V13 package as FM-1-RE unpacked it,
+the stored CRCs of the `uboot.boot`, `isd_config.ini` and `app_dir_head` entries, and both CRCs in the header of the
+stock `ota.bin` (`analysis/device/ota-loader/ota_stock.bin`), match with 0 and not with `0xFFFF` (this wiki's check,
+2026-11-26, with Python's `binascii.crc_hqx`). felucca-bsp's `tools/fm1pkg.py` and `fm1_install.py` and m-bootloader's
+`tools/bankcb.py` all start from 0. So FM-1-RE's name is off, not the algorithm. **[RE] [CODE]**
+
 ## Layers, outside in
 
 ```
@@ -78,6 +86,19 @@ each encrypted with JieLi's ENC stream cipher (key `0xFFFF`). Files start on 0x1
 V16's package also carries a 5-byte `farg.cfg` whose purpose is unknown (m-bootloader `docs/STOCK-V15-V16.md`).
 **[RE]**
 
+### The update loader (`ota.bin`)
+
+**[RE]** M-VAVE's `ota.bin` (19,969 bytes; the same in V13 and V14), as FM-1-RE checked it byte by byte
+([`io/11-ota-protocol.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/io/11-ota-protocol.md), "Known open items",
+"ota.bin container format"):
+- an outer 32-byte header: header CRC, data CRC (over the rest of the file), data offset `0x20`, data length `0x4DE1`,
+  the name `usb_hid_ota.bin`;
+- an inner boot header: its own two CRCs, the image size `0x5B1C`, the load address **`0x01C0A800`**, the same name;
+- six **LZ4 block** chunks that share one dictionary, decompressing to 4 KiB each (the last `0xB1C`). The inner data CRC
+  covers the decompressed image.
+
+The bootloader decompresses it to `0x01C0A800` and starts it ([Update Protocol and Installers](Update-Protocol-and-Installers.md)).
+
 ### More entries: resources and extra regions
 
 felucca-bsp's loader (fm1-base builds) knows two more entry types. Both are written **after** the app, and a failure
@@ -124,7 +145,8 @@ the stock bootloader back** where the installer writes the head. The Felucca loa
 
 - Felucca / felucca-bsp: `fm1pkg_make.py` / `fm1pkg.py` (build), `fm1_install.py` (install).
 - [jl-misctools](https://github.com/kagaimiq/jl-misctools): JieLi container utilities.
-- [FM-1-RE](https://github.com/AL-255/FM-1-RE): unpacked stock packages and their metadata.
+- [FM-1-RE](https://github.com/AL-255/FM-1-RE): unpacked stock V13 and V14 packages and their metadata
+  (`firmware-images/`), and `scripts/extract_ota_loader.py`, which checks and unpacks the stock `ota.bin`.
 - [M-Flasher](https://github.com/jvitkauskas/m-flasher): installs M-VAVE's `.fwsc` through download mode and
   shows a flash map of what will change. **[HW]** It installs community packages too: DUB-1's `.fwsc` went on
   at the first try over SHRUB v1.29 on a UC25HQ80 unit (`download-mode`, then FLASH FIRMWARE), and back to
@@ -141,7 +163,10 @@ the stock bootloader back** where the installer writes the head. The Felucca loa
   [fm1-base](https://github.com/charlesvestal/fm1-base) README "A bigger app slot" (3039770).
 - M-VAVE's [FM1 Open](https://github.com/m-vave/fm1_open) `sdk/WebUpdate.js`, `app/version.h` (4c7496d);
   [SMK37 Open](https://github.com/m-vave/smk37_open) `app/version.h`, `sdk/WebUpdate.js` (b2d6bcb).
-- [FM-1-RE architecture](https://github.com/AL-255/FM-1-RE/blob/main/docs/architecture.md) §2.
+- [FM-1-RE](https://github.com/AL-255/FM-1-RE) (WTFPL): [architecture](https://github.com/AL-255/FM-1-RE/blob/main/docs/architecture.md) §2;
+  [`docs/io/11-ota-protocol.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/io/11-ota-protocol.md) ("Known open items");
+  `firmware-images/v13/raw_fw/FM-1.fwsc_unpack/decrypted.bin` and `analysis/device/ota-loader/ota_stock.bin` (the CRC check).
+- felucca-bsp `tools/fm1pkg.py`, `tools/fm1_install.py` (MPL-2.0); m-bootloader `tools/bankcb.py` (MIT): the CRC16's initial value.
 - [fm1-dub#14](https://github.com/sbegueria/fm1-dub/issues/14): M-Flasher and M-UPGRADE with DUB-1's package (2026-11-22).
 
 ---

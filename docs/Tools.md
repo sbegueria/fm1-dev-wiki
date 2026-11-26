@@ -32,7 +32,7 @@ current state.
 | [FM1Kit](https://github.com/ocean/FM1Kit) | Swift: install from iOS/macOS |
 | [fm-static](https://seajaysec.github.io/fm-static/) | web installer for units with odd MIDI port names |
 | [TransitFM1](https://github.com/Quixotic7/TransitFM1) | silent stopover firmware between two custom firmwares; answers as V15, writes the next firmware first sector last ([Update Protocol and Installers](Update-Protocol-and-Installers.md)) |
-| [FM-1-RE](https://github.com/AL-255/FM-1-RE) `tools/fm1_ota.py` | the stock update protocol from Python |
+| [FM-1-RE](https://github.com/AL-255/FM-1-RE) `tools/fm1_ota.py` | the stock update protocol from Python (Linux, ALSA). `tools/verify_reflash_record.py` checks its recorded V15 install offline, without opening MIDI ports ([Update Protocol and Installers](Update-Protocol-and-Installers.md)) |
 | [fm1-firmware-patcher](https://github.com/czietz/fm1-firmware-patcher) (Unlicense) | binary patches of stock V15 and V16 (detune, aftertouch, colours); the patched file may not be shared |
 | [FM-1 Macropad Patch](https://github.com/smememe/fm1-macropad-patch) (MIT) | patch of stock V15: every input sends a USB-MIDI note |
 | [fm1buddy](https://github.com/konsumer/fm1buddy) (GPL-3.0) | an ESP32-S3 touchscreen box (Freenove 2.8", no soldering) that runs an FM-1 or SMK-37 without a computer: installs firmware from SD or over Wi-Fi, backs up and recovers, routes USB and Bluetooth MIDI gear, records the FM-1's USB audio to WAV (README, 2026-11-26) |
@@ -62,7 +62,7 @@ current state.
 | [jl-misctools](https://github.com/kagaimiq/jl-misctools) | JieLi containers and key files |
 | [jieli-ida](https://github.com/donlon/jieli-ida) (MIT) | IDA Pro processor module and ELF loader for pi32v2, work in progress (tested with IDA Pro 9.4) |
 | [m-apps](https://github.com/jvitkauskas/m-apps) (MIT) | Rust programs run from RAM without touching the flash (`hello`, `usbdisk`, `slots`, `mp3`, a launcher); `make run` starts one through M-Flasher's `run-ram` (0.9.2 or newer) and prints its log. Early. `AGENTS.md` lists traps found on the hardware |
-| Ghidra + [ghidra-jieli](https://github.com/kagaimiq/ghidra-jieli) | disassemble stock firmware |
+| Ghidra + [ghidra-jieli](https://github.com/kagaimiq/ghidra-jieli) | disassemble stock firmware. **[RE]** FM-1-RE found that it mis-decodes the 6-byte long `call` (prefix `80 ff`), which broke flow-following, and that JieLi's own `objdump` decodes `app.bin` more accurately; its [`docs/04-toolchain-and-vendoring.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/04-toolchain-and-vendoring.md) shows how to wrap a raw `app.bin` for it. Load stock `app.bin` at `0x02000120` ([Memory Map](Memory-Map.md#the-stock-app-runs-at-0x02000120)) |
 | Emulators | see [Simulators and Emulators](Simulators-and-Emulators.md) |
 | `tools/fm1_bootarea.py` ([kmplngj/Felucca](https://github.com/kmplngj/Felucca)) | offline, read-only: names a dump's or package's boot area (V15, V16, m-bootloader), checks CRCs, reads the chip key and the declared clock |
 | `tests/mul64_hload_check.py` (kmplngj/Felucca) | scans a build's disassembly for 64-bit multiplies next to 16-bit loads, the erratum's pattern ([Performance](Performance.md)) |
@@ -77,7 +77,8 @@ pi32v2-rust, fm1buddy, M-Unbricker, m-apps, jieli-ida; [m-bootloader](https://gi
 README and [release 3.0](https://github.com/jvitkauskas/m-bootloader/releases/tag/v3.0);
 [awesome-fm-1](https://github.com/cicloid/awesome-fm-1) `mooring/` at commit `671ce25` (2026-11-16);
 [felucca-bsp](https://github.com/hugelton/felucca-bsp) `README.md` at `fdd709f`;
-[fm1-base#36](https://github.com/charlesvestal/fm1-base/issues/36).
+[fm1-base#36](https://github.com/charlesvestal/fm1-base/issues/36); [FM-1-RE](https://github.com/AL-255/FM-1-RE)
+`docs/04-toolchain-and-vendoring.md`, `tools/README.md`, `docs/io/12-v15-reflash-proof.md`.
 
 ---
 

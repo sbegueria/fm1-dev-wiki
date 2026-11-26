@@ -179,6 +179,14 @@ bridge at `0x13E00`. Access it with interrupts off so nothing else uses the brid
 
 The battery's divider is on ADC channel 3 (PB1). **Never drive or pull PB1 low:** held low for 8 s it resets the
 chip (felucca-bsp `boards/fm1/fm1_adc.h`, from `isd_config`). **[CODE]** fm1-base has `plat_battery` for charge bars.
+FM-1-RE decodes the same stock setting, `RESET=PB01_08_0`: PB1, 8 s, active low
+([`TODO_aug2.md`](https://github.com/AL-255/FM-1-RE/blob/main/TODO_aug2.md), "PB01 is a reset input"). **[RE]**
+
+**How stock V13 reads it.** **[RE]** It sums ADC channel 3 over 256 ticks of its input timer and turns the average into
+four levels, with cuts at raw values of about 520, 531, 550 and 591. Around each reading it drives GPIO 149
+high, then low, and reads bit 1 of `0x51004`, which FM-1-RE takes for a charger or USB-present flag; those two roles are
+its guess (FM-1-RE [`io/07-input.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/io/07-input.md) §4.2). **[?]**
+What those raw values mean in volts is still open ([Open Questions](Open-Questions.md)).
 
 ## Sources
 
@@ -196,6 +204,7 @@ chip (felucca-bsp `boards/fm1/fm1_adc.h`, from `isd_config`). **[CODE]** fm1-bas
 - JieLi AC79 SDK `README.md`.
 - [fm1-x0x#21](https://github.com/charlesvestal/fm1-x0x/issues/21) (voltages; fc79's reading of V15).
 - [m-flasher#55](https://github.com/jvitkauskas/m-flasher/issues/55), [#70](https://github.com/jvitkauskas/m-flasher/issues/70).
+- [FM-1-RE](https://github.com/AL-255/FM-1-RE) (WTFPL; stock V13) `docs/io/07-input.md` §4.2, `TODO_aug2.md`.
 - [kmplngj/Felucca `docs/boot-area-survey.md`](https://github.com/kmplngj/Felucca/blob/main/docs/boot-area-survey.md) (GPL-3.0-only).
 
 ---

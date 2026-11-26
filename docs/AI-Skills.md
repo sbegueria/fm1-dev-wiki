@@ -85,13 +85,14 @@ None of these is a reason to avoid the skill. They are the reason to keep the ta
 | Project | Licence | What |
 | --- | --- | --- |
 | [fm1-base](https://github.com/charlesvestal/fm1-base) `felucca-to-fm1-base` | MPL-2.0 | Moves a Felucca-based firmware onto fm1-base, keeping its GPL ([Choosing a Base](Choosing-a-Base.md)). |
-| [fm1-to-smk37](https://github.com/genkigenki/fm1-to-smk37) | per its README | A prompt and kit for porting an FM-1 firmware to the SMK-37 with a coding agent ([SMK-37](SMK-37.md)). |
+| [fm1-to-smk37](https://github.com/genkigenki/fm1-to-smk37) | CC BY-NC 4.0 (its `LICENSE`; the ported firmware code stays under its own licences) | A prompt, an agent playbook (`AGENTS.md`) and a kit for porting an FM-1 firmware to the SMK-37 with a coding agent, keeping the FM-1 build byte-identical; hardware map, pitfalls, mapping patterns ([SMK-37](SMK-37.md), [Programming Guide](Programming-Guide.md#targeting-both-fm-1-and-smk-37)). |
 | [Felucca Editor](https://github.com/hunterxiong2026/fm1-felucca-editor-2026) | MIT | Edits Felucca 1.5 sounds, tracks and songs over SysEx; also packaged as a Claude skill. Chinese README. |
 | [SLOOP Editor Skill](https://github.com/hunterxiong2026/fm1-sloop-editor-2026) | MIT | Drives SLOOP 2.4.1 over SysEx (a DeepSeek harness skill). Chinese README. |
 | [kmplngj/Felucca](https://github.com/kmplngj/Felucca) `.agents/skills/` | GPL-3.0-only | A Felucca fork run largely by agents (below). |
 | Dinghy's [docs/RULES.md](https://github.com/zvenson/dinghy/blob/main/docs/RULES.md) | GPL-3.0 | Not a skill, but written to be read by agents and people; the source of most of mvave-fm1's "chip rules". |
 
-(Descriptions from each README and [awesome-fm-1](https://github.com/cicloid/awesome-fm-1), October 2026.)
+(Descriptions from each README and [awesome-fm-1](https://github.com/cicloid/awesome-fm-1), October 2026; fm1-to-smk37's
+licence from its `LICENSE` at `54252ff`, checked 2026-11-26.)
 
 ## kmplngj's Felucca fork: skills and tooling
 

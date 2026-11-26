@@ -33,6 +33,10 @@ which ELF a report belongs to.
 
 If you add code in RAM, widen the PC-limit window, or the guard faults on the first fetch ([Performance](Performance.md)).
 
+**[RE]** M-VAVE's V13 uses the stack guard per task: at each context switch it writes the new task's stack range to
+`0x01EEF0E0` and `0x01EEF0DC`, plus `0x200` for core 1 (FM-1-RE
+[`io/02-rtos.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/io/02-rtos.md) §2.1, marked high).
+
 ## Survive a crash loop
 
 **[CODE]** Count starts in `NOINIT`. If the firmware crashes or hangs (watchdog) in its first ~30 s twice in a
@@ -81,6 +85,19 @@ Show, on a debug or settings page:
 Put a dark, semi-transparent panel behind debug text if it sits over an animation: you want to keep the
 animation running (it is part of the load you are measuring) and still read the numbers.
 
+## Nothing hidden in the stock firmware
+
+**[RE]** FM-1-RE searched stock V13 and V14 for a way in and found none
+([`TODO_aug2.md`](https://github.com/AL-255/FM-1-RE/blob/main/TODO_aug2.md), "No hidden console or recovery chord has
+been found"; `analysis/device/debug-surfaces.md`):
+- no serial console: the stock `isd_config.ini` sets a debug baud rate (`UTBD`) but no debug pin (`UTTX`) and no UART
+  update pin (`UTRX`); the application's UART is the MIDI input;
+- no USB serial port, and none of the SDK's factory, test or AT command frames;
+- no trace of the SDK's online configuration tool protocol (frames starting `5A AA A5`), which can read and write flash;
+- the two-key chord in the key scanner only resets octave and semitone ([Controls](Controls.md)).
+
+So a crash in stock firmware tells you nothing over USB; the community's own tools are below.
+
 ## Over USB
 
 | Tool | What | Tag |
@@ -112,6 +129,9 @@ Restrict register peeks to known ranges: a read of a gated peripheral block can 
 - [FM-1 Transporter](https://github.com/kurogedelic/FM-1-transporter).
 - [Dinghy](https://github.com/zvenson/dinghy) `firmware/hal/fm1_sys.h`, `fm1_irq.h`, `firmware/src/platform.c`, `docs/RULES.md` (GPL-3.0).
 - [mvave-fm1](https://github.com/maxfridbe/mvave-fm1) development skill §3, §7; [MvaveFM1Unbricker README](https://github.com/Quixotic7/MvaveFM1Unbricker).
+- [FM-1-RE](https://github.com/AL-255/FM-1-RE) (WTFPL; stock V13, V14): `docs/io/02-rtos.md` §2.1, `TODO_aug2.md`,
+  [`analysis/device/debug-surfaces.md`](https://github.com/AL-255/FM-1-RE/blob/main/analysis/device/debug-surfaces.md).
+  Its code addresses need `0x120` added ([Memory Map](Memory-Map.md#the-stock-app-runs-at-0x02000120)).
 
 ---
 

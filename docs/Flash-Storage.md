@@ -21,6 +21,14 @@ The FM-1 has one 1 MiB SPI NOR flash. It holds the boot area, your code (run in 
 | `[0xEA000, 0xFC000)` | USR: user patches and resources |
 | `[0xFF000, 0x100000)` | Unit reservation (`key_mac`) |
 
+**Reading a region table.** **[RE]** In SMK-37 stock 016, the region table (in the decrypted flash from `0x4060`)
+gives VM, BTIF, USRTRIM, USRFLASH and USR as **absolute** flash offsets, not relative to the app area at `0x4000`.
+Some unpackers add `0x4000` and report these regions 16 KiB too high. The FM-1 ranges above are given as absolute
+offsets too (m-bootloader SPEC §5.5). Each entry also carries flags; a
+package for a device should carry that device's table with the stock flags, so the official loader treats it the same
+way (genkigenki's [fm1-to-smk37](https://github.com/genkigenki/fm1-to-smk37) 01 §2, 02 §2.3, 05 §2; read from SMK-37
+stock 016). The SMK-37's own layout, with its calibration and the risk of a blank USRFLASH, is on [SMK-37](SMK-37.md).
+
 **Where the stock data really is.** **[HW]** On one FM-1 that had run stock V15 (read 2026-10-08), the SDK's VM
 was at **`0xE8000`** (at most 4 KiB, since BTIF follows), not at the start of the declared range: magic `55 AA AA 55`, then
 records 106, 107, 187, 108, 113 and 109, which hold the radio's RF calibration. BTIF at **`0xE9000`** holds the
@@ -165,6 +173,8 @@ much the XIP window maps is unknown (felucca-bsp `docs/EXPERIMENTAL.md`). **[?]*
 ## Sources
 
 - [m-bootloader SPEC.md](https://github.com/jvitkauskas/m-bootloader/blob/main/docs/SPEC.md) §5.5.
+- [fm1-to-smk37](https://github.com/genkigenki/fm1-to-smk37) `docs/01-hardware.md` §2, `docs/02-update-and-recovery.md`
+  §2.3, `docs/05-reverse-engineering.md` §2 (CC BY-NC 4.0; 54252ff, 2026-10-17).
 - [FM-1-RE architecture](https://github.com/AL-255/FM-1-RE/blob/main/docs/architecture.md) §2.
 - Felucca's `firmware/src/storage.c` (GPL-3.0-only).
 - [felucca-bsp](https://github.com/hugelton/felucca-bsp) `chip/fm1_flash.h`, `chip/fm1_flash_wait.h`, `chip/fm1_xip.h`,

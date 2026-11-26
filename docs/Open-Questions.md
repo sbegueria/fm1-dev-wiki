@@ -21,6 +21,10 @@ Each entry: **the question**, what we know, and how to find out.
    *Since:* two code sources contradict the hub on PC6. felucca-bsp's `boards/fm1/fm1_audio.h` says PC6 "is the I2S
    data line, not a codec reset or mute pin"; FM1 Open's `app/board/fm1_audio.h` calls it the DAC line. The part
    itself is still unknown ([Pinout](Pinout.md), November 2026).
+   *Since:* FM-1-RE's later notes on stock V13 (`docs/io/03-audio-dac.md` §5.2, §5.3, marked med) find the synth
+   sent through the `0x12E00` block (ALNK0), with set-up code configuring PC0, PC1, PC2 and PC6, while its overview still
+   says "internal audio DAC". So stock firmware likely uses the same output as the open firmwares; the part on the
+   other end is still unknown ([Audio Output](Audio-Output.md#what-m-vaves-own-firmware-uses)).
    *How:* a board photo with the part number; a datasheet; probe the lines.
 2. **The true sample rate.** Open firmwares assume 44,100 Hz; FM-1-RE reports the stock audio server at 44,118 Hz.
    Is the rate the same under 360 and 320 MHz? *How:* record a long sine from the FM-1 and measure its frequency
@@ -54,9 +58,15 @@ Each entry: **the question**, what we know, and how to find out.
    (felucca-bsp [#46](https://github.com/hugelton/felucca-bsp/pull/46); [Flash Storage](Flash-Storage.md)). Still
    open: the same on the UC25HQ80 (`B36014`), whether erase-suspend works there, and the other core during an erase.
 10. **Battery.** The ADC reading against the battery's voltage, and the battery cost of M-VAVE's voltage settings.
+    *Since:* stock V13 turns a 256-reading average of ADC channel 3 into four levels at raw values of about 520,
+    531, 550 and 591, and switches GPIO 149 around each reading (FM-1-RE `docs/io/07-input.md` §4.2;
+    [Clocks and Power](Clocks-and-Power.md#battery)). **[RE]** The voltages those values stand for, and what
+    GPIO 149 does, are still open.
 
 11. **The chip's exact part.** The first r/MVaveFM1 thread says AC79118B; the resource hub reads AC7911B, QFN-48,
-    marking `JL C156211-11A-B`, from board photos; mvave-fm1 repeats AC7911B. *How:* a sharp photo of the marking.
+    marking `JL C156211-11A-B`, from board photos; mvave-fm1 repeats AC7911B. FM-1-RE reads its unit's marking as
+    `C156211-11B8`, **LQFP48** (`docs/01-firmware-analysis.md`), against the hub's QFN-48. *How:* a sharp photo of
+    the marking and the package's leads.
 12. **Where the flash is.** The hub says the Puya P25Q80H die is inside the SoC package (SiP), on PD0–PD6;
     felucca-bsp's experimental notes speak of replacing "the stock SOIC-8". Is there an 8-pin flash on the board?
     *How:* a board photo; the AC7911B datasheet's package description.
@@ -68,6 +78,9 @@ Each entry: **the question**, what we know, and how to find out.
     TX) shares the package pin with PH8. *How:* trace the jack on a board photo.
     *Since:* the resource hub's `HARDWARE_MODS.md` lists a DIN-5 MIDI-out mod on pin 39 with a 74LVC1G07 buffer
     [?]; its firmware repository is gone and upstream Dinghy has no MIDI out ([Pinout](Pinout.md)).
+    *Since:* stock V13 has a UART transmit path: it copies incoming MIDI into the UART's TX DMA as MIDI thru
+    (FM-1-RE `docs/io/05-midi.md` §1, §2.1) **[RE]**. Whether that pin reaches the jack is the same question
+    ([MIDI and USB](MIDI-and-USB.md)).
 36. **The V15 supply voltages.** Two readings disagree. A static reading of V15's code (fc79, fm1-x0x#21) gives
     I/O 3.2 V, VDC14 1.60 V and SYSVDD 1.38 V. m-bootloader's RAM-app probe read I/O 3.5 V, core 1.20 V while V15
     or V16 ran, and saw 3.2 V only from the 016 bootloader until its firmware starts. The two may have been read at
@@ -81,13 +94,17 @@ Each entry: **the question**, what we know, and how to find out.
     no libgcc", so floats fail to link. The likely reading is that Dinghy's build links no float support, not that
     the chip lacks an FPU, but no one has written that down. *How:* build a float test with `-mfprev1`, run it on
     a unit and time it against the same code built soft-float.
+    *Since:* M-VAVE's V13 links software helpers for doubles only, none for single floats (FM-1-RE
+    `docs/function-index.md`; [Performance](Performance.md)) **[RE]**, which fits single floats in hardware.
 
 16. **The 64-bit multiply erratum.** Which exact instruction pairs fail? Is 320 MHz clear of it? Does it ever hit
     float code? (felucca-bsp `docs/CPU.md`.) A new case: the 48 kHz USB resampler `uac_tap48` had the pattern
     (felucca-bsp [#16](https://github.com/hugelton/felucca-bsp/issues/16), 2026-11-18). Is 396 MHz
     ([Clocks and Power](Clocks-and-Power.md)) worse for it?
 17. **The second core's misreads.** Why do some units' core 1 misread shared RAM? Is it the supply, the clock, the
-    bus? Is it fixed by M-VAVE's voltages? (melodee#17, fm1-x0x#10.)
+    bus? Is it fixed by M-VAVE's voltages? (melodee#17, fm1-x0x#10.) Stock firmware starts core 1 too (V13 and V15:
+    [Second Core](Second-Core.md)), so a stock unit's core 1 runs under M-VAVE's voltages; whether stock code ever
+    shows the fault is not known.
 18. **Flag gains.** What do FM1 Open's flags (`-flto`, `-pi32v2-enable-simd=true`, `-pi32v2-large-program=true`,
     IPRA, `rep-memop`) gain on real DSP code, and do they change float results?
 
@@ -107,9 +124,7 @@ Each entry: **the question**, what we know, and how to find out.
 
 ## Memory map
 
-20. **The XIP offset in the stock image.** Felucca maps flash `0x4120` to `0x02000120`; FM-1-RE writes
-    `flash_offset − 0x4120 + 0x02000000` and puts stock vectors at `0x020000A0`. Is the stock app linked
-    differently, or is one note off by the 0x120 header?
+20. **The XIP offset in the stock image.** Resolved: see below.
 21. **The stock clock in the app.** FM-1-RE reads a `pll_clock_init` → 240 MHz in V13's start-up; measurements under
     M-VAVE's bootloader, with an open firmware running, give 360 MHz. What does V15's own start-up set, and when?
     *Since:* the bootloaders' hand-over is now measured (015: 360 MHz, 016: 320 MHz; m-bootloader
@@ -123,17 +138,21 @@ Each entry: **the question**, what we know, and how to find out.
 
 22. **Installs that stall half-way** ("the loader stopped answering" after ~half the requests). A USB drop, or the
     loader's poll falling behind? *How:* log the last request and its timing in the installer; a USB capture.
+    *Since:* one cause is known for new hosts: the device drops an answer whose declared length is wrong, and a
+    stock install stalled on its last 481-byte request that way (FM-1-RE `docs/io/12-v15-reflash-proof.md`, one unit,
+    2026-09-04) **[HW]**. Felucca-family installers declare the length from the data, so it does not explain their
+    stalls ([Update Protocol](Update-Protocol-and-Installers.md)).
 23. **m-bootloader and full packages.** Which installers keep m-bootloader and which put the stock one back?
     (SLOOP's kept it; M-VAVE's and Baud Girl's restore stock.) *Since:* M-UPGRADE's V15→V16 update puts the stock
     016 bootloader back (m-bootloader [v3.0 notes](https://github.com/jvitkauskas/m-bootloader/releases/tag/v3.0));
     m-bootloader's own MIDI mode writes only the app, never a bootloader ([Boot Chain](Boot-Chain-and-Bootloaders.md)).
     Other installers are still to be listed.
 24. **The loader's watchdog.** How long can the update loader go without a request before it gives up, per base?
+    *Since:* the host side of M-UPGRADE is known: it waits 2,000 ms after each upgrade command and 8,000 ms per
+    receive, with no keep-alive (FM-1-RE `docs/io/11-ota-protocol.md`, decompiled) **[RE]**. The loaders' own
+    limits are still open.
 
-25. **USB IDs of the update loaders.** The hub reports `4D4A:4155` "ota-FM-1" during an update; mvave-fm1's skill
-    puts ORBIT's loader there too. ORBIT's and Felucca's loader sources say `1209:0002` "Felucca Update". Is
-    `4D4A:4155` M-VAVE's own loader? *How:* `lsusb` during an M-UPGRADE update and during an ORBIT update.
-    Note: m-bootloader's MIDI mode also uses `1209:0002` ("FM-1 Update"; SPEC §11.6).
+25. **USB IDs of the update loaders.** Resolved for M-VAVE's loader: see below.
 26. **V16.** Since 2026-10-21 M-VAVE's download address serves V16. Mostly answered (November 2026): V16 answers
     `FM-1_016`; Felucca and fm1-base install over it and back (Felucca
     [#329](https://github.com/hugelton/Felucca/issues/329), felucca-bsp
@@ -181,11 +200,23 @@ Each entry: **the question**, what we know, and how to find out.
 ## The SMK-37
 
 34. Elite hardware behaviour is inferred from the Pro's (m-bootloader SPEC §13). Who has an Elite to test?
-    m-bootloader 3.0 itself has not been tested on any SMK-37 yet (its v3.0 notes).
+    m-bootloader 3.0 itself has not been tested on any SMK-37 yet (its v3.0 notes). fm1-to-smk37 builds Elite and
+    MKE-P37 packages too, but checked its facts only on an SMK-37 Pro (its README, 54252ff, 2026-10-17).
 41. **SMK37 Open and the calibration sector.** SMK37 Open keeps the FM-1's layout, so its USER region
     `[0x7C000, 0xFF000)` spans the SMK-37's calibration and Bluetooth sectors `0xC0000`–`0xC1FFF`. It doesn't read
     the factory calibration; does its firmware or updater ever write there? ([SMK-37](SMK-37.md)) *How:* dump
     `0xC0000`–`0xC1FFF` before and after an SMK37 Open install and use.
+    *Since:* the region is wider than that. It starts inside the SMK's stock app area (which runs to `0x9CFFF`) and
+    covers the stock VM, USRFLASH (presets and wheel values) and USR too; its VM and BTIF sit below `0x7C000`
+    (`sdk/Package.cs`). fm1-to-smk37 reads stock 016's table and says an SMK package should carry that table, with
+    the stock flags, so the official loader treats it the same way (02 §2.3). **[RE]** So also: does the stock
+    loader or stock firmware act on SMK37 Open's table, and what does stock firmware do with USRFLASH afterwards
+    (a blank USRFLASH has been seen to make it erase the calibration)? *How:* also dump `0xC2000`–`0xEAFFF`.
+43. **Does stock SMK-37 016 answer the soft key?** m-bootloader's SPEC §4.2 says stock 016 on an SMK-37 Pro
+    answered `F0 22 24 35 7D F7` on the first "… Private" port; fm1-to-smk37 (02 §2, §3.1) says only Felucca-family
+    loaders and apps understand it, not the stock app, and stages its own loader first for a backup. Which port did
+    each try? ([MIDI and USB](MIDI-and-USB.md)) *How:* send the soft key from stock 016 on each of the SMK's MIDI
+    ports and note which, if any, restarts into the loader.
 
 ## Display
 
@@ -194,11 +225,28 @@ Each entry: **the question**, what we know, and how to find out.
     test sending only `0x51` after the normal start-up, colours checked.
     *Since:* M-VAVE's own panel set-up sends `51 FF` (Dinghy `docs/NEWER-FM1-SCREEN.md`; [Display](Display.md)), so
     the command is accepted by this panel; dimming with lower values is still untested.
+    On the SMK-37 the question doesn't arise: it has no backlight pin, and the screen is on whenever the unit is
+    (fm1-to-smk37 01 §3, verified).
 42. **The newer panels at 60 MHz.** Dinghy's notes say the newer panels need the display clock at 12 MHz;
     fm1-base's `lcd_panel` option sends M-VAVE's set-up but keeps 60 MHz ([Display](Display.md)). Do newer panels
     work at 60 MHz once fully set up? *How:* run fm1-base with `lcd_panel = true` on a newer unit.
+    For the SMK-37's panel, fm1-to-smk37 disagrees with itself: `BAUD` 4, about 12 MHz, verified (01 §3), against
+    "the SMK's 20 MHz LCD clock" (10 §5).
 
 ## Resolved
+
+- **20. The XIP offset in the stock image** (2026-11-26, this wiki's reading). The stock app is linked at
+  `0x02000120` like the open firmwares; FM-1-RE's addresses of code and data in `app.bin` are 0x120 low. Evidence
+  from FM-1-RE's own data: the package's `entry-point` is `0x02000120`, the start-up's jump and core 1's entry land
+  0x120 above the functions FM-1-RE finds, its tables sit 0x120 below the code's pointers, and its `.data` copy fits
+  the file only at `0x02000120`. fm1-to-smk37 says the same for stock 016. FM-1-RE itself does not conclude **[RE]**.
+  Now in [Memory Map](Memory-Map.md#the-stock-app-runs-at-0x02000120).
+- **25. USB IDs of the update loaders** (2026-09-04 capture). `4D4A:4155` is **M-VAVE's own loader**: it enumerated
+  that way and answered `ota-FM-1_015` between the two steps of a stock V15 install (FM-1-RE
+  `docs/io/12-v15-reflash-proof.md`, one unit) **[HW]**. ORBIT's and Felucca's loaders use `1209:0002` "Felucca
+  Update" by their sources, and m-bootloader's MIDI mode `1209:0002` "FM-1 Update" (SPEC §11.6); mvave-fm1's skill,
+  which put ORBIT's loader at `4D4A:4155`, has not been checked with `lsusb`. FM-1-RE's July notes say a shrunk test
+  loader came back as `4C4A:C755` (`docs/ota-loader-shrinking.md`). Now in [MIDI and USB](MIDI-and-USB.md).
 
 - **5. The cycle counter** (2026-11-21). `C0_TL_CKCNT` counts only when bits 0–2 of `DBG_CON` (`0x1EEE344`) are
   set: 360,031 counts per ms with them, 0 without (felucca-bsp

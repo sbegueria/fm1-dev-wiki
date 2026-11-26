@@ -31,10 +31,38 @@ Addresses as the CPU sees them. See [Flash Storage](Flash-Storage.md) for the fl
 | `0x04000000` | External RAM window. **Absent on the FM-1** (but see the SDRAM question in [Open Questions](Open-Questions.md)). | [SDK] [RE] |
 | `0xFFC00000`–`0xFFCFFFFF` | The chip's ROM. Dinghy's build refuses any call to, or constant loaded from, this range: a constant that happens to fall in it (`-32767 << 7` = `0xFFC00080`) trips the check too. | [CODE] |
 
-**A disagreement on the XIP offset.** Felucca-family code maps flash offset `0x4120` (where `app.bin` starts) to
-`0x02000120`. FM-1-RE's architecture notes write the mapping as `flash_offset − 0x4120 + 0x02000000` and put the
-stock app's vectors at `0x020000A0`. Working firmware proves the first for open firmwares. Whether the stock
-image is linked differently, or the note is off by the 0x120-byte header, is in [Open Questions](Open-Questions.md). **[?]**
+**ROM services.** **[RE]** M-VAVE's V13 calls the ROM at fixed addresses: `0xFFC00404` flash read, `0xFFC00476`
+flash write, `0xFFC05C4C` delay, `0xFFC00EEA` / `0xFFC00F2E` P33 read / write (FM-1-RE
+[`io/09-storage.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/io/09-storage.md) §1,
+[`io/07-input.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/io/07-input.md) §1,
+[`io/01-boot.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/io/01-boot.md) §5, marked high).
+
+### The stock app runs at `0x02000120`
+
+**[RE]** Felucca-family code maps flash `0x4120` (where `app.bin` starts) to `0x02000120`, and working firmware
+proves it for open firmwares. FM-1-RE reads M-VAVE's V13 `app.bin` as if its first byte were at `0x02000000`
+(`docs/architecture.md` §2: `flash_offset − 0x4120 + 0x02000000`, vectors at `0x020000A0`). This wiki's reading of
+FM-1-RE's own data (2026-11-26) is that **the stock app is linked at `0x02000120` too**, and FM-1-RE's app addresses
+are 0x120 low:
+
+- The stock package's metadata, as FM-1-RE unpacked it, gives `entry-point: 33554720`, which is `0x02000120`
+  (`firmware-images/v13/raw_fw/FM-1.fwsc_unpack/jlfw.yaml`). `docs/01-firmware-analysis.md` converts it as `0x020000A0`.
+- The start-up code jumps to the literal `0x02001C24`, but FM-1-RE finds that function starting at its `0x02001B04`,
+  0x120 lower. The entry handed to core 1, `0x020001B8`, is FM-1-RE's core-1 vector `0x02000098` + 0x120
+  (`io/01-boot.md` §4, §5.2 "Anomaly note").
+- Tables sit 0x120 below the addresses the code loads for them (`io/04-synth-engine.md` §1 "Reading note";
+  `io/05-midi.md` §3.3).
+- The start-up code copies `.data`, `0x9E7C` bytes, from `0x02084820`, then 32 bytes from `0x0208E69C`
+  (`io/01-boot.md` §2, §2.1). `app.bin` is `0x8E59C` bytes. Placed at `0x02000000`, the copies would run 0x100 bytes past
+  the end of the file; placed at `0x02000120`, they end exactly at its last byte (this wiki's arithmetic).
+- fm1-to-smk37 says independently that stock `app.bin` runs at `0x02000120`, checked with tables of string pointers
+  ([`docs/05-reverse-engineering.md`](https://github.com/genkigenki/fm1-to-smk37/blob/main/docs/05-reverse-engineering.md)
+  §3, stock 016). felucca-bsp's package builder writes `0x02000120` into the `app_area_head` entry (`tools/fm1pkg.py`).
+
+FM-1-RE calls the offsets "anomalies" or a "shard artifact" and does not conclude; its `io/01-boot.md` header says
+the plain mapping was verified. Both readings are shown here. **When you use an FM-1-RE address of code or data in
+`app.bin`, add `0x120`** to get the address the CPU uses. Its RAM, register and ROM addresses are not affected, nor
+an address it computed from a literal in the code (that one is already the CPU's).
 
 ## One firmware's RAM layout (example)
 
@@ -76,6 +104,10 @@ Points to know:
   below that address, and its build checks it (README). **[CODE]**
 - Felucca itself has since changed its layout: at [ac8cc0e](https://github.com/hugelton/Felucca/tree/ac8cc0e)
   (2026-11-24) `firmware/app.ld` has 72 KB of RAM and a pool of `0x5A000` from `0x01C1A000`. **[CODE]**
+- M-VAVE's V13, for comparison: `.data` (`0x9E7C` bytes) at `0x01C00000`, `.bss` after it up to `0x01C211FB`, core 0's
+  stacks topped at `0x01C14BB4` and `0x01C15BB4`, core 1's at `0x01C15EB4` and `0x01C16EB4`, and the same vector table
+  at `0x01C7FE00` (FM-1-RE [`io/01-boot.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/io/01-boot.md) §1,
+  marked high). **[RE]**
 
 ## Calling between flash and RAM
 
@@ -95,7 +127,16 @@ section contains no `call` instruction.
 ## Sources
 
 - [m-bootloader SPEC.md](https://github.com/jvitkauskas/m-bootloader/blob/main/docs/SPEC.md) §2.1, §2.2, §4.2, §6, §11.8 (RAM apps).
-- [FM-1-RE architecture](https://github.com/AL-255/FM-1-RE/blob/main/docs/architecture.md) §2.
+- [FM-1-RE](https://github.com/AL-255/FM-1-RE) (WTFPL; stock V13; last commit 2026-09-08):
+  [`docs/architecture.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/architecture.md) §2,
+  [`docs/01-firmware-analysis.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/01-firmware-analysis.md),
+  [`docs/io/01-boot.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/io/01-boot.md) §1, §2, §4, §5,
+  [`docs/io/04-synth-engine.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/io/04-synth-engine.md) §1,
+  [`docs/io/05-midi.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/io/05-midi.md) §3.3,
+  [`docs/io/07-input.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/io/07-input.md) §1,
+  [`docs/io/09-storage.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/io/09-storage.md) §1,
+  [`firmware-images/v13/raw_fw/FM-1.fwsc_unpack/jlfw.yaml`](https://github.com/AL-255/FM-1-RE/blob/main/firmware-images/v13/raw_fw/FM-1.fwsc_unpack/jlfw.yaml).
+- [fm1-to-smk37](https://github.com/genkigenki/fm1-to-smk37) `docs/05-reverse-engineering.md` §3 (CC BY-NC 4.0; cited, not copied).
 - Felucca's `firmware/app.ld` (GPL-3.0-only). [felucca-bsp](https://github.com/hugelton/felucca-bsp) `chip/fm1_xip.h`,
   `chip/fm1_flash.h`, `chip/fm1_sys.h`, `docs/EXPERIMENTAL.md` (MPL-2.0); Felucca has used them as its
   `firmware/bsp` submodule since 1.7.0, and its `hal/` copies are gone.

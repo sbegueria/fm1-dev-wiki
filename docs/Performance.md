@@ -100,6 +100,10 @@ If all engines don't fit, load the current one into a reserved SRAM area when th
 ## Compiler and linker flags
 
 **[CODE]** The FPU needs `-mcpu=r3 -mfprev1` (the SDK's own flags). Without them floats are done in software.
+**[RE]** M-VAVE's V13 links software helpers for doubles only (`__adddf3`, `__muldf3`, `__divdf3` and others) and none
+for single-precision floats, which fits single floats done in hardware (FM-1-RE
+[`docs/function-index.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/function-index.md), this wiki's search,
+2026-11-26).
 
 Common practice:
 - `-O2` for the hot DSP files, `-Os` (or `-Oz`) for the rest. Code size matters for the cache too.
@@ -197,6 +201,7 @@ second-core option since 1.6.1 (MENU > SYSTEM > 2ND CORE, beta, off by default).
 - JieLi AC79 SDK `include_lib/driver/cpu/wl82/asm/cache.h`, `csfr.h`.
 - DUB-1's CPU notes (October 2026) and Felucca's `tools/build.py` checks (GPL-3.0-only).
 - [fm1-base](https://github.com/charlesvestal/fm1-base) commit history, `tools/build.py`, `include/plat.h` (at 3039770).
+- [FM-1-RE](https://github.com/AL-255/FM-1-RE) `docs/function-index.md` (WTFPL; stock V13).
 - [kmplngj/Felucca `docs/mul64-hload-audit.md`](https://github.com/kmplngj/Felucca/blob/main/docs/mul64-hload-audit.md) (GPL-3.0-only).
 
 ---

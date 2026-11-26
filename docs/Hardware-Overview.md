@@ -12,10 +12,10 @@ What is inside an FM-1, as far as the community knows. Each line has its tag (se
 
 | | | Tag |
 | --- | --- | --- |
-| SoC | JieLi **AC791N**, WL82 family ("AC79" in JieLi's SDK). The r/MVaveFM1 thread names the part **AC79118B**; the [FM-1 resource hub](https://github.com/aroum/fm1-custom-fw/blob/main/REVERSE_ENGINEERING.md) reads **AC7911B**, QFN-48, marking `JL C156211-11A-B`, from board photos. Neither is checked here **[?]** ([Open Questions](Open-Questions.md)). Strings like `JL-BR22` in the stock firmware come from linked libraries and do not identify the chip. | [RE] [SDK] |
+| SoC | JieLi **AC791N**, WL82 family ("AC79" in JieLi's SDK). The r/MVaveFM1 thread names the part **AC79118B**; the [FM-1 resource hub](https://github.com/aroum/fm1-custom-fw/blob/main/REVERSE_ENGINEERING.md) reads **AC7911B**, QFN-48, marking `JL C156211-11A-B`, from board photos. FM-1-RE reads the marking on its unit as `C156211-11B8`, **LQFP48** ([`docs/01-firmware-analysis.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/01-firmware-analysis.md), "SoC / CPU"). None is checked here **[?]** ([Open Questions](Open-Questions.md)). Strings like `JL-BR22` in the stock firmware come from linked libraries and do not identify the chip. | [RE] [SDK] |
 | CPU | JieLi **pi32v2**, 32-bit, little endian, 16-bit instruction words. Toolchain target `-mcpu=r3`. | [SDK] [CODE] |
 | Cores | **Two.** The SDK defines `CPU_CORE_NUM 2`. Several firmwares run work on the second core. See [Second Core](Second-Core.md). | [SDK] [HW] |
-| FPU | **Single-precision** hardware floating point, enabled with `-mfprev1`. Doubles are done in software (slow). | [SDK] [CODE] |
+| FPU | **Single-precision** hardware floating point, enabled with `-mfprev1`. Doubles are done in software (slow). M-VAVE's V13 links software helpers for doubles only, none for single floats ([Performance](Performance.md)). | [SDK] [CODE] [RE] |
 | Caches | I-cache and D-cache (SDK). The data cache has **8 ways of 4 KiB**; 1 to 7 of them can be used as plain RAM at `0x01F28000` + way × 4 KiB, as M-VAVE's V15 does with 7. On one FM-1, 2 ways ran as RAM for days; with 7, flash data reads over 16 KiB were 57× slower (Optimist, 2026-10-18 to 25; felucca-bsp `chip/fm1_cache_ram.h`, `docs/EXPERIMENTAL.md`). I-cache size and layout: see [Performance](Performance.md) and [Open Questions](Open-Questions.md). | [SDK] [HW] [?] |
 | Clock | **360 MHz** under M-VAVE's 015 (V15) bootloader (measured). M-VAVE's **016** (V16) bootloader hands the firmware **320 MHz** (LSB 53.3 MHz), measured with a boot probe on one FM-1 (m-bootloader [`docs/STOCK-V15-V16.md`](https://github.com/jvitkauskas/m-bootloader/blob/121cfbe/docs/STOCK-V15-V16.md), 2026-11-14 and 21). m-bootloader: its SPEC sets 360 MHz, and the same probe read 360 MHz under 2.3; [Clocks and Power](Clocks-and-Power.md) reports 320 MHz under 1.2. The SDK calls 320 MHz its maximum. | [HW] |
 | SRAM | The SDK says **578 KB** of on-chip SRAM in total. Firmwares use the window `0x01C00000`–`0x01C80000` (512 KB). There is **no external RAM** on the FM-1. | [SDK] [CODE] |
@@ -55,7 +55,9 @@ M-VAVE's stock firmware is a DX7-compatible six-operator FM synth. **V16** came 
 its download address with each release, so that address now gives V16. Most custom-firmware installers and
 recovery tools were written against V15 ([Recovery](Recovery.md)). **[CODE]** Reverse
 engineering of V13 found an msfa/Dexed-derived engine, a FreeRTOS-derived SMP kernel, JieLi's UI, USB, BLE and
-storage stacks ([FM-1-RE architecture](https://github.com/AL-255/FM-1-RE/blob/main/docs/architecture.md)).
+storage stacks ([FM-1-RE architecture](https://github.com/AL-255/FM-1-RE/blob/main/docs/architecture.md); its code
+addresses need `0x120` added, see [Memory Map](Memory-Map.md#the-stock-app-runs-at-0x02000120)). Its notes find the
+stock synth on the same ALNK0 output as the open firmwares ([Audio Output](Audio-Output.md)).
 None of that is needed by a custom firmware: the open firmwares replace the whole application.
 
 ## Sources
@@ -63,7 +65,7 @@ None of that is needed by a custom firmware: the open firmwares replace the whol
 - JieLi AC79 SDK: `README.md` (chip summary), `include_lib/driver/cpu/wl82/asm/cpu.h` (`CPU_CORE_NUM`).
 - [felucca-bsp](https://github.com/hugelton/felucca-bsp): `chip/fm1_clock.h`, `chip/fm1_sys.h`, `boards/fm1/`.
 - [m-bootloader SPEC.md](https://github.com/jvitkauskas/m-bootloader/blob/main/docs/SPEC.md) §2, §8.
-- [FM-1-RE](https://github.com/AL-255/FM-1-RE).
+- [FM-1-RE](https://github.com/AL-255/FM-1-RE) (WTFPL; stock V13): `docs/architecture.md`, `docs/01-firmware-analysis.md`.
 - Felucca-derived HAL headers (`hal/fm1_input.h`, `fm1_lcd_hw.h`, `fm1_adc.h`, `fm1_audio.h`, `fm1_uart.h`;
   GPL-3.0-only, © Leo Kuroshita), as in DUB-1 and other Felucca forks. Since Felucca 1.7.0 they are felucca-bsp's
   `boards/fm1/` and `chip/` files (MPL-2.0); felucca-bsp `chip/fm1_cache_ram.h`, `boards/fm1/fm1_jack.h`,

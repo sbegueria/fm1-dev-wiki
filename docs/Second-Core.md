@@ -52,6 +52,17 @@ GammaWave. See [Known Projects](Known-Projects.md).
 the reader guesses it renders audio (fc79, [fm1-x0x#21](https://github.com/charlesvestal/fm1-x0x/issues/21),
 "Update 4", 2026-10-14).
 
+**[RE]** FM-1-RE's reading of the older **V13** differs. Its kernel looks SMP: per-core current-task pointers and a
+context-switch interrupt per core, 127 and 126 ([`io/02-rtos.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/io/02-rtos.md)
+§1, §2, marked high). The start-up writes core 1's entry to `0x01C7FFF8`, sets bit 3 of `0x10008`, rings the CPU
+control block at `0x01EEE004`, and waits for core 1's acknowledgement byte at `0x01C1FF08`. Core 1's stacks are at
+`0x01C15EB4` and `0x01C16EB4`, and its entry code sets them and returns into RAM code
+([`io/01-boot.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/io/01-boot.md) §4, §5.2, marked med). FM-1-RE's
+own hardware map says the opposite, "Single CPU core (`CPU_CORE_NUM 1`)" (`docs/reversing/01-hardware-map.md`). So:
+V13 starts core 1 through the same mailbox as V15; whether its RTOS runs on both cores, and whether V15 changed
+that, is still open.
+FM-1-RE's code addresses need `0x120` added ([Memory Map](Memory-Map.md#the-stock-app-runs-at-0x02000120)).
+
 ## The worker's idle loop: one unit's finding
 
 **[HW]** In kmplngj's Felucca fork, a unit repeatedly reported invalid second-core jobs (bad sequence, function
@@ -109,6 +120,8 @@ two cores … I went without it. It paid off." Both approaches have shipped.
 - [felucca-bsp](https://github.com/hugelton/felucca-bsp) `docs/EXPERIMENTAL.md`, `chip/fm1_sys.h`, `chip/fm1_cpu1.h`;
   [PR #46](https://github.com/hugelton/felucca-bsp/pull/46) comments.
 - [Felucca](https://github.com/hugelton/Felucca) `BUILDING.md`, `firmware/src/felucca.c` (GPL-3.0-only, at ac8cc0e).
+- [FM-1-RE](https://github.com/AL-255/FM-1-RE) (WTFPL; stock V13) `docs/io/01-boot.md` §4, §5.2, `docs/io/02-rtos.md`
+  §1, §2, `docs/reversing/01-hardware-map.md`.
 - [fm1-x0x#21](https://github.com/charlesvestal/fm1-x0x/issues/21) (fc79's reading of V15);
   [m-flasher#55](https://github.com/jvitkauskas/m-flasher/issues/55).
 - [kmplngj/Felucca `docs/cpu2-idle-polling.md`](https://github.com/kmplngj/Felucca/blob/main/docs/cpu2-idle-polling.md) (GPL-3.0-only).

@@ -43,6 +43,12 @@ At 2,000 and 1,000 some LED effects flicker, per the same file. With velocity on
 MASTER pot's slot of the scan, every `FM1_BATT_EVERY`-th time (~0.2 s), because the main loop can't use the ADC
 while the scan owns it. **[CODE]**
 
+**How the stock firmware scans.** **[RE]** M-VAVE's **V13** (FM-1-RE
+[`io/07-input.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/io/07-input.md) §2, §3) scans 41 key positions
+(27 keys and 14 buttons make 41) on a 20 ms timer, and keeps 7 encoder slots. A press or release counts after 3 scans
+in a row; a long press after 41 scans, about 0.8 s. Pressing scanner positions 0 and 1 together only resets the octave
+and semitone shift, in V13 and V14; it is not a factory or update mode (FM-1-RE marks this high).
+
 ## Debounce
 
 Felucca uses an integrating debounce of 8 frames (~5 ms). **[CODE]**
@@ -66,6 +72,11 @@ here: if your unit differs, please report it.)
 ## MASTER
 
 The MASTER pot is on ADC channel 4 (PB6), 10-bit, polled from the main loop. **[CODE]**
+
+FM-1-RE's input notes call ADC channels 3 and 4 the "pitch and mod wheels". The FM-1 has no wheels: channel 4 is
+MASTER and channel 3 the battery's divider ([Pinout](Pinout.md)). Its own reading of V13's code fits that: channel 3
+feeds the battery level and channel 4 an analog-change event (`io/07-input.md` §4.2). The "Pitch Up" and "Pitch Dn"
+strings it found are not explained.
 
 ## LEDs
 
@@ -120,6 +131,8 @@ and 0.4 on two units; the check is unchanged in 0.6.1). Drive PA2 low before any
 - [M-VAVE FM1 Open](https://github.com/m-vave/fm1_open) `app/board/device.c`, `app/board/fm1_audio.h` at `4c7496d`.
 - [zvenson/dinghy PR #4](https://github.com/zvenson/dinghy/pull/4); Dinghy `firmware/src/platform.c` at `14cda7a`.
 - [m-bootloader SPEC.md](https://github.com/jvitkauskas/m-bootloader/blob/main/docs/SPEC.md) §8.2.
+- [FM-1-RE](https://github.com/AL-255/FM-1-RE) `docs/io/07-input.md` §2, §3, §4.2 (WTFPL; stock V13, V14).
+  Its code addresses need `0x120` added ([Memory Map](Memory-Map.md#the-stock-app-runs-at-0x02000120)).
 - [felucca-bsp](https://github.com/hugelton/felucca-bsp), [fm1-base](https://github.com/charlesvestal/fm1-base) READMEs; fm1-base `lib/touch.h` (MPL-2.0).
 
 ---

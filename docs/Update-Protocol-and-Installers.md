@@ -27,6 +27,17 @@ in an answer `f1 = length >> 4`. The answer's data is followed by a checksum byt
 `~(flash type + sum(data) + sum of the 4 address bytes + sum of the 3 length bytes) & 0xFF`. The final
 "success?" request is address `0xF0000000`, length 8; the host answers `"success\0"`.
 
+**FM-1-RE has since corrected that reading for answers of odd lengths** ([`io/11-ota-protocol.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/io/11-ota-protocol.md),
+"Read-request / data-response framing"). Build the whole message first, then pack it: `00 59 30`, a 24-bit body length
+(8 for a request, data length + 8 for an answer), the flash type, the 32-bit address, the 24-bit requested length, the
+data, and the checksum (the complement of the sum from the flash type to the end of the data). The fixed
+`00 32 41 41` start only happens to give the right length for aligned blocks. **[RE]** **The device drops an answer
+whose declared length is wrong**: body length + 7 must equal the unpacked length. In a stock V15 install, the loader's
+last request was for 481 bytes; the old builder declared 488 instead of 489, the answer was dropped, and the install
+stalled. Declaring 489 fixed it (FM-1-RE [`io/12-v15-reflash-proof.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/io/12-v15-reflash-proof.md),
+one unit, 2026-09-04). **[HW]** Felucca-family installers build the length from the data
+(`fm1_install.py`), so this trap is for new hosts.
+
 1. **Handshake.** The host asks for the identity (cmd `0x11`); the device answers with a string like `FM-1_900`
    (model, underscore, version) in a 27-byte body. The installer checks the model against the package's
    ([Firmware Package Format](Firmware-Package-Format.md)). Identities and their pitfalls: [below](#package-identities).
@@ -77,6 +88,31 @@ the rule, found by offering packages that differ in one field: **[HW]**
   accepts any well-formed package whose boot area the FM-1 can boot
   ([Felucca#296](https://github.com/hugelton/Felucca/issues/296), 2026-10-28;
   felucca-bsp [afd83ed](https://github.com/hugelton/felucca-bsp/commit/afd83ed)). **[CODE]**
+
+### M-VAVE's side, from FM-1-RE
+
+FM-1-RE studied the stock update path on V13 and V14, and installed V15 with its own client. Its code addresses need
+`0x120` added ([Memory Map](Memory-Map.md#the-stock-app-runs-at-0x02000120)).
+- **M-VAVE's loader** enumerates as `4D4A:4155` and answers `ota-FM-1_015`; the normal firmware is `4C4A:C755`
+  (`io/12-v15-reflash-proof.md`, one unit, 2026-09-04). **[HW]**
+- **M-UPGRADE's timing** (its update worker, decompiled): it waits 2,000 ms after each upgrade command before reading
+  requests, gives each receive 8,000 ms, and keeps the MIDI port open 3,000 ms after answering `0xE0000000`. It sends
+  no keep-alive (`io/11-ota-protocol.md`, "Terminal signals and timing"). **[RE]**
+- **The loader's finish.** M-VAVE's loader asks "success?" (`0xF0000000`) at most four times and goes on even if no
+  answer matches; it then resets the chip. The stock `isd_config` has `UPDATE_JUMP=0`, the SDK's normal reset path,
+  not a jump into the ROM ([`TODO_aug2.md`](https://github.com/AL-255/FM-1-RE/blob/main/TODO_aug2.md), "The stock
+  loader maps to the SDK `updata_mode` framework"; `analysis/device/ota-loader/finish-gates.md`). **[RE]**
+- **The firmware refuses repeats too**, not only M-UPGRADE. V13 refused to stage a package whose `cfg` entry header
+  equalled the one stored. Changing one padding byte got past that check, but a second, unidentified check still
+  stopped the modified packages (`io/11-ota-protocol.md`, "Known open items", 2026-07-21). **[HW]**
+- **Downgrades are host policy, at least partly.** A V15-derived test build that reported `FM-1_016` went back to stock
+  V15 through the normal protocol (`io/12-v15-reflash-proof.md`), and a bundled M-UPGRADE log shows V10 installing
+  `FM-1_008`. **[HW]**
+- **Forcing another loader in through step 1** worked only up to 19,456 bytes (`0x4C00`) of loader. In that test set,
+  sizes that were not a multiple of 512 bytes were refused, and longer payloads read back stale at the tail. The stock
+  loader is 19,937 bytes, so this limit is for replacement loaders, not stock updates
+  ([`ota-loader-shrinking.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/ota-loader-shrinking.md), modified
+  packages, one unit, 2026-07-21). **[HW]** The loader's own format: [Firmware Package Format](Firmware-Package-Format.md#the-update-loader-otabin).
 
 ### The order of the write, and the unprotected window
 
@@ -217,7 +253,7 @@ must send `0x12` first to learn what is answering, and never build these command
 | [Slipway](https://github.com/Discodave-Glitch/slipway) | Windows | lists firmwares, keeps stock V15 as the way back |
 | ORBIT's `tools/fm1_install.py` | Python | the Felucca installer with exit codes: 0 done, 1 cancelled or error, 2 bad arguments or package, 3 FM-1 not found, 4 connection lost, 5 timeout, 6 wrong model or foreign loader (mvave-fm1 firmware skill §5.3) |
 | [TransitFM1](https://github.com/Quixotic7/TransitFM1) | web, Python | a silent stopover firmware between two custom firmwares (below) |
-| [FM-1-RE](https://github.com/AL-255/FM-1-RE) `tools/fm1_ota.py` | Python | the reverse-engineered protocol, byte-exact (per the resource hub) |
+| [FM-1-RE](https://github.com/AL-255/FM-1-RE) `tools/fm1_ota.py` | Python (Linux, ALSA) | the reverse-engineered protocol, byte-exact (per the resource hub). Its framing was corrected after the 2026-09-04 install, which ran through a Windows adapter; its ALSA transport had no hardware test of that fix (`io/12-v15-reflash-proof.md`) |
 | [M-Flasher](https://github.com/jvitkauskas/m-flasher) | Windows, macOS, Linux | not this protocol: writes through download mode ([Recovery](Recovery.md)) |
 | [fm1-nes](https://github.com/Keitark/fm1-nes) `scripts/jltool_update.py` | Windows | not this protocol: app-only updates through download mode and jl-uboot-tool; only onto stock 010/V14 layouts and the Puya flash; "not hardware-qualified" beyond one V14 bench install (51 sectors changed, 2026-10-03; `APP_UPDATES.md`) |
 
@@ -240,7 +276,8 @@ any well-formed package (Felucca#296, above).
 **Installs that stop half-way.** Reported with Felucca-family installers: "the loader stopped answering after
 562 requests" (about half the package), a blank screen, then "FM-1 not found"; unplugging, replugging and
 installing again finished it (DUB-1, October 2026). The upstream installers have the same error path and no
-automatic reconnect. The cause (a USB drop, the loader's poll falling behind) is not known. **[HW] [?]**
+automatic reconnect. The cause (a USB drop, the loader's poll falling behind) is not known. **[HW] [?]** One known
+cause of a stall in a new host: an answer with a wrong declared length, which the device drops (above).
 - A progress screen in the loader helps users tell a stall from a dead link: felucca-bsp's loader now shows
   "UPDATING / DO NOT UNPLUG" and a bar (2026-10-23).
 - If a write was cut off, the unit usually stays in update mode on the next start: run the installer again.
@@ -271,7 +308,12 @@ accept only the V15 file by hash will refuse it; current Felucca, fm1-base and f
 
 - Felucca's `src/ota.c`, `loader/loader.c`, `tools/fm1_install.py` (GPL-3.0-only).
 - [DUB-1](https://github.com/sbegueria/fm1-dub) `firmware/loader/ldr_core.c` (from 1.5.0), `tests/ldr_test.c`; the cut-install test, 2026-11-23.
-- [FM-1-RE](https://github.com/AL-255/FM-1-RE) OTA protocol and host-updater analysis.
+- [FM-1-RE](https://github.com/AL-255/FM-1-RE) (WTFPL; stock V13/V14, and a V15 install), OTA protocol and host-updater analysis:
+  [`docs/io/11-ota-protocol.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/io/11-ota-protocol.md),
+  [`docs/io/12-v15-reflash-proof.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/io/12-v15-reflash-proof.md),
+  [`docs/ota-loader-shrinking.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/ota-loader-shrinking.md),
+  [`TODO_aug2.md`](https://github.com/AL-255/FM-1-RE/blob/main/TODO_aug2.md),
+  [`analysis/device/ota-loader/finish-gates.md`](https://github.com/AL-255/FM-1-RE/blob/main/analysis/device/ota-loader/finish-gates.md).
 - [m-bootloader](https://github.com/jvitkauskas/m-bootloader) README (M-UPGRADE behaviour).
 - [FM-1 resource hub REVERSE_ENGINEERING.md](https://github.com/aroum/fm1-custom-fw/blob/main/REVERSE_ENGINEERING.md) §4.
 - [TransitFM1](https://github.com/Quixotic7/TransitFM1) README and `docs/SAFETY.md` (GPL-3.0; 0.1.3, 2026-10-18).

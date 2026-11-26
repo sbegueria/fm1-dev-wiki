@@ -72,7 +72,7 @@ last buffer loops as a buzz. Zero the buffer before flash erases, which run with
 | --- | --- | --- |
 | felucca-bsp `boards/fm1/fm1_audio.h` (fdd709f) | first line still "ALNK0 I2S → external codec"; the pins PC0 MCLK, PC1 BCLK, PC2 LRCK, PC6 data | [CODE] |
 | M-VAVE's [FM1 Open](https://github.com/m-vave/fm1_open/blob/4c7496d/app/board/fm1_audio.h) `app/board/fm1_audio.h` (2026-10) | "ALNK0: 24-bit stereo, two DMA halves, 128 frames"; PC0 MCLK, PC1 SCLK, PC2 LRCLK, **PC3 clock/RX**, **PC6 DAC**; "RX supplies the interrupt clock; FM1 has no connected analogue input" | [CODE] |
-| [FM-1-RE](https://github.com/AL-255/FM-1-RE/blob/main/docs/architecture.md) | "internal audio DAC", the stock firmware running its audio server at **44118 Hz** with 64-sample blocks | [RE] |
+| [FM-1-RE](https://github.com/AL-255/FM-1-RE/blob/main/docs/architecture.md) | "internal audio DAC", the stock firmware running its audio server at **44118 Hz** with 64-sample blocks. Its later audio notes find stock V13's synth sent through the `0x12E00` block, which is ALNK0 here (below). | [RE] |
 | [FM-1 resource hub](https://github.com/aroum/fm1-custom-fw/blob/main/REVERSE_ENGINEERING.md) §1.2 | an **external codec** on I2S: PC0 MCLK, PC1 BCLK, PC2 LRCK, PC6 the codec's power/reset; the chip's own DAC (DACL pin) as an auxiliary line. From board photos and JieLi's reference schematics; no codec part number given. | [?] |
 | The hub's `HARDWARE_MODS.md` (2026-11-18), on the TNFM mod | cutting the output filter capacitors C98, C99, C100, C102 "to disconnect the internal DAC" | [?] |
 
@@ -80,6 +80,21 @@ Two code sources (felucca-bsp and M-VAVE's own) now agree that **PC6 carries the
 hub's "PC6 = power/reset" disagrees with both. Whether the converter is on-chip or a separate part is still open:
 no one has given a part number. See [Open Questions](Open-Questions.md). If you know, please add a photo or a
 measurement.
+
+### What M-VAVE's own firmware uses
+
+**[RE]** FM-1-RE's notes on stock **V13** ([`io/03-audio-dac.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/io/03-audio-dac.md)
+§5.2, §5.3, marked med) find the synth's output going through the DMA block at **`0x12E00`**, the block open firmwares
+call ALNK0. Its interrupt is **IRQ 11**, with the handler in RAM, and the set-up configures GPIO 32, 33, 34 and 38: PC0, PC1,
+PC2 and PC6. So the stock firmware and the open firmwares use the same output. The chip's DAC block with its DMA at
+`0x12F00` and a hardware sample-rate converter serves FM-1-RE's "generic" path: USB and Bluetooth audio, and system
+tones. FM-1-RE's own overview (the same file, top, and `architecture.md`) still draws the synth into the `0x12F00` DAC;
+both are its words. FM-1-RE's code addresses need `0x120` added ([Memory Map](Memory-Map.md#the-stock-app-runs-at-0x02000120)).
+
+More from the same notes **[RE]**:
+- The engine renders **64-frame blocks** of 16-bit stereo, into two 256-byte halves at `0x01C10694` and `0x01C10794`,
+  then runs six effect slots. Its configuration block says 44,118 Hz and 12 voices (§5.2, high).
+- The DAC's DC-offset and level trims are calibrated by sweeps and saved, 6 bytes, as VM record 110 (§6.3, med).
 
 ## Sample rate
 
@@ -139,6 +154,11 @@ input on the computer's clock, and input and output as two named functions
 playback and 3 × 60 s of recording at 44.1 kHz ran with no underruns (Charles Vestal, same PR). The new options'
 own device runs were still to be reported. **[CODE]**
 
+**Stock firmware** has only the other direction. **[RE]** Its "FM-1 Audio" function is a UAC1 **playback** device
+(computer to FM-1): 24-bit stereo at 44.1 kHz, an isochronous OUT endpoint (EP2) of 288 bytes. Read from the
+descriptor bytes in V13 (FM-1-RE [`io/06-usb.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/io/06-usb.md)
+§1, §6, marked high).
+
 **FM1 Open** mixes USB playback (Q23, with the host's left/right gain) and Bluetooth A2DP audio (16-bit) into the
 output, and sends the final mix to the USB input (`app/audio_output.c`). **[CODE]** M-VAVE tested stereo USB
 playback on an FM-1 under Windows (fo#6, 2026-10-21). **[HW]**
@@ -186,7 +206,9 @@ above).
   `sdk/include/fm1_block.h`; issue [#6](https://github.com/m-vave/fm1_open/issues/6).
 - [m-bootloader `docs/STOCK-V15-V16.md`](https://github.com/jvitkauskas/m-bootloader/blob/121cfbe/docs/STOCK-V15-V16.md) (PLL values under each bootloader).
 - [zvenson/dinghy#13](https://github.com/zvenson/dinghy/issues/13).
-- [FM-1-RE](https://github.com/AL-255/FM-1-RE) `docs/architecture.md` §1, §4.
+- [FM-1-RE](https://github.com/AL-255/FM-1-RE) (WTFPL; stock V13): `docs/architecture.md` §1, §4;
+  [`docs/io/03-audio-dac.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/io/03-audio-dac.md) §1, §5.2, §5.3, §6.3;
+  [`docs/io/06-usb.md`](https://github.com/AL-255/FM-1-RE/blob/main/docs/io/06-usb.md) §1, §6.
 - [kmplngj/Felucca BUILDING.md](https://github.com/kmplngj/Felucca/blob/main/BUILDING.md) (build options).
 - [FM-1 resource hub](https://github.com/aroum/fm1-custom-fw) `REVERSE_ENGINEERING.md` §1.2, item 3; `HARDWARE_MODS.md`
   item 8 ([7ad4fe4](https://github.com/aroum/fm1-custom-fw/commit/7ad4fe4), 2026-11-18).

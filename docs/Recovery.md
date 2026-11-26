@@ -38,7 +38,7 @@ open). Label your backups yourself. **[HW]**
 | starts but crashes at once, twice | Felucca-family firmwares fall into a **safe mode** (no audio, USB on) after two failed starts: install from there | [CODE] |
 | has m-bootloader | hold **REC** at power-on (download mode) or **PLAY** (menu: SD card, boot app or boot anyway, download mode, MIDI mode). With a firmware that fails its check, the menu opens by itself in **MIDI mode**, so a browser installer can reinstall the unit with no keys pressed | [HW] |
 | is dead, and you have a second, working FM-1 or SMK-37 | [M-Unbricker](https://github.com/jvitkauskas/m-unbricker) (below) | [HW] |
-| shows on USB as `4C4A:8057` / `WL80UBOOT1.00` | it is already in ROM download mode: use M-Flasher, [MvaveFM1Unbricker](https://github.com/Quixotic7/MvaveFM1Unbricker), or `fm1_rescue` | [HW] |
+| shows on USB as `4C4A:8057` / `WL80UBOOT1.00` (the disk may be named `WL82 UBOOT1.00`) | it is already in ROM download mode: use M-Flasher, [MvaveFM1Unbricker](https://github.com/Quixotic7/MvaveFM1Unbricker), or `fm1_rescue` | [HW] |
 | shows nothing on USB, but the firmware is crashing | without hardware (MvaveFM1Unbricker README): **leave it on for two minutes** (Felucca-family watchdog and boot-loop guard enter ROM boot after two failed boots); **hold OCT− and OCT+ at power-on for 10 s** (if the firmware reaches its main loop; on Felucca this is the download-mode key above); **three quick restarts** (on 10 s, off, three times: three crashed boots land in ROM boot, which is also how a unit can get there by accident) | [CODE] |
 | shows nothing at all on USB | force download mode with a **USB_KEY dongle** (below) | [HW] |
 
@@ -187,12 +187,53 @@ settings range: use stock **System > Reset Patches** (TransitFM1 README; mvave-f
 could soft-brick on its old preset layout; the fix reported is erasing `0x97000` (length `0x8000`) and `0xFC000`
 (length `0x2000`) in download mode, which deletes that user data (resource hub §1.3). **[CODE] [?]**
 
+## The SMK-37
+
+The tools above work on the SMK-37 too, with its own data to protect ([SMK-37](SMK-37.md)). Its calibration
+(`0xC1000`), Bluetooth pairing (`0xC0000`) and `key_mac` (`0xFF000`) are unique to the unit, and so are the presets
+and wheel values in USRFLASH (`0xC2000`–`0xEAFFF`).
+
+**A backup without the soft key.** Whether stock SMK firmware answers the soft key is disputed ([SMK-37](SMK-37.md)).
+genkigenki's [fm1-to-smk37](https://github.com/genkigenki/fm1-to-smk37) (CC BY-NC 4.0; 02 §3, at `54252ff`,
+2026-10-17) gets there through a custom update loader instead, before anything is installed. **[HW]** (one SMK-37 Pro):
+
+1. Run only the first, checking step of an install of a custom SMK package. Stock firmware accepts the package and
+   restarts into the custom update loader; the app area is not rewritten yet.
+2. Send that loader the soft key. The keyboard comes back as the mass-storage disk `WL82 UBOOT1.00`.
+3. Read the whole 1 MiB twice with [jl-uboot-tool](https://github.com/kagaimiq/jl-uboot-tool). Both dumps must be
+   1,048,576 bytes with the same SHA-256, and `trimdat` must sit at `0xC1224`. If not, read again.
+4. Keep the dump in two places. Power-cycle: the loader comes up again, because its update record is still there.
+   Finish the custom install, or install the stock package to stay stock.
+
+A SLOOP-based SMK firmware enters download mode by itself (OCTAVE− and OCTAVE+ held 5 s while stopped, or `uboot yes`
+in its serial console). After two failed starts it opens a USB recovery screen that answers as `SMK-37 Pro_000` and
+takes a new package; after a third it drops into download mode (02 §3.2, §5). **[CODE]**
+
+**Writing in download mode.** Never write `0x0`–`0x3FFF`, `0xC0000`–`0xC1FFF` or `0xFF000` and up, except from your
+own dump if they were damaged. Work in whole 4 KiB sectors and read each back. The stock app area is
+`0x4000`–`0x9CFFF`; without your own dump, install the stock package normally instead (02 §5.1). **[RE]**
+
+> **Going back to stock: don't erase USRFLASH.** Stock SMK firmware has been seen to reset its presets and **erase
+> the calibration and Bluetooth sectors when USRFLASH is blank** (m-bootloader SPEC §5.5). **[HW]** fm1-to-smk37's
+> return-to-stock section (02 §6) suggests erasing the ranges its port used, USRFLASH included, to `0xFF` for a clean
+> state. Don't erase USRFLASH: write `0x9D000`–`0xBFFFF` and `0xC2000`–`0xEAFFF` back from a backup of the **same
+> unit** made before its first custom install. Without one, install the stock package and leave those ranges as they
+> are; the kit notes it is not known whether stock firmware reformats them by itself. An M-Unbricker repair also
+> leaves USRFLASH erased (it erases everything but the boot, calibration, Bluetooth and key areas); the m-bootloader it
+> installs keeps a copy of the calibration and puts it back if it is erased ([SMK-37](SMK-37.md)), but restore
+> USRFLASH from your backup before stock firmware runs if you can.
+
+**Rescue dongles and M-Unbricker.** The kit's recovery table (2026-10-17) says no USB_KEY dongle had been tried on an
+SMK-37. Since then M-Unbricker, which sends the USB_KEY from a working unit, reports that either model repairs
+either model (above; its README, 2026-11-26). **[HW]**
+
 ## Never do this
 
 - Don't write the boot area (`[0, 0x4000)`) unless you are installing a bootloader with a tool made for it.
 - Don't copy another unit's flash wholesale: the areas above `0x93000` can hold unit data (on the SMK-37,
   factory calibration). See [Flash Storage](Flash-Storage.md). A tool's "same unit" check is not proof (m-flasher#61, above).
 - Don't connect VBUS from a dongle to the FM-1.
+- Don't leave an SMK-37's USRFLASH (`0xC2000`–`0xEAFFF`) erased when stock firmware may start (above).
 
 ## Sources
 
@@ -200,6 +241,8 @@ could soft-brick on its old preset layout; the fix reported is erasing `0x97000`
   (eb4f2c1, 2026-11-23); [v3.0 release notes](https://github.com/jvitkauskas/m-bootloader/releases/tag/v3.0);
   [M-Flasher](https://github.com/jvitkauskas/m-flasher) README; [m-flasher#61](https://github.com/jvitkauskas/m-flasher/issues/61).
 - [M-Unbricker](https://github.com/jvitkauskas/m-unbricker) README (MIT; 204f88d, 2026-11-26).
+- [fm1-to-smk37](https://github.com/genkigenki/fm1-to-smk37) `docs/02-update-and-recovery.md` §3, §5, §6 (CC BY-NC 4.0;
+  54252ff, 2026-10-17).
 - Felucca `firmware/src/main.c` (ac8cc0e), [Felucca#320](https://github.com/hugelton/Felucca/issues/320),
   [#329](https://github.com/hugelton/Felucca/issues/329), [1.8.2 release notes](https://github.com/hugelton/Felucca/releases/tag/v1.8.2)
   (GPL-3.0-only); felucca-bsp `tools/fm1_rescue.py` (fdd709f; MPL-2.0).
