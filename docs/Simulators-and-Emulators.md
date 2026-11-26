@@ -27,10 +27,29 @@ library on both, and `-ffp-contract=off` on both (no fused multiply-add).
 code layout, the cache and flash fetches decide that. One firmware's heaviest piece on the device was among the
 lightest on the host (DUB-1, October 2026). Measure on the device ([Performance](Performance.md)).
 
+**What the bases offer (checked 2026-11-26). [CODE]**
+
+- **fm1-base**: a scripted host simulator (`host/plat_host.c`). Besides keys, knobs and MIDI, a script can dump the
+  whole flash to a 1 MiB image or load one (`flash_dump`, `flash_load`), type on the USB serial console and check the
+  reply (`console`, `expect_console`), and drive an SD card. Its own network (`host/wifi_air.c`) runs the WiFi and
+  Ableton Link tests with no radio.
+- **Felucca**: host unit and regression tests (`tests/run_tests.sh`) that render every engine and preset and compare
+  hashes with `tests/golden.txt`; they also compare a cost figure with baseline files (`tests/cpu_baseline.txt`,
+  `tests/target_budget.txt`); how those figures relate to the device's timing is not described here.
+- **Dinghy**: host mode (`tests/run_host.sh`): the same app, the sound as a WAV, the screen as PNGs, from a script.
+
 ## Browser emulators of the app
 
-**[CODE]** The same host build compiled to WebAssembly (Emscripten), with a picture of the panel. fm1-base, Felucca
-and many forks publish one. Good for showing a firmware before anyone installs it.
+**[CODE]** The same host build compiled to WebAssembly, with a picture of the panel. fm1-base, Felucca and many forks
+publish one. Good for showing a firmware before anyone installs it. The compilers differ (checked 2026-11-26):
+
+| Project | Compiler | Notes |
+| --- | --- | --- |
+| fm1-base | Emscripten (`tools/build.py --web`) | Optional parts (`emu = [...]` in `fm1.toml`, since 2026-10-27): `midi`, `port`, `data`, `image`, `backup`, `wasm`, `reboot`; `resample` (44.1 kHz played at the browser's rate) is on unless left out. Since 2026-11-10, **Copy session** turns what you played into a host-simulator script, so a problem seen in the browser can be replayed and tested ([91798ae](https://github.com/charlesvestal/fm1-base/commit/91798ae)). The same build makes `.rfm1` files for RemoteFM1 on iOS. |
+| Felucca | Emscripten (`web/emu/`) | A demo: it keeps the flash's storage sectors in the browser; USB, TRS MIDI and the user sample slots are not emulated (BUILDING.md). |
+| foma | plain `clang --target=wasm32 -nostdlib`, **not Emscripten** (`tools/build.py`) | `./fm1 dev` rebuilds on every save, and the page reloads when `build.json` changes. No USB audio input and no Bluetooth in the emulator (README). |
+| FM1 Open (M-VAVE) | WASI SDK 27 | The [workbench](https://open.m-vave.com/fm1-workbench) previews the instrument in the browser beside the updater and the project, sample and DX7 managers; the browser build comes from the same C sources (README). It previews MIDI settings without sending performance MIDI out. |
+| Optimist | Emscripten | A web simulator; `python tools/optimist.py emu` also runs a full-system emulator (BUILDING.md). |
 
 ## The FM-1 as a panel for a computer
 
@@ -58,6 +77,12 @@ How closely they model timing, the cache and the flash is described in each proj
 ## Sources
 
 - Each project's README (October 2026); [awesome-fm-1](https://github.com/cicloid/awesome-fm-1).
+- Checked again on 2026-11-26: [fm1-base](https://github.com/charlesvestal/fm1-base) `tools/build.py`, `host/plat_host.c`,
+  `web/emu/parts/` (commits [b01ecd5](https://github.com/charlesvestal/fm1-base/commit/b01ecd5),
+  [91798ae](https://github.com/charlesvestal/fm1-base/commit/91798ae)); [Felucca](https://github.com/hugelton/Felucca)
+  `BUILDING.md` (`ac8cc0e`); [foma](https://github.com/konsumer/foma) `README.md`, `tools/build.py` (`885100f`);
+  [FM1 Open](https://github.com/m-vave/fm1_open) `README.md` (`4c7496d`); [Dinghy](https://github.com/zvenson/dinghy)
+  `README.md` (`14cda7a`); [Optimist](https://github.com/w0ts/optimist) `BUILDING.md` (`b32f7321`).
 - [RemoteFM1 README](https://github.com/Quixotic7/RemoteFM1) and `docs/PROTOCOL.md`.
 - Felucca-family `host/` simulators and `web/emu/`; [fm1-base DESIGN.md](https://github.com/charlesvestal/fm1-base/blob/main/DESIGN.md).
 

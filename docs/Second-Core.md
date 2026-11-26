@@ -27,13 +27,30 @@ From felucca-bsp's [EXPERIMENTAL.md](https://github.com/hugelton/felucca-bsp/blo
   second core, and the firmware runs on one core until power-off (`fm1_cpu1_bar`). Core 1's faults are handled
   without a crash.
 - **[HW]** The core supply matters: "at the boot loader's [voltages], under load (both cores, or WiFi …), some
-  units read flash and SRAM wrong" (felucca-bsp `chip/fm1_sys.h`). Raise VDC14 and SYSVDD to M-VAVE's levels
-  before starting core 1 ([Clocks and Power](Clocks-and-Power.md)).
-- felucca-bsp's own copy of this code is **beta**: "this version not yet on a device". fm1-base turns it on with
-  `cpu2 = true`.
+  units read flash and SRAM wrong" (felucca-bsp `chip/fm1_sys.h`). felucca-bsp and fm1-base raise VDC14 and SYSVDD
+  to the levels read from V15's code before starting core 1. What V15 really leaves in those registers is disputed:
+  see [Clocks and Power](Clocks-and-Power.md).
+- felucca-bsp's `docs/EXPERIMENTAL.md` still calls its own copy **beta**: "this version not yet on a device" (at
+  fdd709f, 2026-11-26). fm1-base turns it on with `cpu2 = true`. **[HW]** Since then it has run on FM-1s in
+  fm1-base builds: in the sliced-erase tests of [felucca-bsp#46](https://github.com/hugelton/felucca-bsp/pull/46)
+  (2026-11-22), charlesvestal's run gave the second core a job every block, 647 jobs with none given up or misread,
+  and hdavid's ran both cores rendering through about 2,500 sector erases with no audio underruns. Both units had
+  the `856014` flash.
+
+**[CODE]** Felucca has built the same code in since 1.6.1 (`FELUCCA_CPU2=1`, the default; from felucca-bsp's
+`chip/fm1_cpu1.h` since [987b205](https://github.com/hugelton/Felucca/commit/987b205), 2026-10-26). The user turns
+it on in MENU > SYSTEM > 2ND CORE (beta, off by default), and it applies from the next power-on. A misread, a fault
+or a late job sends Felucca back to one core (`BUILDING.md`, `firmware/src/felucca.c`, at ac8cc0e). No device
+report of it was found (2026-11-26).
 
 Other firmwares that describe themselves as dual-core include SLOOP (both cores, per pi32v2-isa's table) and
 GammaWave. See [Known Projects](Known-Projects.md).
+
+**[RE]** M-VAVE's own firmware uses core 1 too, but not as a second RTOS core. In V15 the system library carries a
+"modified" `CPU_CORE_NUM 1` (the public SDK has 2), so the RTOS runs on one core. Core 1 is still started
+(`EnableOtherCpu`, entry at `0x01C7FFF8`) and runs a bare-metal worker loop from RAM. What it does is not proven;
+the reader guesses it renders audio (fc79, [fm1-x0x#21](https://github.com/charlesvestal/fm1-x0x/issues/21),
+"Update 4", 2026-10-14).
 
 ## The worker's idle loop: one unit's finding
 
@@ -64,6 +81,14 @@ and the render runs on one core until power-off ([fm1-base as a Base](FM1-Base.m
 - **Flash contention:** both cores fetching from XIP share the flash. Code that core 0 needs at a deadline should
   be in SRAM ([Performance](Performance.md)).
 
+## The clock and the bootloader
+
+**[?]** One user's Skiff unit crashed with both cores on at 360 MHz under m-bootloader. It ran fine under the stock
+015 and 016 bootloaders, and fine at 320 MHz under m-bootloader. Another user's units were not affected (Audio-C,
+[m-flasher#55](https://github.com/jvitkauskas/m-flasher/issues/55), 2026-11-14 and 15). One unit; the cause is not
+known. If you test the second core, note which bootloader and clock the unit runs
+([Clocks and Power](Clocks-and-Power.md)).
+
 ## How to test stability
 
 From the r/MVaveFM1 discussion (u/Nukkebeer's question, u/ZenLegume's reply):
@@ -81,7 +106,11 @@ two cores … I went without it. It paid off." Both approaches have shipped.
 
 ## Sources
 
-- [felucca-bsp](https://github.com/hugelton/felucca-bsp) `docs/EXPERIMENTAL.md`, `chip/fm1_sys.h`.
+- [felucca-bsp](https://github.com/hugelton/felucca-bsp) `docs/EXPERIMENTAL.md`, `chip/fm1_sys.h`, `chip/fm1_cpu1.h`;
+  [PR #46](https://github.com/hugelton/felucca-bsp/pull/46) comments.
+- [Felucca](https://github.com/hugelton/Felucca) `BUILDING.md`, `firmware/src/felucca.c` (GPL-3.0-only, at ac8cc0e).
+- [fm1-x0x#21](https://github.com/charlesvestal/fm1-x0x/issues/21) (fc79's reading of V15);
+  [m-flasher#55](https://github.com/jvitkauskas/m-flasher/issues/55).
 - [kmplngj/Felucca `docs/cpu2-idle-polling.md`](https://github.com/kmplngj/Felucca/blob/main/docs/cpu2-idle-polling.md) (GPL-3.0-only).
 - [fm1-base](https://github.com/charlesvestal/fm1-base) `include/plat.h` (the `plat_cpu2_*` group).
 - [r/MVaveFM1 thread](https://www.reddit.com/r/MVaveFM1/comments/1xe8c9x/all_right_stop_collaborate_and_listen/).

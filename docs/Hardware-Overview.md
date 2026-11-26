@@ -16,11 +16,11 @@ What is inside an FM-1, as far as the community knows. Each line has its tag (se
 | CPU | JieLi **pi32v2**, 32-bit, little endian, 16-bit instruction words. Toolchain target `-mcpu=r3`. | [SDK] [CODE] |
 | Cores | **Two.** The SDK defines `CPU_CORE_NUM 2`. Several firmwares run work on the second core. See [Second Core](Second-Core.md). | [SDK] [HW] |
 | FPU | **Single-precision** hardware floating point, enabled with `-mfprev1`. Doubles are done in software (slow). | [SDK] [CODE] |
-| Caches | I-cache and D-cache (SDK). Size and layout: see [Performance](Performance.md) and [Open Questions](Open-Questions.md). | [SDK] [?] |
-| Clock | **360 MHz** under M-VAVE's bootloader (measured); 320 MHz under m-bootloader 1.2 unless the firmware resets it. The SDK calls 320 MHz its maximum. See [Clocks and Power](Clocks-and-Power.md). | [HW] |
+| Caches | I-cache and D-cache (SDK). The data cache has **8 ways of 4 KiB**; 1 to 7 of them can be used as plain RAM at `0x01F28000` + way × 4 KiB, as M-VAVE's V15 does with 7. On one FM-1, 2 ways ran as RAM for days; with 7, flash data reads over 16 KiB were 57× slower (Optimist, 2026-10-18 to 25; felucca-bsp `chip/fm1_cache_ram.h`, `docs/EXPERIMENTAL.md`). I-cache size and layout: see [Performance](Performance.md) and [Open Questions](Open-Questions.md). | [SDK] [HW] [?] |
+| Clock | **360 MHz** under M-VAVE's 015 (V15) bootloader (measured). M-VAVE's **016** (V16) bootloader hands the firmware **320 MHz** (LSB 53.3 MHz), measured with a boot probe on one FM-1 (m-bootloader [`docs/STOCK-V15-V16.md`](https://github.com/jvitkauskas/m-bootloader/blob/121cfbe/docs/STOCK-V15-V16.md), 2026-11-14 and 21). m-bootloader: its SPEC sets 360 MHz, and the same probe read 360 MHz under 2.3; [Clocks and Power](Clocks-and-Power.md) reports 320 MHz under 1.2. The SDK calls 320 MHz its maximum. | [HW] |
 | SRAM | The SDK says **578 KB** of on-chip SRAM in total. Firmwares use the window `0x01C00000`–`0x01C80000` (512 KB). There is **no external RAM** on the FM-1. | [SDK] [CODE] |
 | Accelerators | Hardware FFT/IFFT and matrix maths, AES-128/256, SHA, random numbers, CRC16 (SDK). Only CRC16 is known to be used by community firmware. | [SDK] |
-| Radio | WiFi 802.11b/g/n and Bluetooth 5.0 (dual mode), on JieLi's closed libraries. fm1-base supports BLE MIDI or WiFi (not both at once). | [SDK] [HW] |
+| Radio | WiFi 802.11b/g/n and Bluetooth 5.0 (dual mode). On **JieLi's closed libraries** a firmware has BLE or WiFi, not both: together they don't fit in RAM. **fm1-base's own stacks** (no JieLi code) run BLE and WiFi together, since 2026-11-25: a WPA2-PSK station with ARP, DHCP, IGMP and UDP only (no TCP, no DNS), an access-point mode, and opt-in Ableton Link (GPL-3.0-only) ([fm1-base README](https://github.com/charlesvestal/fm1-base/blob/3039770/README.md), merge [c734409](https://github.com/charlesvestal/fm1-base/commit/c734409)). fm1-base's notes: the WiFi MAC has Ralink RT3070's register layout at `0x30000` (JieLi's wl30 core), the BLE baseband registers are at `0x28000` (`docs/wifi/README.md`, `docs/bt/BLE-HW-FACTS.md`). See [fm1-base as a Base](FM1-Base.md). | [SDK] [HW] [RE] |
 
 ## The board
 
@@ -33,11 +33,13 @@ What is inside an FM-1, as far as the community knows. Each line has its tag (se
 | Encoders | 7 quadrature encoders in the same matrix. | [HW] |
 | Pots | MASTER on the ADC (PB6). The battery's divider on PB1. | [HW] |
 | LEDs | Key and button LEDs, multiplexed with the matrix columns. | [HW] |
-| Audio | Stereo out through the chip's ALNK0 (I2S) block, with four control lines to the output stage on PC0, PC1, PC2, PC6. Whether the converter is inside the chip or a separate codec is disputed: see [Audio Output](Audio-Output.md). | [CODE] [?] |
+| Audio | Stereo out through the chip's ALNK0 (I2S) block: PC0 MCLK, PC1 BCLK, PC2 LRCK, PC6 data (felucca-bsp and M-VAVE's FM1 Open). About **44,117.6 Hz**, from the 24 MHz crystal. Whether the converter is inside the chip or a separate codec is disputed: see [Audio Output](Audio-Output.md). | [CODE] [?] |
+| Headphone jack | A switch on PB5: low with headphones in. | [HW] |
 | MIDI | USB-MIDI device (USB 1.1 full speed); TRS MIDI in on UART1 (PH8). | [CODE] |
 | USB | One USB port: device mode normally (stock firmware enumerates as `4C4A:C755`); the chip's mask-ROM download mode for recovery. USB host is possible with external power. | [HW] |
 | Power | Battery with a charger; the core and SRAM supply (SYSVDD) and VDC14 set by firmware. See [Clocks and Power](Clocks-and-Power.md). | [HW] |
 | Debug | **No debug header** on the board. Recovery is over USB only. | [HW] |
+| Card slot | None. A mod ([m-card](https://github.com/jvitkauskas/m-card)) puts a microSD card on the screen's SPI1: see [Pinout](Pinout.md). | [HW] [CODE] |
 
 Pin details: [Pinout](Pinout.md). Addresses: [Memory Map](Memory-Map.md).
 
@@ -63,7 +65,12 @@ None of that is needed by a custom firmware: the open firmwares replace the whol
 - [m-bootloader SPEC.md](https://github.com/jvitkauskas/m-bootloader/blob/main/docs/SPEC.md) §2, §8.
 - [FM-1-RE](https://github.com/AL-255/FM-1-RE).
 - Felucca-derived HAL headers (`hal/fm1_input.h`, `fm1_lcd_hw.h`, `fm1_adc.h`, `fm1_audio.h`, `fm1_uart.h`;
-  GPL-3.0-only, © Leo Kuroshita), as in DUB-1 and other Felucca forks.
+  GPL-3.0-only, © Leo Kuroshita), as in DUB-1 and other Felucca forks. Since Felucca 1.7.0 they are felucca-bsp's
+  `boards/fm1/` and `chip/` files (MPL-2.0); felucca-bsp `chip/fm1_cache_ram.h`, `boards/fm1/fm1_jack.h`,
+  `boards/fm1/fm1_audio.h` and `docs/EXPERIMENTAL.md` at `fdd709f`.
+- [m-bootloader `docs/STOCK-V15-V16.md`](https://github.com/jvitkauskas/m-bootloader/blob/121cfbe/docs/STOCK-V15-V16.md) (the clock each bootloader hands over).
+- [fm1-base](https://github.com/charlesvestal/fm1-base) at `3039770`: `README.md`, `docs/wifi/README.md`, `docs/bt/BLE-HW-FACTS.md` (MPL-2.0).
+- [M-VAVE FM1 Open](https://github.com/m-vave/fm1_open) `app/board/fm1_audio.h` at `4c7496d`.
 - `fm1_rescue.py` in Felucca-family trees (flash ID and chip key checks).
 - [fm1-dub#14](https://github.com/sbegueria/fm1-dub/issues/14), [#15](https://github.com/sbegueria/fm1-dub/pull/15): the UC25HQ80 (`B36014`) on new units, M-Flasher's device info from two owners (2026-11).
 - [FM-1 resource hub REVERSE_ENGINEERING.md](https://github.com/aroum/fm1-custom-fw/blob/main/REVERSE_ENGINEERING.md) §1.1, §1.2

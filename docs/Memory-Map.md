@@ -13,15 +13,19 @@ Addresses as the CPU sees them. See [Flash Storage](Flash-Storage.md) for the fl
 | Range | What | Tag |
 | --- | --- | --- |
 | `0x00010000`… | Low-speed peripherals (clock, power, timers, UART, SPI, ADC, P33 bridge…) | [SDK] [CODE] |
+| `0x00028000`–`0x00028054` | BLE baseband registers. The per-link registers are a block in SRAM that the engine reaches by DMA. | [RE] [CODE] |
+| `0x00030000`–`0x00031FFF` | WiFi MAC and BBP window: JieLi's wl30 core, with the register layout of Ralink's RT3070 | [RE] [CODE] |
 | `0x00040000`… | High-speed peripherals, including the SFC (flash controller) at `0x40200` and XIP decryption at `0x40300` | [SDK] [CODE] |
 | `0x00050000`… | GPIO (`0x50000 + 0x40 × port`, A=0 … H=7) and pin mux (`0x51000`…) | [SDK] [CODE] |
 | `0x01C00000`–`0x01C7FFFF` | Internal SRAM used by firmware (512 KB). Code can run from it. | [CODE] [HW] |
 | `0x01C02000` | Where the mask ROM loads and starts the bootloader | [RE] |
 | `0x01C0A800` | Where the staged update loader is decompressed and started | [RE] [CODE] |
+| `0x01C30000`… | Where m-bootloader's RAM apps are linked and run (up to below `0x01C7FD80`) | [CODE] |
 | `0x01C7FD50`–`0x01C7FFFF` | Reserved: boot info from the bootloader, the boot/update mailbox, the interrupt vector table at `0x01C7FE00` | [CODE] |
 | `0x01EEE000`… | CPU control block ("corex2"): cache control (`0x01EEE008`), debug/guard limits, performance counters | [SDK] |
 | `0x01EEF000`… | Interrupt controller (`ICFG`, pending), exception and trace registers | [CODE] |
 | `0x01F00000`… | Cache internal arrays (the bootloader clears some ranges here to invalidate) | [RE] |
+| `0x01F28000`… | The data cache's 8 ways of 4 KiB, one after another. 1 to 7 of them can be made plain RAM ([Performance](Performance.md)). | [HW] |
 | `0x02000000`… | Flash XIP window, decrypted and cached. Flash offset `off` (≥ `0x4000`) reads at `0x02000000 + off − 0x4000`. | [CODE] |
 | `0x02000120` | Entry point of every known application image | [CODE] [RE] |
 | `0x04000000` | External RAM window. **Absent on the FM-1** (but see the SDRAM question in [Open Questions](Open-Questions.md)). | [SDK] [RE] |
@@ -49,7 +53,9 @@ MEMORY
 ```
 
 Points to know:
-- **The app slot is `0x8DFBC` bytes** (581,564). The package builder refuses a bigger image. **[CODE]**
+- **The app slot is `0x8DFBC` bytes** (581,564) in the stock layout. The package builder refuses a bigger image.
+  fm1-base can move the app area's end with `app_end` (up to `0xE0000`; `0xCE000` gives an `app.bin` of
+  823,228 bytes), and its update loader writes the bigger area ([Flash Storage](Flash-Storage.md)). **[CODE]**
 - **Any SRAM can hold code.** The "(rw)" on the pool is only a linker label. M-VAVE's own open firmware marks its
   render functions to run from SRAM. See [Performance](Performance.md). **[CODE] [HW]**
 - **Stacks** sit high in RAM with guard bands under them; Felucca's hardware guards fault on a write into a band.
@@ -62,7 +68,14 @@ Points to know:
 - `NOINIT` survives a reset **and** an entry into download mode: MvaveFM1Unbricker reads 512 bytes at
   `0x01C7C000` through the ROM's loader to recover Melodee's crash record. **[CODE]**
 - fm1-base's figures for its template: 96 KB of RAM for `.data`/`.bss` and a 336 KB pool (128 KB and 304 KB in a
-  WiFi build). **[CODE]**
+  WiFi build). With `ram_layout = "packed"` the RAM code, `.data`/`.bss` and the pool share **one budget of 464 KB**
+  instead, 8 KB kept spare. `PLAT_SPARE` puts a buffer in NOINIT's room past the records that must survive a reset
+  (about 13.8 KB of its 15.7 KB), zeroed at boot (fm1-base README "What each costs", `include/plat.h`, at
+  [3039770](https://github.com/charlesvestal/fm1-base/tree/3039770)). **[CODE]**
+- **The radio's frame DMA does not reach above `0x01C20000`.** fm1-base's own WiFi stack keeps its frame buffers
+  below that address, and its build checks it (README). **[CODE]**
+- Felucca itself has since changed its layout: at [ac8cc0e](https://github.com/hugelton/Felucca/tree/ac8cc0e)
+  (2026-11-24) `firmware/app.ld` has 72 KB of RAM and a pool of `0x5A000` from `0x01C1A000`. **[CODE]**
 
 ## Calling between flash and RAM
 
@@ -70,7 +83,7 @@ Points to know:
 Felucca calls RAM code through a pointer the compiler can't fold back:
 
 ```c
-/* from Felucca's hal/fm1_flash.h (GPL-3.0-only, © Leo Kuroshita) */
+/* from felucca-bsp chip/fm1_flash.h (MPL-2.0, © Leo Kuroshita); Felucca's own copy was hal/fm1_flash.h before 1.7.0 */
 static inline void *fl_far(void *p) { void *volatile q = p; return q; }
 #define FL_FAR(fn) ((__typeof__(&fn))fl_far((void *)&fn))
 ```
@@ -81,10 +94,13 @@ section contains no `call` instruction.
 
 ## Sources
 
-- [m-bootloader SPEC.md](https://github.com/jvitkauskas/m-bootloader/blob/main/docs/SPEC.md) §2.1, §2.2, §4.2, §6.
+- [m-bootloader SPEC.md](https://github.com/jvitkauskas/m-bootloader/blob/main/docs/SPEC.md) §2.1, §2.2, §4.2, §6, §11.8 (RAM apps).
 - [FM-1-RE architecture](https://github.com/AL-255/FM-1-RE/blob/main/docs/architecture.md) §2.
-- Felucca's `firmware/app.ld`, `hal/fm1_xip.h`, `hal/fm1_flash.h`, `hal/fm1_sys.h` (GPL-3.0-only).
-- [fm1-base README](https://github.com/charlesvestal/fm1-base), "What each costs".
+- Felucca's `firmware/app.ld` (GPL-3.0-only). [felucca-bsp](https://github.com/hugelton/felucca-bsp) `chip/fm1_xip.h`,
+  `chip/fm1_flash.h`, `chip/fm1_sys.h`, `docs/EXPERIMENTAL.md` (MPL-2.0); Felucca has used them as its
+  `firmware/bsp` submodule since 1.7.0, and its `hal/` copies are gone.
+- [fm1-base README](https://github.com/charlesvestal/fm1-base), "What each costs", "A bigger app slot";
+  `docs/bt/BLE-HW-FACTS.md` §1 and `docs/wifi/README.md` (radio registers).
 - [Dinghy](https://github.com/zvenson/dinghy) `docs/RULES.md`, `tools/build.py` (GPL-3.0); [mvave-fm1](https://github.com/maxfridbe/mvave-fm1) development skill §3.
 - [MvaveFM1Unbricker README](https://github.com/Quixotic7/MvaveFM1Unbricker) (`retained-ram.bin`).
 

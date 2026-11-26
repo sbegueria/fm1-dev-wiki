@@ -21,8 +21,8 @@ which ELF a report belongs to.
 
 ## Hardware guards
 
-**[CODE]** The CPU control block (`0x01EEE000`…) has limits that raise the CPU exception. Felucca's
-`hal/fm1_guard.h` (GPL-3.0-only) uses:
+**[CODE]** The CPU control block (`0x01EEE000`…) has limits that raise the CPU exception. felucca-bsp's
+`chip/fm1_guard.h` (MPL-2.0; Felucca's `hal/fm1_guard.h` until 1.7.0) uses:
 
 | Guard | Catches |
 | --- | --- |
@@ -38,6 +38,16 @@ If you add code in RAM, widen the PC-limit window, or the guard faults on the fi
 **[CODE]** Count starts in `NOINIT`. If the firmware crashes or hangs (watchdog) in its first ~30 s twice in a
 row, start in a **safe mode**: no audio, no engine, just the screen and USB with the update path, so the user can
 install something else. Clear the count once the firmware has run long enough.
+
+**Make the `NOINIT` record `volatile`.** **[HW]** felucca-bsp's `examples/hwtest` kept its boot guard as a plain
+`static` struct in `.noinit`, only ever given its magic number. The compiler treated it as zero at start and shrank
+the magic and a counter to 1-bit flags, so the 32-bit check was gone. Whatever RAM stock V15 left behind then passed
+as a record: the first boot after an install landed in download mode (UBOOT) 3 times out of 3 (hellsend,
+[felucca-bsp#17](https://github.com/hugelton/felucca-bsp/issues/17), 2026-10-28), and 2 of 2 over V16
+(charlesvestal). Declared `volatile`, and with counters above 1 refused as well, it came back on its own 2 of 2
+times ([14610bd](https://github.com/hugelton/felucca-bsp/commit/14610bd), 2026-10-31). fm1-base's and
+Felucca-based firmwares' guards are globals and were checked whole in their built images. If you write your own,
+make it `volatile` and check the emitted code.
 
 Arm the **watchdog** early in start-up and feed it from the main loop. The reset reason (P33) tells you next time
 whether it was the watchdog.
@@ -61,7 +71,10 @@ instead of a crash report. Test divisors yourself, and build the host simulator 
 Show, on a debug or settings page:
 - the audio load: now and the peak of the last ~2 s ([Performance](Performance.md));
 - the dropout count;
-- the clock (from its registers, [Clocks and Power](Clocks-and-Power.md)) and the build stamp;
+- the clock (from its registers, or the cycle counter against TIMER4 once `DBG_CON` bits 0–2 are set:
+  [Clocks and Power](Clocks-and-Power.md)) and the build stamp;
+- the supply rails, if you set them (fm1-base's `tools/fm1_remote.py log` prints them as the bootloader left them
+  and as they are now);
 - per-stage timing of the heaviest block, if you have it;
 - second-core job errors, if you use it ([Second Core](Second-Core.md)).
 
@@ -72,7 +85,7 @@ animation running (it is part of the load you are measuring) and still read the 
 
 | Tool | What | Tag |
 | --- | --- | --- |
-| A CDC-ACM serial port | Felucca's `usb.c` can add one (`FELUCCA_CDC=1`) for a text console | [CODE] |
+| A CDC-ACM serial port | felucca-bsp's `chip/usb.c` adds one with `FELUCCA_CDC=1`; Felucca builds it in by default for its text console (`BUILDING.md`, MENU > USB SERIAL) | [CODE] |
 | `fm1_debug.py` (X0X debug builds) | peek and poke registers and RAM in a few allowed ranges, time a loop against TIMER4 | [CODE] |
 | `tools/fm1_remote.py` (fm1-base) | press buttons and keys, turn encoders, read back what the screen says, the last crash and the radio's log | [CODE] |
 | "Report a problem" (fm1-base's installer page) | reads the crash record and log in the browser, ready to copy | [CODE] |
@@ -91,8 +104,11 @@ Restrict register peeks to known ranges: a read of a gated peripheral block can 
 
 ## Sources
 
-- Felucca's `hal/fm1_irq.h`, `fm1_guard.h`, `fm1_sys.h`, `fm1_debug.h`, `src/usb.c`, and its derivatives' main loops (GPL-3.0-only).
-- [fm1-base README](https://github.com/charlesvestal/fm1-base) ("Development over USB").
+- [felucca-bsp](https://github.com/hugelton/felucca-bsp) `chip/fm1_irq.h`, `fm1_guard.h`, `fm1_sys.h`, `fm1_debug.h`,
+  `fm1_perf.h`, `usb.c` (MPL-2.0), which Felucca has used as its `firmware/bsp` submodule since 1.7.0 (its `hal/`
+  copies are gone); [issue #17](https://github.com/hugelton/felucca-bsp/issues/17).
+- Felucca's `BUILDING.md` and its derivatives' main loops (GPL-3.0-only).
+- [fm1-base README](https://github.com/charlesvestal/fm1-base) ("Development over USB"), `docs/SECOND-CORE.md` ("The supplies").
 - [FM-1 Transporter](https://github.com/kurogedelic/FM-1-transporter).
 - [Dinghy](https://github.com/zvenson/dinghy) `firmware/hal/fm1_sys.h`, `fm1_irq.h`, `firmware/src/platform.c`, `docs/RULES.md` (GPL-3.0).
 - [mvave-fm1](https://github.com/maxfridbe/mvave-fm1) development skill §3, §7; [MvaveFM1Unbricker README](https://github.com/Quixotic7/MvaveFM1Unbricker).
