@@ -30,6 +30,7 @@ Every technical fact is tagged with where it comes from: **[HW]** measured on a 
 - [Display](docs/Display.md)
 - [Controls](docs/Controls.md)
 - [MIDI and USB](docs/MIDI-and-USB.md)
+- [Bluetooth and WiFi](docs/Bluetooth-and-WiFi.md)
 - [SMK-37](docs/SMK-37.md)
 
 **Boot and install**

@@ -59,7 +59,7 @@ When two sources disagree, both are shown and the point goes to [Open Questions]
 ## All pages
 
 **Hardware:** [Hardware Overview](Hardware-Overview.md) · [Memory Map](Memory-Map.md) · [Clocks and Power](Clocks-and-Power.md) · [Pinout](Pinout.md) · [Audio Output](Audio-Output.md) ·
-[Display](Display.md) · [Controls](Controls.md) · [MIDI and USB](MIDI-and-USB.md) · [SMK-37](SMK-37.md)
+[Display](Display.md) · [Controls](Controls.md) · [MIDI and USB](MIDI-and-USB.md) · [Bluetooth and WiFi](Bluetooth-and-WiFi.md) · [SMK-37](SMK-37.md)
 
 **Boot, packages and installing:** [Boot Chain and Bootloaders](Boot-Chain-and-Bootloaders.md) · [Firmware Package Format](Firmware-Package-Format.md) ·
 [Update Protocol and Installers](Update-Protocol-and-Installers.md) · [Recovery](Recovery.md) · [Flash Storage](Flash-Storage.md)

@@ -164,9 +164,12 @@ The deep page is [fm1-base as a Base](FM1-Base.md). In short:
   Arduino sketch: `setup()`, `loop()`, `audio()`. `audio()` gets 256 frames every 5.8 ms (README; `platform/fm1.c`).
   Optional parts in `firmware.json`: USB audio, TRS MIDI, MIDI clock, Bluetooth MIDI. Bluetooth uses Henri David's
   stack (from Optimist, as fm1-base carries it); it measures the radio's VCO bands at every start, and the first
-  `bt_enable` pauses the sound while the radio starts (README).
+  `bt_enable` pauses the sound while the radio starts (README). Unlike fm1-base, it does not run the full radio
+  calibration, which hung or faulted in most of its builds (2026-10-31): it uses the unit's stored records, else
+  constants (`platform/bt.c`).
 - **Two platforms.** `"platform": "felucca"` (the default) is all source. `"platform": "mvave"` runs your code on
-  M-VAVE's FM1 SDK from FM1 Open (FreeRTOS, USB, Bluetooth and flash in their binary library). The README lists the cost:
+  M-VAVE's FM1 SDK from FM1 Open (FreeRTOS, USB, Bluetooth and flash in their binary library); it brings that SDK's
+  BLE central role and **Bluetooth audio in** (A2DP sink: `bt_audio_in()`). The README lists the cost:
   about **46 KiB of flash** for your code and data, about 160 KiB of RAM, saved settings lost when you switch, identity
   `FM-1_8` plus six digits, and no OCT− rescue.
 - **Build.** Docker only: `./fm1 dev` pulls the `konsumer/foma-toolchain` image (`linux/amd64`), builds, and serves a page

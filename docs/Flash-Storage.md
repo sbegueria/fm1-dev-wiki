@@ -31,7 +31,7 @@ stock 016). The SMK-37's own layout, with its calibration and the risk of a blan
 
 **Where the stock data really is.** **[HW]** On one FM-1 that had run stock V15 (read 2026-10-08), the SDK's VM
 was at **`0xE8000`** (at most 4 KiB, since BTIF follows), not at the start of the declared range: magic `55 AA AA 55`, then
-records 106, 107, 187, 108, 113 and 109, which hold the radio's RF calibration. BTIF at **`0xE9000`** holds the
+records 106, 107, 187, 108, 113 and 109. 106, 107, 108 and 187 are the radio's calibration (only 187 measured per unit; the others hold the SDK demo board's constants); 109 and 113 are BLE keys ([Bluetooth and WiFi](Bluetooth-and-WiFi.md#calibration-and-where-it-lives)). BTIF at **`0xE9000`** holds the
 Bluetooth address (record 102). `0x93000`–`0x96FFF` and `0xE7000` read `FF` (fm1-base's
 `docs/bt/BLE-HW-FACTS.md` §1, §14.1, a document that came from Optimist; one unit).
 

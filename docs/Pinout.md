@@ -55,7 +55,7 @@ The hub also suggests ways to get a MIDI *out* (routing UART1 TX to the USB D+ p
 or to a freed pin through the output crossbar). **[?]** Since 2026-11-18 the hub's `HARDWARE_MODS.md` lists a
 "Hardware DIN MIDI Out Mod (by ehn96)": a 3.3 V DIN-5 MIDI out, "verified with Dinghy v0.3.0 (which outputs hardware
 MIDI out on pin 39, recommends 74LVC1G07 buffer)". The linked repository (`ehn96/dinghy`) returned 404 on
-2026-11-26, and Dinghy's own source (0.6.1) has no MIDI out on a pin. Unchecked here. **[?]**
+2026-11-26, and Dinghy's own source (0.6.1) has no MIDI out on a pin. Unchecked here. **[?]** In the hub's own pin map, pin 39 is **PD6**, which it calls the flash's power gate, so the claim doesn't fit the map (checked 2026-11-27; `ehn96/dinghy` still 404).
 
 ## The key matrix and PA2
 

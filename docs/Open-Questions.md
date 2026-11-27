@@ -81,6 +81,10 @@ Each entry: **the question**, what we know, and how to find out.
     *Since:* stock V13 has a UART transmit path: it copies incoming MIDI into the UART's TX DMA as MIDI thru
     (FM-1-RE `docs/io/05-midi.md` §1, §2.1) **[RE]**. Whether that pin reaches the jack is the same question
     ([MIDI and USB](MIDI-and-USB.md)).
+    *Since (2026-11-27):* no open FM-1 firmware transmits on UART1. The mod's "pin 39" is **PD6** in the hub's own pin
+    map, which it calls the flash's power gate, so the claim doesn't fit the map; `ehn96/dinghy` is still 404. The hub
+    now calls the circuit "an input optocoupler/buffer", unsourced. *How, without a photo:* set PH7 as UART1 TX at
+    31,250 baud sending a known pattern and probe the jack's tip and ring with nothing plugged in.
 36. **The V15 supply voltages.** Two readings disagree. A static reading of V15's code (fc79, fm1-x0x#21) gives
     I/O 3.2 V, VDC14 1.60 V and SYSVDD 1.38 V. m-bootloader's RAM-app probe read I/O 3.5 V, core 1.20 V while V15
     or V16 ran, and saw 3.2 V only from the 016 bootloader until its firmware starts. The two may have been read at
@@ -240,6 +244,51 @@ Each entry: **the question**, what we know, and how to find out.
     Vestal, [fm1-base#99](https://github.com/charlesvestal/fm1-base/issues/99), 2026-11-27). A report from a `B36014` unit with the newer screen would settle it.
     For the SMK-37's panel, fm1-to-smk37 disagrees with itself: `BAUD` 4, about 12 MHz, verified (01 §3), against
     "the SMK's 20 MHz LCD clock" (10 §5).
+
+## MIDI
+
+53. **Does the every-poll TRS driver replay stale bytes?** Felucca reads the UART count only on receive or timeout
+    events; felucca-bsp, fm1-base and Dinghy read it on every poll ([MIDI and USB](MIDI-and-USB.md)). The fault was
+    shown in a host model. *How:* send a long stream of known CCs into TRS while the render is heavy (polls late), and
+    count wrong or repeated messages with each driver.
+54. **MIDI in latency and jitter, per base.** Nobody has measured note-in to sound-out on USB or TRS. *How:* a computer
+    or a hardware interface sends 1,000 notes; record the FM-1's output beside a reference click; compare Felucca,
+    fm1-base with and without `midi_stamp`, Optimist and stock V15.
+55. **Clock out and clock follow on hardware.** The 418 µs spread of clock out before `FELUCCA_MIDI_RT` has no "after"
+    figure, and the clock-follow fixes (Felucca, OberVave's PI loop, Optimist's filter) were shown in simulation.
+    *How:* timestamp 10,000 F8s from the FM-1 on a computer; for follow, a DAW sends clock at fixed tempos and ramps and
+    the FM-1's steps are recorded against the DAW's click for 10 minutes.
+56. **Which USB MIDI devices fail with the USB host?** Low-speed controllers, devices that wait for VBUS, multi-cable
+    devices, two-chip hubs on felucca-bsp's one-level code. *How:* a list of devices with who, when and the result.
+
+## The radios
+
+See [Bluetooth and WiFi](Bluetooth-and-WiFi.md).
+
+44. **BLE MIDI latency and jitter.** Only CRC rates and acknowledgements have been measured. *How:* loop a note from the
+    FM-1 to a Mac and back, or compare with USB MIDI on the same host; a histogram over 1,000 notes at 7.5, 11.25 and
+    15 ms intervals; stock, JieLi's stack and the own stack.
+45. **A2DP drift.** The own stack's SBC stream is labelled 44.1 kHz but fed at 44,117.6 Hz with no resampler; a full
+    queue drops a whole packet. Does it click every few seconds, or does the sink absorb it? *How:* stream 10 minutes
+    to two sinks, log the queue depth and drops, listen for regular clicks.
+46. **The SBC encoder's cost.** 3.1 % of a core in the emulator, "~31 % of a block, up to 54 %" on an FM-1. Which, and
+    why the gap (flash waits)? *How:* time the encoder with TIMER4 on a unit, code in flash and in RAM.
+47. **Does radio work cause audio dropouts?** No measurement on either radio, any stack. *How:* record a steady tone
+    over USB while scanning, joining, streaming and with BLE MIDI under load; count discontinuities; read the BLE
+    handlers' longest time on the unit.
+48. **Battery cost of the radios.** Nothing measured. *How:* a USB power meter or a shunt: radio off, advertising,
+    connected, A2DP streaming, WiFi joined, MODE AP, JANK; 10 minutes each.
+49. **Link phase against Live, measured outside the FM-1**, and **WiFi beside Bluetooth audio over hours.** The only
+    on-air figures are in commit messages. *How:* the FM-1's click and Live's into a two-channel recorder for 30
+    minutes, alone and with BLE MIDI and A2DP on; then an 8-hour soak logging retries, drops and underruns.
+50. **Range, TX power and the weak uplink.** One note has the access point hearing the FM-1 20 dB low at 3–4 m; TX
+    power per level is unmeasured. *How:* RSSI both ways at 1, 3, 10 and 20 m; with the stored calibration and without.
+51. **Does modd's driver join and get a lease on hardware?** The repo's last dated hardware record stops before
+    association. *How:* ask DimmKirr for the build, unit and date of a join and the weather fetch, or flash
+    `modd_defconfig` and read its network screen.
+52. **Windows and Android with the own Bluetooth stack**, and **does it need the SDK's temperature retune?** (the SDK
+    retunes every 3 s as the chip warms). *How:* connect from Windows 11 and an Android DAW and report CRC and drops;
+    heat and cool a connected unit and watch the same.
 
 ## Resolved
 

@@ -72,6 +72,15 @@ Many firmwares document hardware lessons in their own docs. Some that have shape
   [h1](https://github.com/jakehandy/h1)).
 - **Stems over USB audio** (8 or 10 channels): LOOM-8, Terykons, Mutable Dreams, Elixir and h1 0.4.0, which adds
   `tools/h1_stems.py` to split the recording into stereo files ([Audio Output](Audio-Output.md#usb-audio)).
+- [modd](https://github.com/DimmKirr/modd) (DimmKirr, GPL-3.0-only): a modular firmware that vendors other firmwares'
+  features; its own WiFi driver with lwIP (TCP, DNS, HTTP), with a documented clean-room method and the largest WiFi
+  register sheet (`docs/hardware/wifi/`); USB host Ethernet; a REST server ([Bluetooth and WiFi](Bluetooth-and-WiFi.md)).
+- [fm1-radio](https://github.com/charlesvestal/fm1-radio) (Charles Vestal) and [FIELD](https://github.com/AveyCole/FM1-Field)
+  (AveyCole): internet audio over JieLi's WiFi stack.
+- [MIDIMON](https://github.com/ignis32/midimonitor_fm1) (ignis32, on fm1-base): a MIDI monitor and router between USB,
+  USB host and BLE.
+- [Tether](https://thefirmwarehub.com/firmware/tether/) (UtopickDesigns, GPL-3.0-only): the FM-1 as a full MIDI
+  controller and as a screen and speaker for [FM1.Pocket](Simulators-and-Emulators.md) ([MIDI and USB](MIDI-and-USB.md)).
 - [fm1-mdx](https://github.com/Keitark/fm1-mdx) (GPL-3.0): an MDX/PDX karaoke player on JieLi's SDK; fm1-nes reuses its
   USB audio and serial code. No commit since 2026-10-08.
 - [fm1-dock](https://github.com/joakimeriksson/fm1-dock) (GPL-3.0, based on Dinghy): one firmware with synths as modules

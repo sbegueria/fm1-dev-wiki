@@ -13,8 +13,12 @@ Addresses as the CPU sees them. See [Flash Storage](Flash-Storage.md) for the fl
 | Range | What | Tag |
 | --- | --- | --- |
 | `0x00010000`… | Low-speed peripherals (clock, power, timers, UART, SPI, ADC, P33 bridge…) | [SDK] [CODE] |
+| `0x00011900`–`0x0001197C` | Radio analog block shared by WiFi and Bluetooth: PLL, filters, PA, DC and IQ trims; the crystal trim at `0x11930` must be ramped from RAM with interrupts off | [RE] [HW] |
+| `0x00014000`–`0x0001405C` | Wireless control: bit 0 the Bluetooth RF path, bit 1 WiFi (`0x14000`); the coexistence controller's port `0x14004` (565 words, needed for WiFi receive); the channel in `0x1405C` | [SDK] [HW] |
+| `0x00020000`–`0x000201FF` | Bluetooth Classic (BR/EDR) baseband and its 625 µs clock | [RE] |
 | `0x00028000`–`0x00028054` | BLE baseband registers. The per-link registers are a block in SRAM that the engine reaches by DMA. | [RE] [CODE] |
-| `0x00030000`–`0x00031FFF` | WiFi MAC and BBP window: JieLi's wl30 core, with the register layout of Ralink's RT3070 | [RE] [CODE] |
+| `0x00030000`–`0x00031FFF` | WiFi MAC and BBP window: JieLi's wl30 core, with the register layout of Ralink's RT3070. The frame DMA is at `0x30F00`–`0x30F1C` and can't read buffers above `0x01C20000`. Receive interrupt 52 never latched in probes; the open stacks poll | [RE] [CODE] [HW] |
+| `0x00041200` | AES-128 block (stock firmware uses it for Bluetooth; the own stack encrypts in software) | [RE] |
 | `0x00040000`… | High-speed peripherals, including the SFC (flash controller) at `0x40200` and XIP decryption at `0x40300` | [SDK] [CODE] |
 | `0x00050000`… | GPIO (`0x50000 + 0x40 × port`, A=0 … H=7) and pin mux (`0x51000`…) | [SDK] [CODE] |
 | `0x01C00000`–`0x01C7FFFF` | Internal SRAM used by firmware (512 KB). Code can run from it. | [CODE] [HW] |
@@ -144,6 +148,7 @@ section contains no `call` instruction.
   `docs/bt/BLE-HW-FACTS.md` §1 and `docs/wifi/README.md` (radio registers).
 - [Dinghy](https://github.com/zvenson/dinghy) `docs/RULES.md`, `tools/build.py` (GPL-3.0); [mvave-fm1](https://github.com/maxfridbe/mvave-fm1) development skill §3.
 - [MvaveFM1Unbricker README](https://github.com/Quixotic7/MvaveFM1Unbricker) (`retained-ram.bin`).
+- The radio blocks: Optimist `docs/WIFI-HW-FACTS.md` §2 and fm1-base `docs/bt/BLE-HW-FACTS.md` §1 (from Optimist, 2026-10); felucca-bsp `chip/fm1_wifi.h`; modd `docs/hardware/wifi/SPECSHEET.md` §4 (`a833219`). More on [Bluetooth and WiFi](Bluetooth-and-WiFi.md).
 
 ---
 
