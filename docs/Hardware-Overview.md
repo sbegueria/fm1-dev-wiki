@@ -37,7 +37,7 @@ What is inside an FM-1, as far as the community knows. Each line has its tag (se
 | Headphone jack | A switch on PB5: low with headphones in. | [HW] |
 | MIDI | USB-MIDI device (USB 1.1 full speed); TRS MIDI in on UART1 (PH8). | [CODE] |
 | USB | One USB port: device mode normally (stock firmware enumerates as `4C4A:C755`); the chip's mask-ROM download mode for recovery. USB host is possible with external power. | [HW] |
-| Power | Battery with a charger; the core and SRAM supply (SYSVDD) and VDC14 set by firmware. See [Clocks and Power](Clocks-and-Power.md). | [HW] |
+| Power | Battery with a charger; the core and SRAM supply (SYSVDD) and VDC14 set by firmware. See [Clocks and Power](Clocks-and-Power.md). The battery is said to be replaceable without soldering (a commenter on u/Putrid_Chef_1511's interior photos, r/MVaveFM1, November 2026; not yet confirmed with a photo). | [HW] [?] |
 | Debug | **No debug header** on the board. Recovery is over USB only. | [HW] |
 | Card slot | None. A mod ([m-card](https://github.com/jvitkauskas/m-card)) puts a microSD card on the screen's SPI1: see [Pinout](Pinout.md). | [HW] [CODE] |
 

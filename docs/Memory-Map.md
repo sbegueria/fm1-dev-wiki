@@ -84,6 +84,28 @@ MEMORY
 }
 ```
 
+**Why RAM and POOL? A convention, not a hardware limit.**
+- **It's one SRAM.** Felucca's linker script says so itself: RAM holds `.data`/`.bss`, "what the audio and key-scan
+  interrupts touch, small variables"; POOL holds big zero-initialised buffers (section `.pool`, not loaded from flash),
+  and "the RAM / POOL boundary only splits the budget" (`firmware/app.ld` header, Leo Kuroshita; 96/336 KB until 1.4,
+  72/360 KB since 1.5). Felucca's build reports the two budgets apart and checks the pool's headroom; no memory guard
+  sits on the boundary. **[CODE]**
+- **Same speed.** Timed on one FM-1 (Optimist, 2026-10-25): a 32-bit read took 35.2 ns in RAM and in POOL alike, a
+  write 35.1 ns; code ran at the same speed from RAM code, RAM and cached flash (Optimist
+  [`docs/MEMORY-MAP.md`](https://github.com/w0ts/optimist/blob/2b559c1d/docs/MEMORY-MAP.md) §2.3). Not measured:
+  contention with the screen's DMA, and the second core's access. **[HW]**
+- **What it buys** is bookkeeping: the interrupt side's memory stays small and reported on its own, and a buffer tagged
+  `.pool` reads as "main loop only" (Felucca's comments: "main loop only: off the audio code's .bss"). **[CODE]**
+- **Packed layouts** drop the boundary: Optimist packs RAM code, data and big buffers into one region in every build
+  since 2026-10-25 (`RAM_PACKED`), and fm1-base offers `ram_layout = "packed"` (below). How buffers are handed out
+  (fixed sections, or an arena reset as a whole, as Optimist uses for effects and engines) is a separate question from
+  where a boundary sits. **[CODE]**
+- **One real limit lies nearby:** the radio's frame DMA can't read above `0x01C20000` (below), which in the layout
+  above is exactly where POOL starts. Radio buffers must stay low, whatever the layout. **[HW]**
+
+(Asked and answered on r/MVaveFM1, "Why the POOL/RAM split?", J-MW, November 2026, with replies from deamonSLINKY and
+keremimo; checked here against the sources above.)
+
 Points to know:
 - **The app slot is `0x8DFBC` bytes** (581,564) in the stock layout. The package builder refuses a bigger image.
   fm1-base can move the app area's end with `app_end` (up to `0xE0000`; `0xCE000` gives an `app.bin` of
@@ -149,6 +171,7 @@ section contains no `call` instruction.
 - [Dinghy](https://github.com/zvenson/dinghy) `docs/RULES.md`, `tools/build.py` (GPL-3.0); [mvave-fm1](https://github.com/maxfridbe/mvave-fm1) development skill §3.
 - [MvaveFM1Unbricker README](https://github.com/Quixotic7/MvaveFM1Unbricker) (`retained-ram.bin`).
 - The radio blocks: Optimist `docs/WIFI-HW-FACTS.md` §2 and fm1-base `docs/bt/BLE-HW-FACTS.md` §1 (from Optimist, 2026-10); felucca-bsp `chip/fm1_wifi.h`; modd `docs/hardware/wifi/SPECSHEET.md` §4 (`a833219`). More on [Bluetooth and WiFi](Bluetooth-and-WiFi.md).
+- Felucca `firmware/app.ld` header (GPL-3.0-only); Optimist `docs/MEMORY-MAP.md` §2.3 at `2b559c1d`; r/MVaveFM1, J-MW, "Why the POOL/RAM split?" (November 2026).
 
 ---
 
