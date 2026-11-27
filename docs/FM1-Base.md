@@ -117,10 +117,12 @@ All **[CODE]** from `tools/build.py`'s help text and the README, unless tagged o
   mirroring (`mirror`); the headphone switch (`headphones`).
 - **The newer screens.** `lcd_panel = true` sends M-VAVE's own ST7789V set-up after the reset (porch, gate, VCOM, supplies,
   60 Hz, gammas) ([1677a14](https://github.com/charlesvestal/fm1-base/commit/1677a14), 2026-10-28). The display clock
-  stays fm1-base's default, which `device/lcd.c` gives as 60 MHz (about 44 MHz measured). Dinghy's note on the newer
-  panels says they need M-VAVE's 12 MHz as well
-  ([NEWER-FM1-SCREEN.md](https://github.com/zvenson/dinghy/blob/14cda7a/docs/NEWER-FM1-SCREEN.md)). Whether
-  `lcd_panel` alone is enough on the newer units is not stated. **[?]**
+  stays fm1-base's default, which `device/lcd.c` gives as 60 MHz (about 44 MHz measured): the set-up is sent at the
+  start-up clock, and the clock is raised to 60 MHz only for the pixels. Dinghy's note on the newer panels says they
+  need M-VAVE's 12 MHz as well
+  ([NEWER-FM1-SCREEN.md](https://github.com/zvenson/dinghy/blob/14cda7a/docs/NEWER-FM1-SCREEN.md)). `lcd_panel` has
+  not been tried on a newer unit; the commit that added it was not run on an FM-1 at all (Charles Vestal,
+  [fm1-base#99](https://github.com/charlesvestal/fm1-base/issues/99), 2026-11-27). **[?]** ([Open Questions](Open-Questions.md#display) 42)
 - **The newer flash. [HW]** The store, data area, backup and update loader accept the UC25HQ80 (`0xB36014`) since
   2026-11-05. A unit that has an older fm1-base release on such a chip can't install anything itself; felucca-bsp's
   `fm1_rescue.sh` puts stock firmware back once. Still open: units whose protected first 16 KB match neither V15 nor V16
@@ -168,8 +170,8 @@ unless `fm1.toml` says `licence = "GPL-3.0-only"` (or `-or-later`) (LICENSING.md
 | --- | --- | --- |
 | **fm1-base into a GPL firmware** (a Felucca fork moving onto it) | **Yes** | MPL-2.0 files may be part of a GPL work and stay MPL-2.0 file by file (fm1-base README). Its skill `felucca-to-fm1-base` does this and keeps the firmware's GPL. The firmware as a whole is distributed under the GPL. |
 | **GPL code into an fm1-base app that is not GPL** (Felucca's engines, sequencer, UI; code from X0X, Melodee, Jangada and other GPL forks) | **No**, unless the firmware becomes GPL | GPL code makes the whole firmware GPL. To stay MPL or closed, take third-party parts from their own upstream (MIT, BSD, Apache-2.0…), or rewrite from behaviour, not by translating Felucca's source (`skill/felucca-to-fm1-base/RULES.md`). This is the thread's point. |
-| **A GPL firmware linking JieLi's binary BT or WiFi libraries** | **No**, by fm1-base's reading | "A GPL-3.0 firmware that links them can't be distributed without an extra permission from the GPL code's copyright holders" (RULES.md). An MPL-2.0 firmware can. So JieLi's WiFi, and BLE on JieLi's stack, need a firmware with no GPL file in it. |
-| **A GPL firmware with BLE (and WiFi) on fm1-base's own stacks** | **Yes, in practice [CODE]** | The own stacks link nothing of JieLi's. Ableton Link needs `wifi_stack = "own"`, which needs `ble_stack = "own"`, and makes the firmware GPL-3.0-only; fm1-base ships such a firmware itself (`examples/link`, GPL-3.0-only). Their parts are MPL-2.0 (offered as `GPL-3.0-only OR MPL-2.0` at source), Apache-2.0 (SBC encoder, radio tables) and BSD-2-Clause (micro-ecc). fm1-base still does not say in words that any GPL firmware may use the own stacks without Link; this is the wiki's reading, not legal advice. |
+| **A GPL firmware linking JieLi's binary BT or WiFi libraries** | **Only with an extra permission** | It needs a GPL-3.0 section 7 permission from every copyright holder of its GPL code. An author who owns all of a firmware's GPL code can grant it, as FM1 Open does; a Felucca fork can't, because its code is not only its author's. An MPL-2.0 firmware needs none (fm1-base LICENSING.md, DESIGN.md at [e4863fa](https://github.com/charlesvestal/fm1-base/commit/e4863fa); earlier DESIGN.md said such a firmware could have "no GPL file at all"). |
+| **A GPL firmware with BLE (and WiFi) on fm1-base's own stacks** | **Yes [CODE]** | The own stacks link nothing of JieLi's. Ableton Link needs `wifi_stack = "own"`, which needs `ble_stack = "own"`, and makes the firmware GPL-3.0-only; fm1-base ships such a firmware itself (`examples/link`, GPL-3.0-only). Their parts are MPL-2.0 (offered as `GPL-3.0-only OR MPL-2.0` at source), Apache-2.0 (SBC encoder, radio tables) and BSD-2-Clause (micro-ecc). Since 2026-11-27 fm1-base says so in words: "A GPL firmware may use all of fm1-base, the own Bluetooth and Wi-Fi stacks included", with or without Link, since none of its MPL-2.0 files carries the "Incompatible With Secondary Licenses" notice (LICENSING.md, [e4863fa](https://github.com/charlesvestal/fm1-base/commit/e4863fa); Charles Vestal, [fm1-base#99](https://github.com/charlesvestal/fm1-base/issues/99)). Not legal advice. |
 
 Relicensing a Felucca-based firmware to MPL-2.0 (to link JieLi's radio libraries) needs every line to be the
 author's own or from a permissive source; `tools/provenance.py` finds lines copied from Felucca, including those
@@ -177,7 +179,8 @@ that came through contributors' pull requests (RULES.md). **[CODE]**
 
 ## When to choose it
 
-- A **new** firmware, or one that wants WiFi or Bluetooth with JieLi's libraries: fm1-base, kept free of GPL code.
+- A **new** firmware, or one that wants WiFi or Bluetooth with JieLi's libraries: fm1-base, kept free of GPL code
+  (or GPL code you own all of, with a section 7 permission). With fm1-base's own stacks, a GPL firmware is fine.
 - A **Felucca fork** that wants shared platform fixes, velocity/pressure, the own BLE and WiFi stacks, or the cpu2
   wrapper: move onto fm1-base and stay GPL ([AI Skills](AI-Skills.md): `felucca-to-fm1-base`). Optimist did this in
   0.4.1.
@@ -201,6 +204,7 @@ that came through contributors' pull requests (RULES.md). **[CODE]**
   Secondary Licenses) and its [FAQ](https://www.mozilla.org/en-US/MPL/2.0/FAQ/).
 - The r/MVaveFM1 thread ["Claude skill"](https://www.reddit.com/r/MVaveFM1/comments/1xh6o7m/claude_skill/), a
   commenter's reply (the commenter's name is not recorded here).
+- [fm1-base#99](https://github.com/charlesvestal/fm1-base/issues/99): Charles Vestal's answers to this wiki (2026-11-27); fm1-base LICENSING.md, DESIGN.md at [e4863fa](https://github.com/charlesvestal/fm1-base/commit/e4863fa).
 
 ---
 

@@ -93,7 +93,8 @@ it (off by default). How it works is documented in those repositories.
 **[CODE]** In fm1-base (`lib/touch.h`, `#define APP_TOUCH`): the **20 keys on the analog rows (F3 to C5)** are read
 through the scan's ADC readings, giving a velocity per press and a **pressure** (0–127) while held, which works as
 per-key aftertouch. The **7 top-row keys (C#5 to G5)** have no converter: a velocity from a probe through the LED
-line, and no pressure. Curve and sensitivity are adjustable (−5..+5). See [fm1-base as a Base](FM1-Base.md).
+line, and no pressure. Curve and sensitivity are adjustable (−5..+5). Confirmed by fm1-base's author (Charles Vestal,
+[fm1-base#99](https://github.com/charlesvestal/fm1-base/issues/99), 2026-11-27). See [fm1-base as a Base](FM1-Base.md).
 
 ## Hold-at-power-on keys
 
@@ -134,6 +135,7 @@ and 0.4 on two units; the check is unchanged in 0.6.1). Drive PA2 low before any
 - [FM-1-RE](https://github.com/AL-255/FM-1-RE) `docs/io/07-input.md` §2, §3, §4.2 (WTFPL; stock V13, V14).
   Its code addresses need `0x120` added ([Memory Map](Memory-Map.md#the-stock-app-runs-at-0x02000120)).
 - [felucca-bsp](https://github.com/hugelton/felucca-bsp), [fm1-base](https://github.com/charlesvestal/fm1-base) READMEs; fm1-base `lib/touch.h` (MPL-2.0).
+- [fm1-base#99](https://github.com/charlesvestal/fm1-base/issues/99): Charles Vestal's answers to this wiki (2026-11-27); fm1-base LICENSING.md, DESIGN.md at [e4863fa](https://github.com/charlesvestal/fm1-base/commit/e4863fa).
 
 ---
 

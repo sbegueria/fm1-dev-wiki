@@ -74,10 +74,13 @@ cache arrays at `0x01F00000`… when it invalidates. Nobody has published a meas
 **The data cache, and using it as RAM.** felucca-bsp's `chip/fm1_cache_ram.h` (from Optimist, hdavid, MPL-2.0)
 turns 1 to 7 of the **data cache's 8 ways of 4 KiB** into plain RAM at `0x01F28000` + way × 4 KiB, with the SDK's
 `cache_way_config` sequence. **[RE]** M-VAVE's V15 runs that sequence with 7 ways (felucca-bsp
-`docs/EXPERIMENTAL.md`). **[HW]** On one FM-1 (Optimist, 2026-10-18 to 25): the memory test passes, the ways read as
-fast as main RAM, and 2 ways were in daily use for days without a fault. But the flash's data goes through the ways
-left as cache: **with 7 ways as RAM, flash data reads over 16 KiB were 57× slower.** Fewer ways are the safer
-choice. Not known: whether the second core and DMA can read the ways. **[CODE]** fm1-base offers
+`docs/EXPERIMENTAL.md`). **[HW]** On one FM-1 (Optimist, 2026-10-18): the memory test passes and the ways read as fast
+as main RAM. But the flash's data goes through the ways left as cache: **with 7 ways as RAM, flash data reads over
+16 KiB were about 57× slower** (1.7 µs against 32 ns), so Optimist's `CACHE_RAM` is off by default. Fewer ways are
+the safer choice. felucca-bsp's `docs/EXPERIMENTAL.md` adds that 2 ways were "in daily use for days without a
+fault"; Optimist's author says no long run is on record, so that part is not established (hdavid,
+[optimist#295](https://github.com/w0ts/optimist/issues/295), 2026-11-27). Optimist gives cache RAM only to its undo ring, read by the main loop; what core 1
+and the audio read stays in SRAM. Not known: whether the second core and DMA can read the ways (Q39). **[CODE]** fm1-base offers
 `cache_ram_ways = 2`, 4 or 7 (`include/plat.h`, `plat_cache_ram`).
 
 ### Putting hot code in RAM
@@ -203,6 +206,7 @@ second-core option since 1.6.1 (MENU > SYSTEM > 2ND CORE, beta, off by default).
 - [fm1-base](https://github.com/charlesvestal/fm1-base) commit history, `tools/build.py`, `include/plat.h` (at 3039770).
 - [FM-1-RE](https://github.com/AL-255/FM-1-RE) `docs/function-index.md` (WTFPL; stock V13).
 - [kmplngj/Felucca `docs/mul64-hload-audit.md`](https://github.com/kmplngj/Felucca/blob/main/docs/mul64-hload-audit.md) (GPL-3.0-only).
+- [optimist#295](https://github.com/w0ts/optimist/issues/295): hdavid's answers to this wiki (2026-11-27); Optimist [`docs/INSTALL-PATHS.md`](https://github.com/w0ts/optimist/blob/bfa17d5e/docs/INSTALL-PATHS.md) (2026-11-26).
 
 ---
 

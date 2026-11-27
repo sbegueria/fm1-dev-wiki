@@ -235,17 +235,22 @@ The deep page is [fm1-base as a Base](FM1-Base.md). In short:
 ### Optimist
 
 - **Status.** Release 0.4 (2026-11-23); the tree is at 0.4.1. Since 0.4.1 it is "based on fm1-base upstream main
-  (2026-11-22)" ([docs/RELEASE-0.4.1.md](https://github.com/w0ts/optimist/blob/b32f7321/docs/RELEASE-0.4.1.md)).
+  (2026-11-22)" ([docs/RELEASE-0.4.1.md](https://github.com/w0ts/optimist/blob/b32f7321/docs/RELEASE-0.4.1.md)). Its
+  `fm1base` submodule is pinned to Optimist's fork's integration branch: fm1-base's main plus Optimist's topic branches
+  that wait as pull requests upstream (hdavid, [optimist#295](https://github.com/w0ts/optimist/issues/295), 2026-11-27).
 - **Licence.** GPL-3.0-only. Its Bluetooth stack and WiFi code are `GPL-3.0-only OR MPL-2.0`, which is how fm1-base and
-  foma can use them; the Ableton Link port stays GPL-3.0-only (README).
+  foma can use them; the Ableton Link port stays GPL-3.0-only (README; confirmed by hdavid, [optimist#295](https://github.com/w0ts/optimist/issues/295)).
 - **Inside.** A modular firmware: a browser "builder" picks engines, effects and pages, and builds them. It credits
   SLOOP, Felucca, Melodee, Clipper, X0X and others for its parts (README).
 - **Build.** macOS arm64 and Linux x86-64, natively, with the open pi32v2-llvm compiler instead of JieLi's clang
   ([BUILDING.md](https://github.com/w0ts/optimist/blob/b32f7321/BUILDING.md)). Or a cloud build: the site opens a filled-in
   GitHub issue, and a workflow answers with the package (`docs/WEB.md`).
 - **Without a unit.** A web simulator (Emscripten) and a full-system emulator (`python tools/optimist.py emu`).
-- **Installing.** Release identity `FM-1_709000401` (0.4.1). Its installer uses m-bootloader 3.0. `docs/INSTALL-PATHS.md`
-  has a table of which way each installer takes, by running firmware and package.
+- **Installing.** Release identity `FM-1_709000401` (0.4.1). Its installers keep the bootloader that is there and
+  install m-bootloader only when asked ([Open Questions](Open-Questions.md#installing) 23). Which m-bootloader: the
+  0.4.1 notes say 3.0, while the main branch on 2026-11-27 still pins m-bootloader v2.4 (`395e6cc`) and M-Flasher
+  0.9.2 (`third_party/`, `docs/INSTALL-PATHS.md`). `docs/INSTALL-PATHS.md` has a table of which way each installer
+  takes, by running firmware and package.
 - **Hardware.** UC25HQ80 since 0.4 ([optimist#261](https://github.com/w0ts/optimist/issues/261)).
 - **Read.** `docs/INSTALL-PATHS.md`, `docs/BLE-HW-FACTS.md`, `docs/WIFI-HW-FACTS.md`, `docs/MEMORY-MAP.md`,
   `docs/DUAL-CORE.md`, `docs/SD-CARD-DESIGN.md`.
@@ -254,8 +259,10 @@ The deep page is [fm1-base as a Base](FM1-Base.md). In short:
 
 **Licence.** Felucca's code is GPL-3.0-only. A Felucca fork stays GPL and cannot relicense by using felucca-bsp
 ([felucca-bsp README](https://github.com/hugelton/felucca-bsp)). MPL-2.0 files (felucca-bsp, fm1-base) can be part
-of a GPL work and stay MPL file by file. To link JieLi's closed Bluetooth or WiFi libraries, fm1-base's notes say
-the firmware has to have no GPL file in it at all ([fm1-base DESIGN.md](https://github.com/charlesvestal/fm1-base/blob/main/DESIGN.md)).
+of a GPL work and stay MPL file by file, so a GPL firmware may use all of fm1-base, its own Bluetooth and WiFi stacks
+included. To link JieLi's closed Bluetooth or WiFi libraries, a GPL firmware needs a GPL-3.0 section 7 permission from
+every copyright holder of its GPL code; a Felucca fork can't get one, since Felucca's code is not only its author's
+(fm1-base [LICENSING.md](https://github.com/charlesvestal/fm1-base/blob/e4863fa/LICENSING.md), 2026-11-27).
 FM1 Open's app links a binary engine under a linking exception, and that engine may only be used on M-VAVE FM1 devices.
 Read [License](License.md) and each project's LICENSE before you mix code.
 
@@ -318,6 +325,8 @@ All checked on 2026-11-26.
 - [Optimist](https://github.com/w0ts/optimist) at `b32f7321`: `README.md`, `BUILDING.md`, `docs/RELEASE-0.4.1.md`,
   `docs/RELEASE-0.4.md`, `docs/WEB.md`.
 - [The r/MVaveFM1 thread](https://www.reddit.com/r/MVaveFM1/comments/1xe8c9x/all_right_stop_collaborate_and_listen/).
+- [fm1-base#99](https://github.com/charlesvestal/fm1-base/issues/99): Charles Vestal's answers to this wiki (2026-11-27); fm1-base LICENSING.md, DESIGN.md at [e4863fa](https://github.com/charlesvestal/fm1-base/commit/e4863fa).
+- [optimist#295](https://github.com/w0ts/optimist/issues/295): hdavid's answers to this wiki (2026-11-27); Optimist [`docs/INSTALL-PATHS.md`](https://github.com/w0ts/optimist/blob/bfa17d5e/docs/INSTALL-PATHS.md) (2026-11-26).
 
 ---
 

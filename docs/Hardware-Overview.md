@@ -16,7 +16,7 @@ What is inside an FM-1, as far as the community knows. Each line has its tag (se
 | CPU | JieLi **pi32v2**, 32-bit, little endian, 16-bit instruction words. Toolchain target `-mcpu=r3`. | [SDK] [CODE] |
 | Cores | **Two.** The SDK defines `CPU_CORE_NUM 2`. Several firmwares run work on the second core. See [Second Core](Second-Core.md). | [SDK] [HW] |
 | FPU | **Single-precision** hardware floating point, enabled with `-mfprev1`. Doubles are done in software (slow). M-VAVE's V13 links software helpers for doubles only, none for single floats ([Performance](Performance.md)). | [SDK] [CODE] [RE] |
-| Caches | I-cache and D-cache (SDK). The data cache has **8 ways of 4 KiB**; 1 to 7 of them can be used as plain RAM at `0x01F28000` + way × 4 KiB, as M-VAVE's V15 does with 7. On one FM-1, 2 ways ran as RAM for days; with 7, flash data reads over 16 KiB were 57× slower (Optimist, 2026-10-18 to 25; felucca-bsp `chip/fm1_cache_ram.h`, `docs/EXPERIMENTAL.md`). I-cache size and layout: see [Performance](Performance.md) and [Open Questions](Open-Questions.md). | [SDK] [HW] [?] |
+| Caches | I-cache and D-cache (SDK). The data cache has **8 ways of 4 KiB**; 1 to 7 of them can be used as plain RAM at `0x01F28000` + way × 4 KiB, as M-VAVE's V15 does with 7. On one FM-1 the ways passed a memory test and read as fast as main RAM; with 7, flash data reads over 16 KiB were about 57× slower (Optimist, 2026-10-18; felucca-bsp `chip/fm1_cache_ram.h`; hdavid, [optimist#295](https://github.com/w0ts/optimist/issues/295)). No long run is on record. I-cache size and layout: see [Performance](Performance.md) and [Open Questions](Open-Questions.md). | [SDK] [HW] [?] |
 | Clock | **360 MHz** under M-VAVE's 015 (V15) bootloader (measured). M-VAVE's **016** (V16) bootloader hands the firmware **320 MHz** (LSB 53.3 MHz), measured with a boot probe on one FM-1 (m-bootloader [`docs/STOCK-V15-V16.md`](https://github.com/jvitkauskas/m-bootloader/blob/121cfbe/docs/STOCK-V15-V16.md), 2026-11-14 and 21). m-bootloader: its SPEC sets 360 MHz, and the same probe read 360 MHz under 2.3; [Clocks and Power](Clocks-and-Power.md) reports 320 MHz under 1.2. The SDK calls 320 MHz its maximum. | [HW] |
 | SRAM | The SDK says **578 KB** of on-chip SRAM in total. Firmwares use the window `0x01C00000`–`0x01C80000` (512 KB). There is **no external RAM** on the FM-1. | [SDK] [CODE] |
 | Accelerators | Hardware FFT/IFFT and matrix maths, AES-128/256, SHA, random numbers, CRC16 (SDK). Only CRC16 is known to be used by community firmware. | [SDK] |
@@ -81,6 +81,7 @@ None of that is needed by a custom firmware: the open firmwares replace the whol
 - [mvave-fm1](https://github.com/maxfridbe/mvave-fm1) firmware skill §10 (USB ID `4C4A:C755` seen on a stock unit,
   2026-10-22).
 - [awesome-fm-1](https://github.com/cicloid/awesome-fm-1) "Official" (V16, October 2026).
+- [optimist#295](https://github.com/w0ts/optimist/issues/295): hdavid's answers to this wiki (2026-11-27); Optimist [`docs/INSTALL-PATHS.md`](https://github.com/w0ts/optimist/blob/bfa17d5e/docs/INSTALL-PATHS.md) (2026-11-26).
 
 ---
 

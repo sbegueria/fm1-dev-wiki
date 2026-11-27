@@ -58,7 +58,9 @@ Jake Handy for h1 0.3.1; written up for every firmware in Dinghy's
 **[CODE]** These are the values in M-VAVE's own FM1 Open source (`app/board/lcd.inc`, `display_setup[]`), which runs
 the panel at `baud` 4 (12 MHz). M-VAVE's list also sets the window (`2A`, `2B`) and sends `20` (inversion off) early,
 before the final `21`; it has no `01` or `13`. fm1-base sends M-VAVE's set-up with `lcd_panel = true` in `fm1.toml`
-(opt-in, [1677a14](https://github.com/charlesvestal/fm1-base/commit/1677a14), 2026-10-28).
+(opt-in, [1677a14](https://github.com/charlesvestal/fm1-base/commit/1677a14), 2026-10-28), at the start-up clock,
+then runs the pixels at 60 MHz. It has not been tried on a newer unit (Charles Vestal, [fm1-base#99](https://github.com/charlesvestal/fm1-base/issues/99),
+2026-11-27): whether a newer panel takes 60 MHz is [Open Questions](Open-Questions.md#display) 42.
 
 **[RE]** M-VAVE's older **V13** does the same: SPI1 with `baud` 4, a 21-command panel set-up table, and drawing
 through two 240×24 strip buffers (11,520 bytes each), with no full-screen framebuffer in RAM (FM-1-RE
@@ -120,6 +122,7 @@ peaks. Measure the audio load with your busiest screen showing. See [Performance
 - [fm1-base](https://github.com/charlesvestal/fm1-base) `lcd_panel` ([1677a14](https://github.com/charlesvestal/fm1-base/commit/1677a14)).
 - [FM-1-RE](https://github.com/AL-255/FM-1-RE) `docs/io/08-display.md` §1 (WTFPL; stock V13).
 - [kmplngj/Felucca](https://github.com/kmplngj/Felucca) `docs/display-power-research-2026-10-22.md`, `docs/lcd-backlight-probe.md`, `docs/lcd-colour-ab-2026-10-22.md` (GPL-3.0-only).
+- [fm1-base#99](https://github.com/charlesvestal/fm1-base/issues/99): Charles Vestal's answers to this wiki (2026-11-27); fm1-base LICENSING.md, DESIGN.md at [e4863fa](https://github.com/charlesvestal/fm1-base/commit/e4863fa).
 
 ---
 
