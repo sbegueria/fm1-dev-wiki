@@ -100,6 +100,12 @@ and the audio read stays in SRAM. Not known: whether the second core and DMA can
 
 If all engines don't fit, load the current one into a reserved SRAM area when the user picks it (ZenLegume).
 
+**Packing the RAM code in the image. [CODE]** [OG Synth](https://github.com/mikejohnsonbeats/OG-Synth-source) (Mike Johnson Beats, 2.1.0, MPL-2.0 patch to fm1-base)
+stores `.ram_text` as a raw deflate stream at the end of the image and unpacks it at start, which saves flash: about
+29.6 KB of RAM code took 18.1 KB (21.8 KB with LZ4-style tokens). A CRC-32 of every KiB follows the stream; a mismatch
+after unpacking starts safe mode with "RAM CODE BAD" instead of running bad code (`patches/fm1-base.patch`:
+`device/rt_lz.h`, `main_fm1.c`, `tools/build.py`; `fm1.toml` `ram_text_lz = true`; 2026-11).
+
 ## Compiler and linker flags
 
 **[CODE]** The FPU needs `-mcpu=r3 -mfprev1` (the SDK's own flags). Without them floats are done in software.
@@ -207,6 +213,7 @@ second-core option since 1.6.1 (MENU > SYSTEM > 2ND CORE, beta, off by default).
 - [FM-1-RE](https://github.com/AL-255/FM-1-RE) `docs/function-index.md` (WTFPL; stock V13).
 - [kmplngj/Felucca `docs/mul64-hload-audit.md`](https://github.com/kmplngj/Felucca/blob/main/docs/mul64-hload-audit.md) (GPL-3.0-only).
 - [optimist#295](https://github.com/w0ts/optimist/issues/295): hdavid's answers to this wiki (2026-11-27); Optimist [`docs/INSTALL-PATHS.md`](https://github.com/w0ts/optimist/blob/bfa17d5e/docs/INSTALL-PATHS.md) (2026-11-26).
+- [OG Synth](https://github.com/mikejohnsonbeats/OG-Synth-source) `patches/fm1-base.patch` (`device/rt_lz.h`), 2.1.3, 2026-11-27 (MPL-2.0).
 
 ---
 

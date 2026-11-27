@@ -72,6 +72,9 @@ Many firmwares document hardware lessons in their own docs. Some that have shape
   [h1](https://github.com/jakehandy/h1)).
 - **Stems over USB audio** (8 or 10 channels): LOOM-8, Terykons, Mutable Dreams, Elixir and h1 0.4.0, which adds
   `tools/h1_stems.py` to split the recording into stereo files ([Audio Output](Audio-Output.md#usb-audio)).
+- [OG Synth](https://github.com/mikejohnsonbeats/OG-Synth-source) (Mike Johnson Beats, [ogsynth.cc](https://ogsynth.cc)): on fm1-base, with the MPL-2.0 part public and the
+  engines proprietary. Worth reading for its patches: RAM code packed with deflate in the image, LEDs kept lit during
+  flash writes. USB audio off on purpose (MIDI only), the second core renders half of the FM6 voices.
 - [modd](https://github.com/DimmKirr/modd) (DimmKirr, GPL-3.0-only): a modular firmware that vendors other firmwares'
   features; its own WiFi driver with lwIP (TCP, DNS, HTTP), with a documented clean-room method and the largest WiFi
   register sheet (`docs/hardware/wifi/`); USB host Ethernet; a REST server ([Bluetooth and WiFi](Bluetooth-and-WiFi.md)).

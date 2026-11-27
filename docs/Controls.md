@@ -84,6 +84,11 @@ strings it found are not explained.
 column. Brightness depends on how long a column stays selected. Felucca keeps an LED lit ~40 µs per column and
 dims by lighting it in fewer frames.
 
+**LEDs during a flash write. [CODE]** With interrupts off for a flash operation, the scan stops, and lit LEDs went dark
+or dimmed by a third during a save. [OG Synth](https://github.com/mikejohnsonbeats/OG-Synth-source) keeps them going: the flash driver's busy loops call a step that runs
+from RAM and goes on lighting the columns, without reading keys (`fm1_led_ram_step`, `FL_BUSY_STEP` in its
+`patches/felucca-bsp.patch`, MPL-2.0, 2026-11).
+
 ## Velocity and pressure from the keys
 
 **[CODE]** The keys have no velocity sensor, but [Velo](https://github.com/charlesvestal/fm1-velocity) reads
@@ -136,6 +141,7 @@ and 0.4 on two units; the check is unchanged in 0.6.1). Drive PA2 low before any
   Its code addresses need `0x120` added ([Memory Map](Memory-Map.md#the-stock-app-runs-at-0x02000120)).
 - [felucca-bsp](https://github.com/hugelton/felucca-bsp), [fm1-base](https://github.com/charlesvestal/fm1-base) READMEs; fm1-base `lib/touch.h` (MPL-2.0).
 - [fm1-base#99](https://github.com/charlesvestal/fm1-base/issues/99): Charles Vestal's answers to this wiki (2026-11-27); fm1-base LICENSING.md, DESIGN.md at [e4863fa](https://github.com/charlesvestal/fm1-base/commit/e4863fa).
+- [OG Synth](https://github.com/mikejohnsonbeats/OG-Synth-source) `patches/felucca-bsp.patch` (`chip/fm1_flash.h`, `boards/fm1/fm1_input.h`), 2.1.3 (MPL-2.0).
 
 ---
 

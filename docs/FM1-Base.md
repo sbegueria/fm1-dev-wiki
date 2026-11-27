@@ -157,7 +157,10 @@ to drive the panel and read the screen, the screen reader, profiling calls (`pla
 ## The licence, in both directions
 
 **fm1-base is MPL-2.0, file by file** (`LICENSING.md`): changes to its files are published under MPL-2.0; an
-app's own files may use any licence, closed ones included. Its files do not carry MPL's "Incompatible With
+app's own files may use any licence, closed ones included. **[CODE]** An example: [OG Synth](https://github.com/mikejohnsonbeats/OG-Synth-source) (Mike Johnson Beats)
+publishes its app template files and its patches to fm1-base and felucca-bsp under MPL-2.0, and keeps its engines,
+effects, sequencer and pages under a proprietary licence, combined as a Larger Work (MPL-2.0 section 3.3); its public
+repository alone does not build (README, 2.1.3). Its files do not carry MPL's "Incompatible With
 Secondary Licenses" notice, so they can be combined with GPL code. How it got there: Leo Kuroshita gave
 permission for his Felucca code in felucca-bsp and fm1-base to be MPL-2.0
 ([felucca-bsp#4](https://github.com/hugelton/felucca-bsp/issues/4)); keremimo agreed for his part
