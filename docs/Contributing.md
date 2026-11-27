@@ -55,6 +55,48 @@ reviewed before it's merged, so a second pair of eyes checks every new fact. Sma
 browser (the pencil icon makes the fork and the pull request for you). New pages or big changes: open an issue
 first, so others can comment.
 
+**No pull request needed.** An issue, or a comment on r/MVaveFM1 with a link to your source, is enough: a
+maintainer adds it with credit. You don't need any role to contribute.
+
+## Who runs the wiki
+
+The wiki started as one person's notes. It belongs to the community: the text is under CC BY-SA 4.0, so anyone
+may copy or fork it. It is moving to a GitHub organisation, **fm1-dev**, so that no single account holds it.
+Everyone keeps their own GitHub account; there are no shared logins.
+
+| Role | Who | Does |
+| --- | --- | --- |
+| **Contributor** | anyone | opens pull requests or issues, or comments with a source |
+| **Maintainer** | a small team | reviews and merges pull requests, labels and answers issues |
+| **Owner** | two or three people | adds and removes maintainers, manages settings; the safety net if an account is lost |
+
+For now the founder is the only owner. One or two maintainers will become owners, so the wiki never depends on one
+person.
+
+## Reviewing
+
+A maintainer reviewing a change checks:
+
+- each new fact has a tag and a source, and the source says what the page says;
+- the tag isn't stronger than the evidence (rule 2);
+- a contradiction is kept beside the old reading, with an [Open Questions](Open-Questions.md) entry (rule 3);
+- dates, credit and licences are there (rules 4, 6, 7);
+- the English is plain.
+
+A reviewer doesn't need to know the answer, only whether the source supports the claim. Once there are several
+maintainers, every change needs one approving review from someone other than its author, maintainers and owners
+included.
+
+## Becoming a maintainer
+
+Maintainers are people who have shown care with sources: you've written or forked an FM-1 firmware, measured
+something on a unit, contributed here, or helped others on r/MVaveFM1. Reverse-engineering or SDK knowledge helps
+but isn't required. It's a few minutes a week, not a job.
+
+To volunteer, open an issue titled "Maintainer: <your name>" with a line about what you've worked on, or ask on
+r/MVaveFM1. If you step back later, say so and your access is removed; nothing is lost. Maintainers enable
+two-factor authentication on their GitHub account.
+
 ---
 
 Unofficial community wiki. Not affiliated with M-VAVE or JieLi. Text under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); code excerpts keep their own licences ([License](License.md)). Facts are tagged **[HW] [SDK] [RE] [CODE] [?]**: see [Home](Home.md). Found an error? See [Contributing](Contributing.md). [Home](Home.md)
