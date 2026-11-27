@@ -8,7 +8,8 @@ nav_order: 1
 
 Projects that hold **developer knowledge**: bases, references and specifications. For the full list of firmwares,
 editors and tools, see [awesome-fm-1](https://github.com/cicloid/awesome-fm-1), the
-[FM-1 resource hub](https://github.com/aroum/fm1-custom-fw) and the
+[FM-1 resource hub](https://github.com/aroum/fm1-custom-fw) (fabiomorena/fm1-custom-fw-hub is a fork of it, last updated
+2026-10-27) and the
 [FM-1 Firmware Atlas](https://github.com/wero1414/atlas-fm-1). (The FM-1 Firmware Database,
 `stanleygurvich/fm1-firmware-database`, no longer exists: GitHub answers "not found" on 2026-11-26.) Licences and
 descriptions are from each project's README and LICENSE file (October 2026; checked again on 2026-11-26). For how the

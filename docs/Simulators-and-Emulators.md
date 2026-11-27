@@ -68,6 +68,7 @@ These emulate the AC791N and run real firmware images unchanged:
 | Project | Licence | Notes |
 | --- | --- | --- |
 | [fm1-emu](https://github.com/joakimeriksson/fm1-emu) | MIT | runs community firmwares unchanged in the browser, natively or as an AU/VST3 plugin; an SMK-37 emulator too |
+| [FM1.Pocket](https://github.com/utopick/fm1-pocket/blob/pocket/pocket/README.md) (UtopickDesigns) | MIT | a fork of fm1-emu as an offline web app ([utopick.github.io/fm1-pocket/pocket](https://utopick.github.io/fm1-pocket/pocket/)) and an Android app; a firmware list merged from fm1-emu's and the Firmware Hub's catalogues; MIDI keyboards mapped to the keys, knobs and buttons. The Android build runs the emulator as native code and the second core on a second phone core: on a Galaxy S23 it plays 386DX at 240 MHz, per its README (2026-11). With a real FM-1 (Chrome, Edge or Android) it backs up, installs m-bootloader, then installs firmware through m-bootloader's MIDI mode; with the **Tether** firmware on the unit, the emulated firmware's screen, sound and LEDs are sent to the FM-1 and its controls come back ([MIDI and USB](MIDI-and-USB.md)) |
 | [fm1-emulator](https://github.com/simonjohansson/fm1-emulator) | GPL-3.0 | Rust; runs `.fwsc`, `.elf`, `.bin` with the screen, buttons and USB serial |
 | [m-wave-fm1-browser-emulator](https://github.com/shcherbakov7/m-wave-fm1-browser-emulator) | GPL-3.0 | Rust/WebAssembly, both cores; Russian README |
 
@@ -85,6 +86,7 @@ How closely they model timing, the cache and the flash is described in each proj
   `README.md` (`14cda7a`); [Optimist](https://github.com/w0ts/optimist) `BUILDING.md` (`b32f7321`).
 - [RemoteFM1 README](https://github.com/Quixotic7/RemoteFM1) and `docs/PROTOCOL.md`.
 - Felucca-family `host/` simulators and `web/emu/`; [fm1-base DESIGN.md](https://github.com/charlesvestal/fm1-base/blob/main/DESIGN.md).
+- [FM1.Pocket](https://github.com/utopick/fm1-pocket) `pocket/README.md` (branch `pocket`, 2026-11-27); r/MVaveFM1, UtopickDesigns, "FM1.Pocket and Tether CFW" (November 2026).
 
 ---
 

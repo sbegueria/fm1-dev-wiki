@@ -11,6 +11,11 @@ What to do when an FM-1 doesn't start, or no installer finds it. **Read this bef
 > Use these tools at your own risk. Every tool below makes, or asks you to make, a full flash backup first. Keep
 > that backup: it holds your unit's own data (presets, calibration).
 
+
+**For users, not developers:** FirmWave's [FM-1 Best Practices](https://wellingtonsaam.github.io/firmwave-mflasher-plus/best-practices/)
+walks through the same paths step by step: install m-bootloader first, keep a backup per unit off the computer, rescue
+keys, the stock-bootloader routes, and the RP2040 FM-1 Transporter as the last resort. It's a good page to send a
+user to; this page keeps the why and the sources.
 ## First: make a backup while things work
 
 [M-Flasher](https://github.com/jvitkauskas/m-flasher) (MIT; Windows, macOS, Linux) backs up the whole 1 MiB flash
@@ -261,6 +266,7 @@ either model (above; its README, 2026-11-26). **[HW]**
 - [TransitFM1 README](https://github.com/Quixotic7/TransitFM1); [fm1-firmware-patcher README](https://github.com/czietz/fm1-firmware-patcher).
 - [FM-1 resource hub REVERSE_ENGINEERING.md](https://github.com/aroum/fm1-custom-fw/blob/main/REVERSE_ENGINEERING.md) §1.3.
 - [awesome-fm-1](https://github.com/cicloid/awesome-fm-1), "Firmware update and recovery".
+- FirmWave's [FM-1 Best Practices](https://wellingtonsaam.github.io/firmwave-mflasher-plus/best-practices/) (formerly M-Flasher+; checked 2026-11-27).
 
 ---
 

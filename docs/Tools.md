@@ -43,6 +43,7 @@ current state.
 | Tool | Notes |
 | --- | --- |
 | [M-Flasher](https://github.com/jvitkauskas/m-flasher) | backup, restore, install, bootloader install; Windows, macOS, Linux |
+| [FirmWave](https://github.com/wellingtonsaam/firmwave-mflasher-plus) (formerly M-Flasher+, wellingtonsaam) | a firmware manager and catalogue for the FM-1 and SMK-37 built on M-Flasher; desktop and Android. Its [FM-1 Best Practices](https://wellingtonsaam.github.io/firmwave-mflasher-plus/best-practices/) is a user-facing recovery guide: 21 short guides, with a "find your fix" by key or screen message |
 | [FM-1 Transporter](https://github.com/kurogedelic/FM-1-transporter) | RP2040 dongle: USB_KEY plus flash read/write |
 | [jl-uboot-tool](https://github.com/kagaimiq/jl-uboot-tool) | JieLi flasher and dumper; source of `wl82loader.bin` |
 | [MvaveFM1Unbricker](https://github.com/Quixotic7/MvaveFM1Unbricker) | soft-brick recovery over a plain cable; double-read full backup; Linux and Windows for flash work (no macOS SCSI back end), `softkey` on macOS too ([Recovery](Recovery.md)) |
@@ -79,6 +80,7 @@ README and [release 3.0](https://github.com/jvitkauskas/m-bootloader/releases/ta
 [felucca-bsp](https://github.com/hugelton/felucca-bsp) `README.md` at `fdd709f`;
 [fm1-base#36](https://github.com/charlesvestal/fm1-base/issues/36); [FM-1-RE](https://github.com/AL-255/FM-1-RE)
 `docs/04-toolchain-and-vendoring.md`, `tools/README.md`, `docs/io/12-v15-reflash-proof.md`.
+- [FirmWave](https://github.com/wellingtonsaam/firmwave-mflasher-plus) README and its best-practices page (gh-pages, checked 2026-11-27).
 
 ---
 
