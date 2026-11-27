@@ -69,6 +69,8 @@ Many firmwares document hardware lessons in their own docs. Some that have shape
 - [Dinghy `docs/NEWER-FM1-SCREEN.md`](https://github.com/zvenson/dinghy/blob/main/docs/NEWER-FM1-SCREEN.md): why the
   newer FM-1s' screens look washed out with many firmwares, and M-VAVE's full panel set-up (found by Jake Handy for
   [h1](https://github.com/jakehandy/h1)).
+- **Stems over USB audio** (8 or 10 channels): LOOM-8, Terykons, Mutable Dreams, Elixir and h1 0.4.0, which adds
+  `tools/h1_stems.py` to split the recording into stereo files ([Audio Output](Audio-Output.md#usb-audio)).
 - [fm1-mdx](https://github.com/Keitark/fm1-mdx) (GPL-3.0): an MDX/PDX karaoke player on JieLi's SDK; fm1-nes reuses its
   USB audio and serial code. No commit since 2026-10-08.
 - [fm1-dock](https://github.com/joakimeriksson/fm1-dock) (GPL-3.0, based on Dinghy): one firmware with synths as modules

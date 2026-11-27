@@ -143,6 +143,36 @@ under full speed's 1023. LOOM-8 recorded 10 inputs on macOS with no gaps
 ~0.6 ms on the bus. Serviced at 2 kHz, it crackled and the pitch dropped in Ableton Live; it now runs at every
 0.1 ms tick ([fm1-base b2bb9b7](https://github.com/charlesvestal/fm1-base/commit/b2bb9b7)).
 
+**Writing the extra channels. [CODE]** In fm1-base, `plat_usb_ch(off, &run)` (`include/plat.h`) gives the app, inside
+`app_render`, a pointer to the extra channels of the frame `off` into the block: `PLAT_USB_CH` 16-bit samples a frame
+(32767 is the master's full scale), `PLAT_USB_CH_STRIDE` apart, for `*run` frames; where the ring wraps, ask again
+from there. The channels start at 0 each block and the app **adds** into them, from either core (one writer per
+sample); the platform sends them with the master once `app_render` returns. It returns NULL when no computer is
+recording, so the app can skip the work. The ring takes 2 × N bytes a frame (768 frames, 15 KB, at 10 channels with
+`FM1B_UAC_DEEP`). The limits come from full-speed USB: 16-bit only, 44.1 kHz only (resampling N channels costs too
+much CPU), at most 10 channels.
+
+**Firmwares that send stems.** Several firmwares already use more than two channels (found by a code search,
+2026-11-27; there may be others):
+- **LOOM-8** ([fm1-loom](https://github.com/charlesvestal/fm1-loom), Charles Vestal, on fm1-base): 10 channels, the
+  master on 1–2 and its eight tracks as mono channels on 3–10, each at its level before its pan (`app/fm1.toml`). It
+  was the test case for the option: 10 inputs recorded on macOS with no gaps (felucca-bsp PR #32, 2026-11-06). **[HW]**
+- **Terykons** ([gravkode-fm1](https://github.com/gravkode/gravkode-fm1), 0.42): a MULTI mode with a 10-channel,
+  16-bit, 44.1 kHz class-compliant input; in MULTI the computer plays nothing through the FM-1. Checked on an FM-1 with
+  macOS, all ten inputs recorded (`terykons/docs/RELEASE_0.42.0.md`). **[HW]**
+- **Mutable Dreams** ([mutable-dreams](https://github.com/kidbee85-beep/mutable-dreams), on fm1-base): 8 channels
+  (`app/fm1.toml`; `docs/2.0-DAW-MONITOR.md`). **[CODE]**
+- **Elixir** ([dmajka/elixir](https://github.com/dmajka/elixir)): its own 8-channel USB audio in its own `usb.c`,
+  not fm1-base's (`docs/usb-audio8-investigation.md`, `docs/usb-audio8-module-design.md`). **[CODE]**
+- **h1** ([jakehandy/h1](https://github.com/jakehandy/h1) 0.4.0, Jake Handy, 2026-11-27, on fm1-base), below.
+
+**[CODE]** h1 uses the 10-channel input for **stems**: the mix on 1–2, then four dry stereo stems on 3–10. The instruments
+of the loop's layers get a stem each, in the layer view's order (the instrument being played the next free one), and
+the fourth carries the rest. The stems are taken before the effects (ECHO, SPACE and TONE are on the mix only). A DAW
+sees one track per channel; `tools/h1_stems.py` splits a 10-channel recording into stereo files
+([CHANGELOG](https://github.com/jakehandy/h1/blob/v0.4.0/CHANGELOG.md), `app/fm1.toml`; announced on r/MVaveFM1).
+So with this option the practical ceiling is **the master plus four stereo stems** (or eight mono ones).
+
 M-VAVE's view, for FM1 Open: "Eight separate audio tracks over USB are currently not supported because the
 available USB bandwidth is insufficient for that configuration" (cream100,
 [m-vave/fm1_open#6](https://github.com/m-vave/fm1_open/issues/6), 2026-10-21). Their channel width is not stated.
@@ -212,6 +242,7 @@ above).
 - [kmplngj/Felucca BUILDING.md](https://github.com/kmplngj/Felucca/blob/main/BUILDING.md) (build options).
 - [FM-1 resource hub](https://github.com/aroum/fm1-custom-fw) `REVERSE_ENGINEERING.md` §1.2, item 3; `HARDWARE_MODS.md`
   item 8 ([7ad4fe4](https://github.com/aroum/fm1-custom-fw/commit/7ad4fe4), 2026-11-18).
+- Multichannel firmwares: [fm1-loom](https://github.com/charlesvestal/fm1-loom), [gravkode-fm1](https://github.com/gravkode/gravkode-fm1), [mutable-dreams](https://github.com/kidbee85-beep/mutable-dreams), [elixir](https://github.com/dmajka/elixir) (files as cited, 2026-11-27); [h1](https://github.com/jakehandy/h1) 0.4.0 `CHANGELOG.md`, `app/fm1.toml` (MIT); fm1-base `include/plat.h` (`plat_usb_ch`) at [548a2b0](https://github.com/charlesvestal/fm1-base/tree/548a2b0); felucca-bsp [PR #32](https://github.com/hugelton/felucca-bsp/pull/32).
 
 ---
 
