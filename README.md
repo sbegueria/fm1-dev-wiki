@@ -6,6 +6,9 @@ An unofficial, community-written reference for people writing custom firmware fo
 (JieLi AC79 chip): the hardware, the boot chain and package format, installing and recovering, and how to write
 firmware that runs well on it. Not affiliated with, endorsed by or supported by M-VAVE or JieLi.
 
+**Read it at [fm1-dev.github.io/wiki](https://fm1-dev.github.io/wiki/).** Maintained by the community in the
+[fm1-dev](https://github.com/fm1-dev) organisation; see [Contributing](docs/Contributing.md#who-runs-the-wiki).
+
 Every technical fact is tagged with where it comes from: **[HW]** measured on a unit, **[SDK]** JieLi's SDK,
 **[RE]** reverse engineering, **[CODE]** used by working firmware, **[?]** unverified. Start at
 [Home](docs/Home.md).

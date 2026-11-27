@@ -61,7 +61,7 @@ maintainer adds it with credit. You don't need any role to contribute.
 ## Who runs the wiki
 
 The wiki started as one person's notes. It belongs to the community: the text is under CC BY-SA 4.0, so anyone
-may copy or fork it. It is moving to a GitHub organisation, **fm1-dev**, so that no single account holds it.
+may copy or fork it. Since 2026-11-27 it lives in a GitHub organisation, [**fm1-dev**](https://github.com/fm1-dev), so that no single account holds it.
 Everyone keeps their own GitHub account; there are no shared logins.
 
 | Role | Who | Does |
