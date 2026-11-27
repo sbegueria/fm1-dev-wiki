@@ -32,6 +32,12 @@ Jake Handy for h1 0.3.1; written up for every firmware in Dinghy's
 [`docs/NEWER-FM1-SCREEN.md`](https://github.com/zvenson/dinghy/blob/14cda7a/docs/NEWER-FM1-SCREEN.md)
 (2026-11-26; in Dinghy since 0.6.1).
 
+**[HW]** An independent check: foomatic999 had two FM-1s, an older one and a newer one with the logo but the **old
+Puya flash** (so the newer panel and the newer flash don't always come together). SLOOP 3 as released showed washed-out
+colours on the newer unit; rebuilt with FM1 Open's panel set-up, it showed correct colours on both. FM1 Open itself
+looked the same on both units (r/MVaveFM1, "Devs: Use LCD init from fm1-open", November 2026, with a write-up for
+coding agents linked from the post).
+
 | Command | Data | Meaning |
 | --- | --- | --- |
 | `01` | wait 150 ms | software reset |
@@ -123,6 +129,7 @@ peaks. Measure the audio load with your busiest screen showing. See [Performance
 - [FM-1-RE](https://github.com/AL-255/FM-1-RE) `docs/io/08-display.md` §1 (WTFPL; stock V13).
 - [kmplngj/Felucca](https://github.com/kmplngj/Felucca) `docs/display-power-research-2026-10-22.md`, `docs/lcd-backlight-probe.md`, `docs/lcd-colour-ab-2026-10-22.md` (GPL-3.0-only).
 - [fm1-base#99](https://github.com/charlesvestal/fm1-base/issues/99): Charles Vestal's answers to this wiki (2026-11-27); fm1-base LICENSING.md, DESIGN.md at [e4863fa](https://github.com/charlesvestal/fm1-base/commit/e4863fa).
+- r/MVaveFM1, foomatic999, "Devs: Use LCD init from fm1-open" (November 2026): SLOOP 3 with FM1 Open's panel set-up on an older and a newer FM-1.
 
 ---
 
